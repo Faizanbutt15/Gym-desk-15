@@ -14,7 +14,7 @@
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex h-screen overflow-hidden" x-data="{ mobileMenuOpen: false }">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-primary text-white flex flex-col hidden md:flex absolute md:relative z-20 h-full transition-transform duration-300 transform md:translate-x-0" :class="mobileMenuOpen ? 'translate-x-0 !flex' : '-translate-x-full'">
+    <aside class="w-64 bg-black text-white flex flex-col hidden md:flex absolute md:relative z-20 h-full transition-transform duration-300 transform md:translate-x-0" :class="mobileMenuOpen ? 'translate-x-0 !flex' : '-translate-x-full'">
         <div class="h-16 flex items-center justify-between px-4 font-bold text-lg border-b border-blue-800 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">
             {{ \Illuminate\Support\Str::limit(auth()->user()->gym->name ?? 'Gym Panel', 18) }}
             <button class="md:hidden text-white" @click="mobileMenuOpen = false">

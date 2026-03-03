@@ -15,50 +15,71 @@
             @php
                 $daysOverdue = now()->startOfDay()->diffInDays($member->fee_due_date, false) * -1;
             @endphp
-            <div class="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden hover:shadow-md transition">
-                <div class="p-5 flex flex-col h-full relative">
-                    <div class="absolute top-0 right-0 w-16 h-16 pointer-events-none">
-                        <div class="absolute inset-0 bg-red-50 opacity-50 rounded-bl-full"></div>
+            <div class="bg-white rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col h-full transform transition hover:-translate-y-1">
+                <!-- Dark Header -->
+                <div class="bg-black pt-6 pb-5 px-4 flex flex-col items-center">
+                    @if($member->photo)
+                        <img src="{{ asset('storage/' . $member->photo) }}" class="w-32 h-32 rounded-full object-cover border-2 border-white shadow-sm mb-3">
+                    @else
+                        <div class="w-32 h-32 rounded-full bg-red-50 text-red-700 flex items-center justify-center font-bold text-5xl border-2 border-white shadow-sm mb-3">
+                            {{ substr($member->name, 0, 1) }}
+                        </div>
+                    @endif
+                    <h3 class="text-xl font-medium text-white tracking-wide text-center">{{ $member->name }}</h3>
+                </div>
+                
+                <!-- Body -->
+                <div class="flex-1 flex flex-col text-sm">
+                    <!-- Section Header -->
+                    <div class="bg-gray-100 px-4 py-2 flex items-center gap-2 border-b border-gray-200">
+                        <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                        <span class="text-xs uppercase tracking-wider font-bold text-black">Details</span>
                     </div>
                     
-                    <div class="flex items-start justify-between mb-4 relative z-10">
-                        <div class="flex items-center gap-4">
-                            @if($member->photo)
-                                <img src="{{ asset('storage/' . $member->photo) }}" class="w-14 h-14 rounded-full object-cover border border-red-200 shadow-sm">
-                            @else
-                                <div class="w-14 h-14 rounded-full bg-red-100 text-red-700 flex items-center justify-center font-bold text-xl border border-red-200 shadow-sm">
-                                    {{ substr($member->name, 0, 1) }}
-                                </div>
-                            @endif
-                            <div>
-                                <h3 class="font-bold text-gray-900 text-lg">{{ $member->name }}</h3>
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold border mt-1 bg-red-100 text-red-800 border-red-200">
-                                    Expired {{ $daysOverdue }} days ago
-                                </span>
-                            </div>
+                    <div class="px-4 divide-y divide-gray-100">
+                        <div class="py-3 flex justify-between items-center">
+                            <span class="text-gray-400 font-medium">Status</span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-bold border bg-red-600 text-white border-red-200">
+                                Expired {{ $daysOverdue }} days ago
+                            </span>
+                        </div>
+                        <div class="py-3 flex justify-between items-center">
+                            <span class="text-gray-400 font-medium">Due Amount</span>
+                            <span class="text-gray-900 font-bold">${{ number_format($member->fee_amount, 2) }}</span>
                         </div>
                     </div>
-                    
-                    <div class="space-y-2 mb-6">
-                        <div class="flex items-center text-sm text-gray-600 gap-2">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                            {{ $member->contact ?? 'No contact' }}
+
+                    <!-- Section Header -->
+                     
+
+                    <div class="px-4 divide-y divide-gray-100 pb-2">
+                        <div class="py-3 flex justify-between items-center overflow-hidden">
+                            <span class="text-gray-400 font-medium mr-4">Phone</span>
+                            <span class="text-gray-900 truncate">{{ $member->contact ?? 'N/A' }}</span>
                         </div>
-                        <div class="flex items-center text-sm text-gray-600 gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            {{ $member->email ?? 'No email' }}
-                        </div>
-                        <div class="flex items-center text-sm font-semibold text-gray-800 gap-2 pt-2 border-t border-gray-50 mt-2">
-                            Due Amount: ${{ number_format($member->fee_amount, 2) }}
+                        <div class="py-3 flex justify-between items-center overflow-hidden">
+                            <span class="text-gray-400 font-medium mr-4">Email</span>
+                            <span class="text-gray-900 truncate">{{ $member->email ?? 'N/A' }}</span>
                         </div>
                     </div>
-                    
-                    <div class="mt-auto">
-                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full">
+
+                    <!-- Action bottom -->
+                    <div class="mt-auto px-4  bg-gray-50 border-t border-gray-200">
+                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-3">
                             @csrf
-                            <button type="submit" class="w-full text-white bg-green-500 hover:bg-green-600 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide transition shadow-sm text-center flex justify-center items-center gap-2" onclick="return confirm('Mark as Paid? This will record a payment and reactivate the member.')">
+                            <div>
+                                <label class="block text-[10px] font-bold text-black uppercase tracking-wider mb-1.5 pl-1">Months Paying For</label>
+                                <select name="months" class="w-full text-sm border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 shadow-sm bg-white text-gray-700 py-2">
+                                    <option value="1">1 Month (${{ number_format($member->fee_amount, 2) }})</option>
+                                    <option value="2">2 Months (${{ number_format($member->fee_amount * 2, 2) }})</option>
+                                    <option value="3">3 Months (${{ number_format($member->fee_amount * 3, 2) }})</option>
+                                    <option value="6">6 Months (${{ number_format($member->fee_amount * 6, 2) }})</option>
+                                    <option value="12">12 Months (${{ number_format($member->fee_amount * 12, 2) }})</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full text-white bg-green-500 hover:bg-green-600 py-2.5 rounded-lg text-sm font-bold uppercase tracking-widest transition shadow-md text-center flex justify-center items-center gap-2" onclick="return confirm('Record this payment and extend the due date?')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                Capture Payment
+                                Mark as Paid
                             </button>
                         </form>
                     </div>

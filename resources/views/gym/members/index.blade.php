@@ -272,69 +272,126 @@
         </div>
     </div>
 
-    <!-- View Modal -->
+    <!-- View Modal (Card Style) -->
     <div x-show="viewModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div x-show="viewModalOpen" class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="viewModalOpen = false"></div>
-            <div class="relative inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                <div class="flex items-center justify-between mb-5 border-b border-gray-100 pb-3">
-                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                        Member Profile
-                    </h3>
-                    <button @click="viewModalOpen = false" class="text-gray-400 hover:text-gray-500 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <div x-show="viewModalOpen" class="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-75" @click="viewModalOpen = false"></div>
+            
+            <div class="relative inline-block w-full max-w-[360px] overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl flex flex-col h-[85vh] sm:h-auto sm:max-h-[90vh]">
+                
+                <!-- Scrollable Content Area -->
+                <div class="flex-1 overflow-y-auto w-full bg-white relative pb-16">
+                    
+                    <!-- Top Dark Header Section -->
+                    <div class="bg-black pt-4 pb-8 px-4 relative flex flex-col items-center">
+                        <!-- Top Actions (Back & Check) -->
+                        <div class="w-full flex justify-between items-center text-white mb-2 relative left-0 px-1">
+                            <button @click="viewModalOpen = false" class="text-white hover:text-gray-300 transition focus:outline-none">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            </button>
+                            <button @click="viewModalOpen = false; editMember = viewMember; editModalOpen = true" class="text-white hover:text-gray-300 transition focus:outline-none">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Profile Image Avatar -->
+                        <div class="flex justify-center mt-1 relative z-10 w-full">
+                            <template x-if="viewMember.photo">
+                                <img :src="'/storage/' + viewMember.photo" class="w-32 h-32 rounded-full object-cover border-2 border-white shadow-sm bg-white">
+                            </template>
+                            <template x-if="!viewMember.photo">
+                                <div class="w-32 h-32 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold text-5xl shadow-sm border-2 border-white" x-text="viewMember.name ? viewMember.name.substring(0, 1) : ''"></div>
+                            </template>
+                        </div>
+                        
+                        <div class="text-center mt-3 mb-1">
+                            <h3 class="text-xl font-medium text-white tracking-wide" x-text="viewMember.name"></h3>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="flex justify-center border-b border-gray-200 bg-white">
+                        <form method="POST" :action="'{{ url('gym/members') }}/' + viewMember.id + '/mark-paid'" class="w-1/2 border-r border-gray-200" x-ref="markPaidForm">
+                            @csrf
+                            <button type="button" @click="$refs.markPaidForm.submit()" class="w-full flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-gray-50 transition text-gray-700">
+                                <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                <span class="text-[11px] font-semibold text-gray-800">Mark Paid</span>
+                            </button>
+                        </form>
+                        <button type="button" @click="viewModalOpen = false; editMember = viewMember; editModalOpen = true" class="w-1/2 flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-gray-50 transition text-gray-700">
+                            <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="text-[11px] font-semibold text-gray-800">Edit Member</span>
+                        </button>
+                    </div>
+
+                    <!-- Details Section Head -->
+                    <div class="bg-gray-100 px-4 py-2 flex items-center gap-2 border-b border-gray-200">
+                        <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                        <span class="text-xs uppercase tracking-wider font-bold text-black">Details</span>
+                    </div>
+
+                    <!-- Details List -->
+                    <div class="px-4 bg-white divide-y divide-gray-100 text-sm">
+                        <div class="py-3.5 flex items-center justify-between">
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Status</span>
+                            <span class="text-gray-800 w-2/3 font-medium text-[13px]" x-text="viewMember.status === 'active' ? 'Active' : 'Inactive'"></span>
+                        </div>
+                        <div class="py-3.5 flex items-center justify-between">
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Monthly Fee</span>
+                            <span class="text-gray-800 w-2/3 font-bold text-[13px]" x-text="'$' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></span>
+                        </div>
+                        <div class="py-3.5 flex items-center justify-between">
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Joined Date</span>
+                            <div class="w-2/3 flex items-center justify-between">
+                                <span class="text-gray-800 font-medium text-[13px]" x-text="viewMember.joined_date ? new Date(viewMember.joined_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''"></span>
+                            </div>
+                        </div>
+                        <div class="py-3.5 flex items-center justify-between">
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Due Date</span>
+                            <div class="w-2/3 flex items-center justify-between">
+                                <span class="text-gray-800 font-medium text-[13px]" x-text="viewMember.fee_due_date ? new Date(viewMember.fee_due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''"></span>
+                                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info Section Head -->
+                    <div class="bg-gray-100 px-4 py-2 border-y border-gray-200 flex items-center gap-2 mt-2 border-t-0">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span class="text-xs uppercase tracking-wider font-bold text-black">Contact</span>
+                    </div>
+
+                    <!-- Contact List -->
+                    <div class="px-4 bg-white divide-y divide-gray-100 text-sm pb-2">
+                        <div class="py-3.5 flex items-center justify-between overflow-hidden">
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium mr-4">Phone</span>
+                            <span class="text-gray-900 w-2/3 font-medium text-[13px] truncate" x-text="viewMember.contact || ''"></span>
+                        </div>
+                        <div class="py-3.5 flex items-center justify-between overflow-hidden">
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium mr-4">Email</span>
+                            <span class="text-gray-900 w-2/3 font-medium text-[13px] truncate" x-text="viewMember.email || ''"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation Bar Dummy -->
+                <div class="absolute bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-between items-center px-4 py-2 pb-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] pt-2.5">
+                    <button class="flex flex-col items-center gap-1 text-indigo-600 focus:outline-none">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                        <span class="text-[9px] font-bold">Details</span>
                     </button>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-6 mb-6">
-                    <div class="flex-shrink-0 flex justify-center">
-                        <template x-if="viewMember.photo">
-                            <img :src="'/storage/' + viewMember.photo" class="w-32 h-32 rounded-xl object-cover border border-gray-200 shadow-sm">
-                        </template>
-                        <template x-if="!viewMember.photo">
-                            <div class="w-32 h-32 rounded-xl bg-blue-50 text-primary flex items-center justify-center font-bold text-4xl border border-blue-100 shadow-sm" x-text="viewMember.name ? viewMember.name.substring(0, 1) : ''"></div>
-                        </template>
-                    </div>
-                    <div class="flex-1 space-y-3">
-                        <div>
-                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Full Name</p>
-                            <p class="text-gray-900 font-medium text-lg" x-text="viewMember.name"></p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Contact</p>
-                                <p class="text-gray-900" x-text="viewMember.contact || 'N/A'"></p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Email</p>
-                                <p class="text-gray-900" x-text="viewMember.email || 'N/A'"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Status</p>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold mt-1" :class="viewMember.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-800'" x-text="viewMember.status === 'active' ? 'Active' : 'Inactive'"></span>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Joined Date</p>
-                        <p class="text-gray-900 font-medium" x-text="viewMember.joined_date ? viewMember.joined_date.substring(0,10) : 'N/A'"></p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Monthly Fee</p>
-                        <p class="text-primary font-bold text-lg" x-text="'$' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Next Due Date</p>
-                        <p class="text-gray-900 font-medium" x-text="viewMember.fee_due_date ? viewMember.fee_due_date.substring(0,10) : 'N/A'"></p>
-                    </div>
-                </div>
-                
-                <div class="pt-5 mt-5 flex justify-end gap-3 border-t border-gray-100">
-                    <button type="button" @click="viewModalOpen = false" class="px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none shadow-sm">Close</button>
-                    <button type="button" @click="viewModalOpen = false; editMember = viewMember; editModalOpen = true" class="px-5 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-800 focus:outline-none shadow-sm">Edit Member</button>
+                    <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                        <span class="text-[9px] font-bold">Membership</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span class="text-[9px] font-bold">Communication</span>
+                    </button>
+                    <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="text-[9px] font-bold">Bookings</span>
+                    </button>
                 </div>
             </div>
         </div>

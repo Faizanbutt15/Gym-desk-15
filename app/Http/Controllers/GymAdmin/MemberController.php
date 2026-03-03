@@ -103,7 +103,13 @@ class MemberController extends Controller
     {
         if ($member->gym_id !== $request->user()->gym_id) abort(403);
 
-        $newDueDate = $member->fee_due_date ? $member->fee_due_date->addDays(30) : now()->addDays(30);
+        $months = (int) $request->input('months', 1);
+        if ($months < 1) $months = 1;
+        
+        $daysToAdd = 30 * $months;
+        $amountPaid = $member->fee_amount * $months;
+
+        $newDueDate = $member->fee_due_date ? $member->fee_due_date->addDays($daysToAdd) : now()->addDays($daysToAdd);
 
         $member->update([
             'fee_due_date' => $newDueDate,
@@ -114,11 +120,15 @@ class MemberController extends Controller
             'gym_id' => $member->gym_id,
             'member_id' => $member->id,
             'member_name' => $member->name,
-            'amount' => $member->fee_amount,
+            'amount' => $amountPaid,
             'paid_date' => now()
         ]);
 
-        return redirect()->back()->with('success', 'Payment recorded successfully. Member activated.');
+        $message = $months > 1 
+            ? "Payment of {$months} months recorded successfully. Member activated." 
+            : 'Payment recorded successfully. Member activated.';
+
+        return redirect()->back()->with('success', $message);
     }
 
     public function reactivate(Request $request, Member $member)
