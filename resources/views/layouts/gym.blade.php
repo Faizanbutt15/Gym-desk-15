@@ -43,13 +43,18 @@
     <div x-show="mobileMenuOpen" class="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden" @click="mobileMenuOpen = false" x-cloak></div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col h-screen overflow-hidden w-full">
+    <div class="flex-1 flex flex-col h-screen overflow-hidden w-full relative">
         <!-- Top Header -->
-        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 md:justify-end border-b border-gray-200">
+        <header class="h-16 bg-white shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] flex items-center justify-between px-6 md:justify-end border-b border-gray-100 z-10 relative">
             <div class="font-bold text-xl text-primary md:hidden">{{ \Illuminate\Support\Str::limit(auth()->user()->gym->name ?? 'Gym Panel', 15) }}</div>
-            <div class="flex items-center space-x-4">
-                <span class="text-sm font-medium text-gray-500 hidden md:inline-block">{{ auth()->user()->name }}</span>
-                <button class="text-gray-600 md:hidden focus:outline-none" @click="mobileMenuOpen = true">
+            <div class="flex items-center space-x-6">
+                <div class="hidden md:flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold text-sm">
+                        {{ substr(auth()->user()->name, 0, 1) }}
+                    </div>
+                    <span class="text-sm font-semibold text-gray-700">{{ auth()->user()->name }}</span>
+                </div>
+                <button class="text-gray-600 hover:text-primary transition md:hidden focus:outline-none" @click="mobileMenuOpen = true">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>

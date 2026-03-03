@@ -48,14 +48,6 @@ class MemberController extends Controller
         $validated['gym_id'] = $gymId;
         $validated['status'] = 'active';
 
-        $latestMember = Member::where('gym_id', $gymId)
-            ->whereNotNull('member_id')
-            ->orderByRaw('CAST(member_id AS UNSIGNED) DESC')
-            ->first();
-
-        $nextId = $latestMember ? intval($latestMember->member_id) + 1 : 1;
-        $validated['member_id'] = str_pad($nextId, 4, '0', STR_PAD_LEFT);
-
         if ($request->filled('photo_base64') && strpos($request->photo_base64, 'data:image') === 0) {
             $image_parts = explode(";base64,", $request->photo_base64);
             $image_base64 = base64_decode($image_parts[1]);

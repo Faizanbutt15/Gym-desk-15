@@ -8,25 +8,40 @@
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
-            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Total Members</h3>
-            <span class="text-3xl font-bold text-primary mt-2">{{ $totalMembers }}</span>
+        <div class="bg-gradient-to-br from-blue-900 to-primary rounded-xl shadow-lg p-6 border border-blue-800 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-xl relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-white">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+            </div>
+            <h3 class="text-blue-100 text-xs font-semibold uppercase tracking-wider relative z-10">Total Members</h3>
+            <span class="text-4xl font-extrabold text-white mt-1 relative z-10">{{ $totalMembers }}</span>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
-            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Active</h3>
-             <span class="text-3xl font-bold text-green-600 mt-2">{{ $activeMembers }}</span>
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-100 flex flex-col items-center text-center">
+            <div class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Active</h3>
+             <span class="text-3xl font-bold text-gray-900 mt-1">{{ $activeMembers }}</span>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex flex-col items-center text-center">
-            <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Inactive</h3>
-            <span class="text-3xl font-bold text-gray-600 mt-2">{{ $inactiveMembers }}</span>
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-100 flex flex-col items-center text-center">
+            <div class="w-10 h-10 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+            </div>
+            <h3 class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Inactive</h3>
+            <span class="text-3xl font-bold text-gray-900 mt-1">{{ $inactiveMembers }}</span>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-orange-200 bg-orange-50 flex flex-col items-center text-center">
-            <h3 class="text-orange-600 text-sm font-bold uppercase tracking-wider">Expiring Soon</h3>
-             <span class="text-3xl font-extrabold text-orange-600 mt-2">{{ $expiringSoon }}</span>
+        <div class="bg-orange-50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-orange-100 flex flex-col items-center text-center">
+            <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-orange-700 text-xs font-bold uppercase tracking-wider">Expiring Soon</h3>
+             <span class="text-3xl font-extrabold text-orange-600 mt-1">{{ $expiringSoon }}</span>
         </div>
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-red-200 bg-red-50 flex flex-col items-center text-center">
-            <h3 class="text-red-700 text-sm font-bold uppercase tracking-wider">Expired</h3>
-             <span class="text-3xl font-extrabold text-red-700 mt-2">{{ $expired }}</span>
+        <div class="bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-red-100 flex flex-col items-center text-center">
+            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h3 class="text-red-700 text-xs font-bold uppercase tracking-wider">Expired</h3>
+             <span class="text-3xl font-extrabold text-red-600 mt-1">{{ $expired }}</span>
         </div>
     </div>
 
