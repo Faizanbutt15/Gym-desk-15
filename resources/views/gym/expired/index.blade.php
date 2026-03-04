@@ -43,10 +43,22 @@
                                 Expired {{ $daysOverdue }} days ago
                             </span>
                         </div>
-                        <div class="py-3 flex justify-between items-center">
-                            <span class="text-gray-400 font-medium">Due Amount</span>
+                        <div class="py-3 flex justify-between items-center bg-gray-50 -mx-4 px-4 border-b border-gray-100">
+                            <span class="text-gray-500 font-bold text-[13px]">Gym Fee</span>
                             <span class="text-gray-900 font-bold">${{ number_format($member->fee_amount, 2) }}</span>
                         </div>
+                        @if($member->trainer_fee > 0)
+                        <div class="py-2.5 flex justify-between items-center text-[13px]">
+                            <span class="text-gray-400 font-medium">Trainer Fee</span>
+                            <span class="text-blue-600 font-bold">${{ number_format($member->trainer_fee, 2) }}</span>
+                        </div>
+                        @endif
+                        @if($member->locker_fee > 0)
+                        <div class="py-2.5 flex justify-between items-center text-[13px]">
+                            <span class="text-gray-400 font-medium">Locker Fee</span>
+                            <span class="text-purple-600 font-bold">${{ number_format($member->locker_fee, 2) }}</span>
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Section Header -->
@@ -69,16 +81,17 @@
                             @csrf
                             
                             @php
+                                $monthlyTotal = $member->fee_amount + $member->trainer_fee + $member->locker_fee;
                                 $feeOptions = [
-                                    1 => ['label' => '1 Month', 'amount' => $member->fee_amount],
-                                    2 => ['label' => '2 Months', 'amount' => $member->fee_amount * 2],
-                                    3 => ['label' => '3 Months', 'amount' => $member->fee_amount * 3],
-                                    6 => ['label' => '6 Months', 'amount' => $member->fee_amount * 6],
-                                    12 => ['label' => '1 Year', 'amount' => $member->fee_amount * 12],
+                                    1 => ['label' => '1 Month', 'amount' => $monthlyTotal],
+                                    2 => ['label' => '2 Months', 'amount' => $monthlyTotal * 2],
+                                    3 => ['label' => '3 Months', 'amount' => $monthlyTotal * 3],
+                                    6 => ['label' => '6 Months', 'amount' => $monthlyTotal * 6],
+                                    12 => ['label' => '1 Year', 'amount' => $monthlyTotal * 12],
                                 ];
                             @endphp
                             
-                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; ${{ number_format($member->fee_amount, 2) }}' }" class="relative z-40">
+                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; ${{ number_format($monthlyTotal, 2) }}' }" class="relative z-40">
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 pl-1">Months Paying For</label>
                                 <input type="hidden" name="months" x-model="selected">
                                 

@@ -41,8 +41,16 @@ class MemberController extends Controller
             'contact' => 'nullable|string|max:20',
             'fee_due_date' => 'nullable|date',
             'fee_amount' => 'required|numeric|min:0',
+            'admission_fee' => 'nullable|numeric|min:0',
+            'trainer_fee' => 'nullable|numeric|min:0',
+            'locker_fee' => 'nullable|numeric|min:0',
             'joined_date' => 'nullable|date',
         ]);
+
+        // Default empty fees to 0
+        $validated['admission_fee'] = $validated['admission_fee'] ?? 0;
+        $validated['trainer_fee'] = $validated['trainer_fee'] ?? 0;
+        $validated['locker_fee'] = $validated['locker_fee'] ?? 0;
 
         $gymId = $request->user()->gym_id;
         $validated['gym_id'] = $gymId;
@@ -58,8 +66,22 @@ class MemberController extends Controller
             $validated['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        Member::create($validated);
-        return redirect()->back()->with('success', 'Member added successfully.');
+        $member = Member::create($validated);
+
+        // Record initial payment upon creation (admission + all first month fees)
+        $totalInitialPayment = $member->fee_amount + $member->admission_fee + $member->trainer_fee + $member->locker_fee;
+        
+        if ($totalInitialPayment > 0) {
+            Payment::create([
+                'gym_id' => $gymId,
+                'member_id' => $member->id,
+                'member_name' => $member->name,
+                'amount' => $totalInitialPayment,
+                'paid_date' => now()
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Member added successfully. Initial payment recorded.');
     }
 
     public function update(Request $request, Member $member)
@@ -73,8 +95,16 @@ class MemberController extends Controller
             'contact' => 'nullable|string|max:20',
             'fee_due_date' => 'nullable|date',
             'fee_amount' => 'required|numeric|min:0',
+            'admission_fee' => 'nullable|numeric|min:0',
+            'trainer_fee' => 'nullable|numeric|min:0',
+            'locker_fee' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
         ]);
+
+        // Default empty fees to 0
+        $validated['admission_fee'] = $validated['admission_fee'] ?? 0;
+        $validated['trainer_fee'] = $validated['trainer_fee'] ?? 0;
+        $validated['locker_fee'] = $validated['locker_fee'] ?? 0;
 
         if ($request->filled('photo_base64') && strpos($request->photo_base64, 'data:image') === 0) {
             if ($member->photo) Storage::disk('public')->delete($member->photo);
@@ -107,7 +137,9 @@ class MemberController extends Controller
         if ($months < 1) $months = 1;
         
         $daysToAdd = 30 * $months;
-        $amountPaid = $member->fee_amount * $months;
+        // The recurring amount paid is only the active recurring fees
+        $totalRecurringMonthly = $member->fee_amount + $member->trainer_fee + $member->locker_fee;
+        $amountPaid = $totalRecurringMonthly * $months;
 
         $newDueDate = $member->fee_due_date ? $member->fee_due_date->addDays($daysToAdd) : now()->addDays($daysToAdd);
 

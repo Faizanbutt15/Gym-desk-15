@@ -143,8 +143,20 @@
                             <input type="text" name="contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Monthly Fee Amount ($) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
                             <input type="number" step="0.01" name="fee_amount" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Admission Fee ($) <span class="text-xs text-gray-400 font-normal">(One-time)</span></label>
+                            <input type="number" step="0.01" name="admission_fee" value="0.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Trainer Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly)</span></label>
+                            <input type="number" step="0.01" name="trainer_fee" value="0.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Locker Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly)</span></label>
+                            <input type="number" step="0.01" name="locker_fee" value="0.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Next Fee Due Date</label>
@@ -220,8 +232,20 @@
                             <input type="text" name="contact" x-model="editMember.contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Monthly Fee Amount ($) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
                             <input type="number" step="0.01" name="fee_amount" x-model="editMember.fee_amount" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Admission Fee ($) <span class="text-xs text-gray-400 font-normal">(One-time)</span></label>
+                            <input type="number" step="0.01" name="admission_fee" x-model="editMember.admission_fee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Trainer Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly, set to 0 to remove)</span></label>
+                            <input type="number" step="0.01" name="trainer_fee" x-model="editMember.trainer_fee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Locker Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly, set to 0 to remove)</span></label>
+                            <input type="number" step="0.01" name="locker_fee" x-model="editMember.locker_fee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Fee Due Date</label>
@@ -337,9 +361,31 @@
                             <span class="text-gray-800 w-2/3 font-medium text-[13px]" x-text="viewMember.status === 'active' ? 'Active' : 'Inactive'"></span>
                         </div>
                         <div class="py-3.5 flex items-center justify-between">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Monthly Fee</span>
+                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Gym Fee</span>
                             <span class="text-gray-800 w-2/3 font-bold text-[13px]" x-text="'$' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></span>
                         </div>
+                        <template x-if="viewMember.trainer_fee > 0">
+                            <div class="py-3.5 flex items-center justify-between">
+                                <span class="text-gray-400 w-1/3 text-[13px] font-medium">Trainer Fee</span>
+                                <span class="text-gray-800 w-2/3 font-bold text-[13px] text-blue-600" x-text="'$' + parseFloat(viewMember.trainer_fee).toFixed(2) + ' /mo'"></span>
+                            </div>
+                        </template>
+                        <template x-if="viewMember.locker_fee > 0">
+                            <div class="py-3.5 flex items-center justify-between">
+                                <span class="text-gray-400 w-1/3 text-[13px] font-medium">Locker Fee</span>
+                                <span class="text-gray-800 w-2/3 font-bold text-[13px] text-purple-600" x-text="'$' + parseFloat(viewMember.locker_fee).toFixed(2) + ' /mo'"></span>
+                            </div>
+                        </template>
+                        <div class="py-3.5 flex items-center justify-between bg-gray-50 -mx-4 px-4 border-y border-gray-100">
+                            <span class="text-gray-500 w-1/3 text-[13px] font-bold">Total Monthly</span>
+                            <span class="text-green-600 w-2/3 font-bold text-[14px]" x-text="'$' + (parseFloat(viewMember.fee_amount || 0) + parseFloat(viewMember.trainer_fee || 0) + parseFloat(viewMember.locker_fee || 0)).toFixed(2)"></span>
+                        </div>
+                        <template x-if="viewMember.admission_fee > 0">
+                            <div class="py-3.5 flex items-center justify-between">
+                                <span class="text-gray-400 w-1/3 text-[13px] font-medium">Admission</span>
+                                <span class="text-gray-500 w-2/3 font-medium text-[13px]" x-text="'$' + parseFloat(viewMember.admission_fee).toFixed(2) + ' (Paid once)'"></span>
+                            </div>
+                        </template>
                         <div class="py-3.5 flex items-center justify-between">
                             <span class="text-gray-400 w-1/3 text-[13px] font-medium">Joined Date</span>
                             <div class="w-2/3 flex items-center justify-between">

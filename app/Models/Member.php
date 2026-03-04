@@ -9,7 +9,8 @@ class Member extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'gym_id', 'name', 'photo', 'email', 'contact', 'fee_due_date', 'fee_amount', 'status', 'joined_date'
+        'gym_id', 'name', 'photo', 'email', 'contact', 'fee_due_date', 'fee_amount', 
+        'admission_fee', 'trainer_fee', 'locker_fee', 'status', 'joined_date'
     ];
 
     protected $casts = [
