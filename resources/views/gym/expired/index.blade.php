@@ -15,9 +15,9 @@
             @php
                 $daysOverdue = now()->startOfDay()->diffInDays($member->fee_due_date, false) * -1;
             @endphp
-            <div class="bg-white rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden flex flex-col h-full transform transition hover:-translate-y-1">
+            <div class="bg-white rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col h-full transform transition hover:-translate-y-1 relative z-0 hover:z-10">
                 <!-- Dark Header -->
-                <div class="bg-black pt-6 pb-5 px-4 flex flex-col items-center">
+                <div class="bg-black pt-6 pb-5 px-4 flex flex-col items-center rounded-t-2xl">
                     @if($member->photo)
                         <img src="{{ asset('storage/' . $member->photo) }}" class="w-32 h-32 rounded-full object-cover border-2 border-white shadow-sm mb-3">
                     @else
@@ -64,20 +64,53 @@
                     </div>
 
                     <!-- Action bottom -->
-                    <div class="mt-auto px-4  bg-gray-50 border-t border-gray-200">
-                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-3">
+                    <div class="mt-auto px-5 py-4 bg-gray-50 border-t border-gray-200 rounded-b-2xl relative z-20">
+                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-4">
                             @csrf
-                            <div>
-                                <label class="block text-[10px] font-bold text-black uppercase tracking-wider mb-1.5 pl-1">Months Paying For</label>
-                                <select name="months" class="w-full text-sm border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 shadow-sm bg-white text-gray-700 py-2">
-                                    <option value="1">1 Month (${{ number_format($member->fee_amount, 2) }})</option>
-                                    <option value="2">2 Months (${{ number_format($member->fee_amount * 2, 2) }})</option>
-                                    <option value="3">3 Months (${{ number_format($member->fee_amount * 3, 2) }})</option>
-                                    <option value="6">6 Months (${{ number_format($member->fee_amount * 6, 2) }})</option>
-                                    <option value="12">12 Months (${{ number_format($member->fee_amount * 12, 2) }})</option>
-                                </select>
+                            
+                            @php
+                                $feeOptions = [
+                                    1 => ['label' => '1 Month', 'amount' => $member->fee_amount],
+                                    2 => ['label' => '2 Months', 'amount' => $member->fee_amount * 2],
+                                    3 => ['label' => '3 Months', 'amount' => $member->fee_amount * 3],
+                                    6 => ['label' => '6 Months', 'amount' => $member->fee_amount * 6],
+                                    12 => ['label' => '1 Year', 'amount' => $member->fee_amount * 12],
+                                ];
+                            @endphp
+                            
+                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; ${{ number_format($member->fee_amount, 2) }}' }" class="relative z-40">
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 pl-1">Months Paying For</label>
+                                <input type="hidden" name="months" x-model="selected">
+                                
+                                <button type="button" @click="open = !open" @click.away="open = false" 
+                                    class="relative w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 rounded-xl text-sm font-semibold text-left focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all shadow-sm flex items-center justify-between hover:border-gray-300">
+                                    <span x-html="selectedLabel"></span>
+                                    <svg class="h-4 w-4 text-gray-400 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                
+                                <div x-show="open" 
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="transform opacity-0 scale-95"
+                                     x-transition:enter-end="transform opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     x-transition:leave-start="transform opacity-100 scale-100"
+                                     x-transition:leave-end="transform opacity-0 scale-95"
+                                     class="absolute top-full mt-2 w-full bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50" 
+                                     style="display: none;">
+                                    <ul class="max-h-60 overflow-y-auto text-sm divide-y divide-gray-50 p-1">
+                                        @foreach($feeOptions as $val => $opt)
+                                        <li @click="selected = {{ $val }}; selectedLabel = '{{ $opt['label'] }} &mdash; ${{ number_format($opt['amount'], 2) }}'; open = false"
+                                            class="px-3 py-2.5 rounded-lg hover:bg-green-50 cursor-pointer transition-colors flex justify-between items-center group font-medium"
+                                            :class="{'bg-green-50 text-green-700': selected == {{ $val }}, 'text-gray-600': selected != {{ $val }}}">
+                                            <span :class="{'font-bold text-green-700': selected == {{ $val }}}">{{ $opt['label'] }}</span>
+                                            <span class="text-gray-400 group-hover:text-green-600 transition-colors" :class="{'text-green-600 font-bold': selected == {{ $val }}}">${{ number_format($opt['amount'], 2) }}</span>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
-                            <button type="submit" class="w-full text-white bg-green-500 hover:bg-green-600 py-2.5 rounded-lg text-sm font-bold uppercase tracking-widest transition shadow-md text-center flex justify-center items-center gap-2" onclick="return confirm('Record this payment and extend the due date?')">
+
+                            <button type="submit" class="relative z-10 w-full text-white bg-green-500 hover:bg-green-600 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-0.5 text-center flex justify-center items-center gap-2" onclick="return confirm('Record this payment and extend the due date?')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Mark as Paid
                             </button>
