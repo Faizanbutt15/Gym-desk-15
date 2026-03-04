@@ -3,13 +3,29 @@
 @section('content')
 <div class="space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 class="text-2xl font-bold text-gray-900">Members</h1>
-        <div class="flex items-center gap-3">
-            <form action="{{ route('members.index') }}" method="GET" class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full md:w-64">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Members</h1>
+            <p class="text-sm text-gray-500 mt-1">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
+        </div>
+        <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+            <form action="{{ route('members.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                <div class="relative w-full md:w-auto">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full md:w-56">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
                 </div>
+                
+                <select name="filter" class="py-2 pl-3 pr-8 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-48" onchange="this.form.submit()">
+                    <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All Members</option>
+                    <hr>
+                    <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active Members</option>
+                    <option value="inactive" {{ request('filter') === 'inactive' ? 'selected' : '' }}>Inactive Members</option>
+                    <option value="with_trainer" {{ request('filter') === 'with_trainer' ? 'selected' : '' }}>With Trainer</option>
+                    <option value="no_trainer" {{ request('filter') === 'no_trainer' ? 'selected' : '' }}>No Trainer</option>
+                    <option value="with_locker" {{ request('filter') === 'with_locker' ? 'selected' : '' }}>With Locker</option>
+                    <option value="no_locker" {{ request('filter') === 'no_locker' ? 'selected' : '' }}>No Locker</option>
+                </select>
             </form>
             <button @click="addModalOpen = true" class="bg-primary hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm whitespace-nowrap">
                 + Add Member
@@ -25,6 +41,7 @@
                     <tr>
                         <th class="px-6 py-4 font-medium">Member</th>
                         <th class="px-6 py-4 font-medium">Contact</th>
+                        <th class="px-6 py-4 font-medium">Total Monthly</th>
                         <th class="px-6 py-4 font-medium">Fee Due Date</th>
                         <th class="px-6 py-4 font-medium">Status</th>
                         <th class="px-6 py-4 font-medium text-right">Actions</th>
@@ -48,6 +65,12 @@
                             </td>
                             <td class="px-6 py-4 text-gray-600">
                                 {{ $member->contact ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="font-bold text-gray-900">${{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
+                                @if($member->trainer_fee > 0 || $member->locker_fee > 0)
+                                    <div class="text-[10px] text-gray-500 mt-0.5">Includes extras</div>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 @if($member->fee_due_date)

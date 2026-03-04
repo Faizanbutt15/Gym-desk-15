@@ -24,8 +24,27 @@ class MemberController extends Controller
             });
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if ($request->filled('filter') && $request->filter !== 'all') {
+            switch ($request->filter) {
+                case 'active':
+                    $query->where('status', 'active');
+                    break;
+                case 'inactive':
+                    $query->where('status', 'inactive');
+                    break;
+                case 'with_trainer':
+                    $query->where('trainer_fee', '>', 0);
+                    break;
+                case 'no_trainer':
+                    $query->where('trainer_fee', '<=', 0);
+                    break;
+                case 'with_locker':
+                    $query->where('locker_fee', '>', 0);
+                    break;
+                case 'no_locker':
+                    $query->where('locker_fee', '<=', 0);
+                    break;
+            }
         }
 
         $members = $query->latest()->paginate(10)->withQueryString();

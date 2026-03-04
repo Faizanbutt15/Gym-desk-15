@@ -7,7 +7,7 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <div class="bg-gradient-to-br from-blue-900 to-primary rounded-xl shadow-lg p-6 border border-blue-800 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-xl relative overflow-hidden">
             <div class="absolute -right-4 -bottom-4 opacity-10 text-white">
                 <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
@@ -42,6 +42,13 @@
             </div>
             <h3 class="text-red-700 text-xs font-bold uppercase tracking-wider">Expired</h3>
              <span class="text-3xl font-extrabold text-red-600 mt-1">{{ $expired }}</span>
+        </div>
+        <div class="bg-indigo-50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-indigo-100 flex flex-col items-center text-center">
+            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            </div>
+            <h3 class="text-indigo-700 text-xs font-bold uppercase tracking-wider">New This Month</h3>
+             <span class="text-3xl font-extrabold text-indigo-600 mt-1">{{ $newMembersThisMonth }}</span>
         </div>
     </div>
 

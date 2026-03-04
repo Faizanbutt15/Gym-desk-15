@@ -25,8 +25,13 @@ class DashboardController extends Controller
             ->where('status', 'active')
             ->count();
             
+        $newMembersThisMonth = Member::where('gym_id', $gymId)
+            ->whereYear('joined_date', now()->year)
+            ->whereMonth('joined_date', now()->month)
+            ->count();
+            
         return view('gym.dashboard', compact(
-            'totalMembers', 'activeMembers', 'inactiveMembers', 'expiringSoon', 'expired'
+            'totalMembers', 'activeMembers', 'inactiveMembers', 'expiringSoon', 'expired', 'newMembersThisMonth'
         ));
     }
 }
