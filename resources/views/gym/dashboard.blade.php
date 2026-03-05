@@ -1,86 +1,276 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ chartType: 'day' }" x-init="fetchDashChartData('day')">
+
+    {{-- Page Header --}}
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div class="bg-gradient-to-br from-blue-900 to-primary rounded-xl shadow-lg p-6 border border-blue-800 flex flex-col items-center text-center transform transition duration-300 hover:scale-105 hover:shadow-xl relative overflow-hidden">
-            <div class="absolute -right-4 -bottom-4 opacity-10 text-white">
-                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
-            </div>
-            <h3 class="text-blue-100 text-xs font-semibold uppercase tracking-wider relative z-10">Total Members</h3>
-            <span class="text-4xl font-extrabold text-white mt-1 relative z-10">{{ $totalMembers }}</span>
+        <div>
+            <p class="text-xs text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Gym Admin</p>
+            <h1 class="text-2xl font-extrabold text-white tracking-tight">Overview</h1>
         </div>
-        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-100 flex flex-col items-center text-center">
-            <div class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <h3 class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Active</h3>
-             <span class="text-3xl font-bold text-gray-900 mt-1">{{ $activeMembers }}</span>
-        </div>
-        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-100 flex flex-col items-center text-center">
-            <div class="w-10 h-10 rounded-full bg-gray-50 text-gray-500 flex items-center justify-center mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-            </div>
-            <h3 class="text-gray-500 text-xs font-semibold uppercase tracking-wider">Inactive</h3>
-            <span class="text-3xl font-bold text-gray-900 mt-1">{{ $inactiveMembers }}</span>
-        </div>
-        <div class="bg-orange-50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-orange-100 flex flex-col items-center text-center">
-            <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <h3 class="text-orange-700 text-xs font-bold uppercase tracking-wider">Expiring Soon</h3>
-             <span class="text-3xl font-extrabold text-orange-600 mt-1">{{ $expiringSoon }}</span>
-        </div>
-        <div class="bg-red-50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-red-100 flex flex-col items-center text-center">
-            <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
-            <h3 class="text-red-700 text-xs font-bold uppercase tracking-wider">Expired</h3>
-             <span class="text-3xl font-extrabold text-red-600 mt-1">{{ $expired }}</span>
-        </div>
-        <div class="bg-indigo-50 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 border border-indigo-100 flex flex-col items-center text-center">
-            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-            </div>
-            <h3 class="text-indigo-700 text-xs font-bold uppercase tracking-wider">New This Month</h3>
-             <span class="text-3xl font-extrabold text-indigo-600 mt-1">{{ $newMembersThisMonth }}</span>
+        <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 text-sm font-medium">
+            {{ now()->format('F Y') }}
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <a href="{{ route('members.index') }}" class="flex items-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition gap-4 group">
-            <div class="p-3 bg-blue-100 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+    {{-- ── ROW 1: Revenue Metric Cards ── --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+        {{-- Net Revenue --}}
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Net Revenue</p>
+                <span class="w-9 h-9 rounded-xl bg-red-900/25 flex items-center justify-center text-red-400 shrink-0">
+                    <i class="ph-fill ph-chart-line-up" style="font-size:18px;"></i>
+                </span>
             </div>
-            <div>
-                <h4 class="text-lg font-bold text-gray-900 group-hover:text-primary transition">Manage Members</h4>
-                <p class="text-sm text-gray-500">View, add, or edit your gym members.</p>
+            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">${{ number_format($netThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+                <span>{{ $netThisMonth >= 0 ? '↑ Positive' : '↓ Negative' }} this month</span>
             </div>
-        </a>
-        <a href="{{ route('expiring-soon') }}" class="flex items-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition gap-4 group">
-            <div class="p-3 bg-orange-100 text-orange-600 rounded-lg group-hover:bg-orange-600 group-hover:text-white transition">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+
+        {{-- Gross Income --}}
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Gross Income</p>
+                <span class="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center text-emerald-500 shrink-0">
+                    <i class="ph-fill ph-money" style="font-size:18px;"></i>
+                </span>
             </div>
-            <div>
-                <h4 class="text-lg font-bold text-gray-900 group-hover:text-primary transition">Expiring Soon</h4>
-                <p class="text-sm text-gray-500">Follow up with members expiring within 3 days.</p>
+            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">+${{ number_format($revenueThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+                <span>Member fee collections</span>
             </div>
-        </a>
-        <a href="{{ route('revenue.index') }}" class="flex items-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition gap-4 group">
-            <div class="p-3 bg-green-100 text-green-600 rounded-lg group-hover:bg-green-600 group-hover:text-white transition">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+
+        {{-- Staff Spending --}}
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Staff Spending</p>
+                <span class="w-9 h-9 rounded-xl bg-orange-900/25 flex items-center justify-center text-orange-400 shrink-0">
+                    <i class="ph-fill ph-wallet" style="font-size:18px;"></i>
+                </span>
             </div>
-            <div>
-                <h4 class="text-lg font-bold text-gray-900 group-hover:text-primary transition">Revenue Reports</h4>
-                <p class="text-sm text-gray-500">Analyze your gym's income and growth.</p>
+            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">-${{ number_format($spendingThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+                <span>Salary payouts this month</span>
             </div>
-        </a>
+        </div>
+
+        {{-- Paid Members --}}
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Paid Members</p>
+                <span class="w-9 h-9 rounded-xl bg-violet-900/25 flex items-center justify-center text-violet-400 shrink-0">
+                    <i class="ph-fill ph-seal-check" style="font-size:18px;"></i>
+                </span>
+            </div>
+            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">{{ $paidMembersThisMonth }}</p>
+            <p class="text-xs text-zinc-600 relative">of {{ $totalMembers }} total members</p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+                <span>Payments collected this month</span>
+            </div>
+        </div>
+
     </div>
+
+    {{-- ── ROW 2: Member Stats Strip ── --}}
+    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-emerald-800/50 transition-all duration-200 flex items-center gap-4">
+            <span class="w-10 h-10 rounded-xl bg-emerald-900/20 flex items-center justify-center text-emerald-400 shrink-0">
+                <i class="ph-fill ph-users-three" style="font-size:20px;"></i>
+            </span>
+            <div>
+                <p class="text-2xl font-bold text-white">{{ $totalMembers }}</p>
+                <p class="text-[11px] text-emerald-500 font-semibold uppercase tracking-wider mt-0.5">Total Members</p>
+            </div>
+        </div>
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-red-900/50 transition-all duration-200 flex items-center gap-4">
+            <span class="w-10 h-10 rounded-xl bg-red-900/20 flex items-center justify-center text-red-400 shrink-0">
+                <i class="ph-fill ph-user-minus" style="font-size:20px;"></i>
+            </span>
+            <div>
+                <p class="text-2xl font-bold text-white">{{ $inactiveMembers }}</p>
+                <p class="text-[11px] text-red-500 font-semibold uppercase tracking-wider mt-0.5">Inactive</p>
+            </div>
+        </div>
+
+        <a href="{{ route('expiring-soon') }}" class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-red-900/50 transition-all duration-200 flex items-center gap-4">
+            <span class="w-10 h-10 rounded-xl bg-red-900/20 flex items-center justify-center text-red-400 shrink-0">
+                <i class="ph-fill ph-clock-countdown" style="font-size:20px;"></i>
+            </span>
+            <div>
+                <p class="text-2xl font-bold text-white">{{ $expiringSoon }}</p>
+                <p class="text-[11px] text-red-500 font-semibold uppercase tracking-wider mt-0.5">Expiring Soon</p>
+            </div>
+        </a>
+
+        <a href="{{ route('expired') }}" class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-red-900/50 transition-all duration-200 flex items-center gap-4">
+            <span class="w-10 h-10 rounded-xl bg-red-900/20 flex items-center justify-center text-red-400 shrink-0">
+                <i class="ph-fill ph-warning-circle" style="font-size:20px;"></i>
+            </span>
+            <div>
+                <p class="text-2xl font-bold text-white">{{ $expired }}</p>
+                <p class="text-[11px] text-red-500 font-semibold uppercase tracking-wider mt-0.5">Expired</p>
+            </div>
+        </a>
+
+        <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-emerald-800/50 transition-all duration-200 flex items-center gap-4">
+            <span class="w-10 h-10 rounded-xl bg-emerald-900/20 flex items-center justify-center text-emerald-400 shrink-0">
+                <i class="ph-fill ph-user-plus" style="font-size:20px;"></i>
+            </span>
+            <div>
+                <p class="text-2xl font-bold text-white">{{ $newMembersThisMonth }}</p>
+                <p class="text-[11px] text-emerald-500 font-semibold uppercase tracking-wider mt-0.5">New / Month</p>
+            </div>
+        </div>
+
+    </div>
+
+    {{-- ── ROW 3: Chart + Recent Payments ── --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        {{-- Revenue Chart --}}
+        <div class="lg:col-span-2 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-4">
+            <div class="flex items-center justify-between flex-wrap gap-3">
+                <div>
+                    <h2 class="text-base font-bold text-white tracking-tight">Revenue Trend</h2>
+                    <p class="text-xs text-zinc-500 mt-0.5">Income from member fee collections</p>
+                </div>
+                <div class="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
+                    <button @click="chartType = 'day'; fetchDashChartData('day')"
+                        :class="{ 'bg-red-600 text-white shadow': chartType === 'day', 'text-zinc-400': chartType !== 'day' }"
+                        class="px-3 py-1.5 rounded-md text-xs font-semibold transition-all">30 Days</button>
+                    <button @click="chartType = 'month'; fetchDashChartData('month')"
+                        :class="{ 'bg-red-600 text-white shadow': chartType === 'month', 'text-zinc-400': chartType !== 'month' }"
+                        class="px-3 py-1.5 rounded-md text-xs font-semibold transition-all">12 Months</button>
+                    <button @click="chartType = 'year'; fetchDashChartData('year')"
+                        :class="{ 'bg-red-600 text-white shadow': chartType === 'year', 'text-zinc-400': chartType !== 'year' }"
+                        class="px-3 py-1.5 rounded-md text-xs font-semibold transition-all">All Years</button>
+                </div>
+            </div>
+            <div id="dashRevenueChart" class="w-full" style="min-height:260px;"></div>
+        </div>
+
+        {{-- Recent Payments --}}
+        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
+                <div>
+                    <h2 class="text-sm font-bold text-white tracking-tight">Recent Payments</h2>
+                    <p class="text-[11px] text-zinc-500 mt-0.5">Latest fee collections</p>
+                </div>
+                <a href="{{ route('revenue.index') }}" class="text-xs text-red-500 hover:text-red-400 font-semibold transition">
+                    View all →
+                </a>
+            </div>
+            <div class="flex-1 overflow-y-auto divide-y divide-zinc-800/60">
+                @forelse($recentPayments as $payment)
+                <div class="flex items-center justify-between px-6 py-3.5 hover:bg-zinc-800/40 transition-colors">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-9 h-9 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center shrink-0 font-bold text-sm border border-zinc-700">
+                            {{ strtoupper(substr($payment->member_name, 0, 1)) }}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-zinc-200 truncate">{{ $payment->member_name }}</p>
+                            <p class="text-[11px] text-zinc-600">{{ $payment->paid_date->format('M d, Y') }}</p>
+                        </div>
+                    </div>
+                    <span class="text-sm font-bold text-emerald-400 shrink-0 ml-2">+${{ number_format($payment->amount, 0) }}</span>
+                </div>
+                @empty
+                <div class="flex flex-col items-center justify-center py-12 text-zinc-600 gap-2">
+                    <p class="text-sm">No payments yet</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+@push('scripts')
+<script>
+    let dashChart = null;
+
+    function fetchDashChartData(type) {
+        fetch(`{{ route('revenue.chart') }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ type: type })
+        })
+        .then(r => r.json())
+        .then(data => renderDashChart(data.categories, data.data));
+    }
+
+    function renderDashChart(categories, data) {
+        const options = {
+            chart: {
+                type: 'area',
+                height: 260,
+                toolbar: { show: false },
+                fontFamily: 'Inter, sans-serif',
+                background: 'transparent',
+            },
+            series: [{ name: 'Revenue', data: data }],
+            colors: ['#dc2626'],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.35,
+                    opacityTo: 0.0,
+                    stops: [0, 95, 100]
+                }
+            },
+            stroke: { curve: 'smooth', width: 2.5, colors: ['#dc2626'] },
+            dataLabels: { enabled: false },
+            xaxis: {
+                categories: categories,
+                tickAmount: 6,
+                labels: {
+                    style: { colors: '#52525b', fontSize: '11px' },
+                    rotate: 0,
+                    hideOverlappingLabels: true,
+                },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
+            },
+            yaxis: {
+                labels: {
+                    formatter: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v),
+                    style: { colors: '#52525b' }
+                }
+            },
+            tooltip: {
+                theme: 'dark',
+                y: { formatter: v => '$' + Number(v).toLocaleString() }
+            },
+            grid: {
+                borderColor: '#27272a',
+                strokeDashArray: 4,
+            },
+            markers: { size: 0, hover: { size: 5 } }
+        };
+
+        if (dashChart) {
+            dashChart.updateOptions(options, true, false, false);
+            dashChart.updateSeries([{ data: data }]);
+        } else {
+            dashChart = new ApexCharts(document.querySelector('#dashRevenueChart'), options);
+            dashChart.render();
+        }
+    }
+</script>
+@endpush
 @endsection

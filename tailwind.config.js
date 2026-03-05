@@ -15,9 +15,10 @@ export default {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                primary: '#1E3A8A', // Deep Blue
+                primary: '#dc2626', // Elegant Red
             }
         },
+
     },
 
     plugins: [forms],
