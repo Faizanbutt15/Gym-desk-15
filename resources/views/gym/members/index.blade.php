@@ -1,34 +1,33 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Members</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Members</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
         </div>
-        <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
-            <form action="{{ route('members.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
-                <div class="relative w-full md:w-auto">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full md:w-56">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+            <form action="{{ route('members.index') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                <div class="relative w-full sm:w-auto">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-9 pr-4 py-2 bg-zinc-900 border border-zinc-700 text-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-48 placeholder-zinc-500">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <i class="ph-bold ph-magnifying-glass text-zinc-500 text-sm"></i>
                     </div>
                 </div>
-                
-                <select name="filter" class="py-2 pl-3 pr-8 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-48" onchange="this.form.submit()">
+                <select name="filter" class="py-2 pl-3 pr-8 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto" onchange="this.form.submit()">
                     <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All Members</option>
                     <hr>
-                    <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active Members</option>
-                    <option value="inactive" {{ request('filter') === 'inactive' ? 'selected' : '' }}>Inactive Members</option>
+                    <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ request('filter') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     <option value="with_trainer" {{ request('filter') === 'with_trainer' ? 'selected' : '' }}>With Trainer</option>
                     <option value="no_trainer" {{ request('filter') === 'no_trainer' ? 'selected' : '' }}>No Trainer</option>
                     <option value="with_locker" {{ request('filter') === 'with_locker' ? 'selected' : '' }}>With Locker</option>
                     <option value="no_locker" {{ request('filter') === 'no_locker' ? 'selected' : '' }}>No Locker</option>
                 </select>
             </form>
-            <button @click="addModalOpen = true" class="bg-primary hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm whitespace-nowrap">
-                + Add Member
+            <button @click="addModalOpen = true" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5">
+                <i class="ph-bold ph-plus"></i> Add Member
             </button>
         </div>
     </div>

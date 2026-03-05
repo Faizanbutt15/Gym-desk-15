@@ -1,15 +1,15 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6" x-data="{ chartType: 'day' }" x-init="fetchDashChartData('day')">
+<div class="space-y-4 md:space-y-6" x-data="{ chartType: 'day' }" x-init="fetchDashChartData('day')">
 
     {{-- Page Header --}}
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between flex-wrap gap-2">
         <div>
-            <p class="text-xs text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Gym Admin</p>
-            <h1 class="text-2xl font-extrabold text-white tracking-tight">Overview</h1>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Gym Admin</p>
+            <h1 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">Overview</h1>
         </div>
-        <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 text-sm font-medium">
+        <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-400 text-xs md:text-sm font-medium">
             {{ now()->format('F Y') }}
         </div>
     </div>

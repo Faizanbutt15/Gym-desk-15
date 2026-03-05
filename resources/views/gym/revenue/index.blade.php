@@ -1,18 +1,21 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6" x-data="{ chartType: 'day' }" x-init="fetchChartData('day')">
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900">Revenue Dashboard</h1>
-        <div class="bg-gray-100 p-1 rounded-lg inline-flex">
-            <button @click="chartType = 'day'; fetchChartData('day')" :class="{'bg-white shadow-sm text-primary': chartType === 'day', 'text-gray-500': chartType !== 'day'}" class="px-4 py-1.5 rounded-md text-sm font-medium transition">Last 30 Days</button>
-            <button @click="chartType = 'month'; fetchChartData('month')" :class="{'bg-white shadow-sm text-primary': chartType === 'month', 'text-gray-500': chartType !== 'month'}" class="px-4 py-1.5 rounded-md text-sm font-medium transition">Last 12 Months</button>
-            <button @click="chartType = 'year'; fetchChartData('year')" :class="{'bg-white shadow-sm text-primary': chartType === 'year', 'text-gray-500': chartType !== 'year'}" class="px-4 py-1.5 rounded-md text-sm font-medium transition">All Years</button>
+<div class="space-y-4 md:space-y-6" x-data="{ chartType: 'day' }" x-init="fetchChartData('day')">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Revenue Dashboard</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Financial overview for your gym</p>
+        </div>
+        <div class="bg-zinc-800 p-1 rounded-lg inline-flex self-start sm:self-auto">
+            <button @click="chartType = 'day'; fetchChartData('day')" :class="{'bg-red-600 text-white shadow-sm': chartType === 'day', 'text-zinc-400': chartType !== 'day'}" class="px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap">30 Days</button>
+            <button @click="chartType = 'month'; fetchChartData('month')" :class="{'bg-red-600 text-white shadow-sm': chartType === 'month', 'text-zinc-400': chartType !== 'month'}" class="px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap">12 Months</button>
+            <button @click="chartType = 'year'; fetchChartData('year')" :class="{'bg-red-600 text-white shadow-sm': chartType === 'year', 'text-zinc-400': chartType !== 'year'}" class="px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap">All Years</button>
         </div>
     </div>
 
     <!-- Highlight Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <!-- Net Revenue Card -->
         <div class="bg-gradient-to-br from-blue-900 to-primary rounded-xl shadow-lg p-6 text-white border border-blue-800 relative overflow-hidden flex flex-col justify-center">
             <div class="absolute -right-4 -top-4 opacity-10">

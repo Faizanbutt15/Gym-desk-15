@@ -1,18 +1,21 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 class="text-2xl font-bold text-gray-900">Daily Attendance Log</h1>
-        <form action="{{ route('attendance.index') }}" method="GET" class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
-            <label class="text-sm font-medium text-gray-600 pl-2">Select Date:</label>
-            <input type="date" name="date" value="{{ $date }}" class="border-gray-300 rounded-md text-sm focus:ring-primary focus:border-primary" onchange="this.form.submit()">
+<div class="space-y-4 md:space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Daily Attendance Log</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Track member and staff check-ins</p>
+        </div>
+        <form action="{{ route('attendance.index') }}" method="GET" class="flex items-center gap-2 bg-zinc-900 p-2 rounded-lg border border-zinc-800 self-start sm:self-auto">
+            <label class="text-xs font-medium text-zinc-400 pl-1 whitespace-nowrap">Date:</label>
+            <input type="date" name="date" value="{{ $date }}" class="bg-zinc-800 border-zinc-700 text-zinc-200 rounded-md text-sm focus:ring-red-500 focus:border-red-500" onchange="this.form.submit()">
         </form>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Members List -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[70vh]">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col" style="height: clamp(320px, 60vh, 70vh);">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
                 <h2 class="text-lg font-bold text-gray-800">Members</h2>
             </div>
@@ -59,7 +62,7 @@
         </div>
 
         <!-- Staff List -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-[70vh]">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col" style="height: clamp(320px, 60vh, 70vh);">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
                 <h2 class="text-lg font-bold text-gray-800">Staff</h2>
             </div>

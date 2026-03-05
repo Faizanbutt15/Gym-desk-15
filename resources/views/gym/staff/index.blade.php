@@ -1,11 +1,14 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, payModalOpen: false, editStaff: {}, payStaff: {} }">
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900">Staff Management</h1>
-        <button @click="addModalOpen = true" class="bg-primary hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
-            + Add Staff
+<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, payModalOpen: false, editStaff: {}, payStaff: {} }">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Staff Management</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Manage your gym team members</p>
+        </div>
+        <button @click="addModalOpen = true" class="self-start sm:self-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center gap-2">
+            <i class="ph-bold ph-plus text-base"></i> Add Staff
         </button>
     </div>
 

@@ -1,25 +1,26 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 class="text-2xl font-bold text-gray-900">Inactive Members</h1>
-        <div class="flex items-center gap-3">
-            <form action="{{ route('inactive-members') }}" method="GET" class="relative flex items-center gap-3 w-full md:w-auto">
-                <div class="relative w-full md:w-64">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
-                </div>
-                <select name="filter" onchange="this.form.submit()" class="border-gray-300 rounded-lg text-sm focus:ring-primary focus:border-primary shadow-sm">
-                    <option value="">All Inactive</option>
-                    <option value="1_month" {{ request('filter') == '1_month' ? 'selected' : '' }}>1 Month Inactive</option>
-                    <option value="2_months" {{ request('filter') == '2_months' ? 'selected' : '' }}>2 Months Inactive</option>
-                    <option value="3_months_plus" {{ request('filter') == '3_months_plus' ? 'selected' : '' }}>3+ Months Inactive</option>
-                </select>
-            </form>
+<div class="space-y-4 md:space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Inactive Members</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">Members with no active payments</p>
         </div>
+        <form action="{{ route('inactive-members') }}" method="GET" class="flex flex-col xs:flex-row items-start xs:items-center gap-2 w-full sm:w-auto">
+            <div class="relative w-full sm:w-52">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name..." class="pl-9 pr-4 py-2 bg-zinc-900 border border-zinc-700 text-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full placeholder-zinc-500">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="ph-bold ph-magnifying-glass text-zinc-500 text-sm"></i>
+                </div>
+            </div>
+            <select name="filter" onchange="this.form.submit()" class="bg-zinc-900 border-zinc-700 text-zinc-300 rounded-lg text-sm focus:ring-red-500 focus:border-red-500 w-full sm:w-auto py-2">
+                <option value="">All Inactive</option>
+                <option value="1_month" {{ request('filter') == '1_month' ? 'selected' : '' }}>1 Month</option>
+                <option value="2_months" {{ request('filter') == '2_months' ? 'selected' : '' }}>2 Months</option>
+                <option value="3_months_plus" {{ request('filter') == '3_months_plus' ? 'selected' : '' }}>3+ Months</option>
+            </select>
+        </form>
     </div>
 
     <!-- Members Table -->
