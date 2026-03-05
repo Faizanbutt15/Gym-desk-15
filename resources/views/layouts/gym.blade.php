@@ -72,7 +72,6 @@
                     ['route' => 'inactive-members',  'match' => 'inactive-members','icon' => 'ph-prohibit',        'label' => 'Inactive'],
                     ['route' => 'staff.index',       'match' => 'staff.*',         'icon' => 'ph-briefcase',       'label' => 'Staff'],
                     ['route' => 'attendance.index',  'match' => 'attendance.*',    'icon' => 'ph-clipboard-text',  'label' => 'Attendance'],
-                    ['route' => 'revenue.index',     'match' => 'revenue.*',       'icon' => 'ph-chart-line-up',   'label' => 'Revenue'],
                 ];
             @endphp
             @foreach($navItems as $item)
