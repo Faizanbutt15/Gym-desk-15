@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\Payment;
 use App\Models\StaffPayment;
+use App\Models\Expense;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -41,12 +42,21 @@ class DashboardController extends Controller
 
         $totalRevenue = Payment::where('gym_id', $gymId)->sum('amount');
 
-        $spendingThisMonth = StaffPayment::where('gym_id', $gymId)
+        $staffSpendingThisMonth = StaffPayment::where('gym_id', $gymId)
             ->whereMonth('paid_date', now()->month)
             ->whereYear('paid_date', now()->year)
             ->sum('amount');
+            
+        $expensesThisMonth = Expense::where('gym_id', $gymId)
+            ->whereMonth('expense_date', now()->month)
+            ->whereYear('expense_date', now()->year)
+            ->sum('amount');
+            
+        $spendingThisMonth = $staffSpendingThisMonth + $expensesThisMonth;
 
-        $totalSpending = StaffPayment::where('gym_id', $gymId)->sum('amount');
+        $totalStaffSpending = StaffPayment::where('gym_id', $gymId)->sum('amount');
+        $totalExpenses = Expense::where('gym_id', $gymId)->sum('amount');
+        $totalSpending = $totalStaffSpending + $totalExpenses;
 
         $netThisMonth = $revenueThisMonth - $spendingThisMonth;
         $netTotal     = $totalRevenue - $totalSpending;

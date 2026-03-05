@@ -18,6 +18,7 @@ use App\Http\Controllers\GymAdmin\InactiveMemberController as GAInactiveMemberCo
 use App\Http\Controllers\GymAdmin\RevenueController as GARevenueController;
 use App\Http\Controllers\GymAdmin\StaffController as GAStaffController;
 use App\Http\Controllers\GymAdmin\AttendanceController as GAAttendanceController;
+use App\Http\Controllers\GymAdmin\ExpenseController as GAExpenseController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -57,6 +58,9 @@ Route::middleware(['auth', 'gym_admin', 'active_gym'])->group(function () {
     
     Route::get('/attendance', [GAAttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [GAAttendanceController::class, 'store'])->name('attendance.store');
+
+    // Expenses
+    Route::resource('expenses', GAExpenseController::class)->except(['create', 'edit', 'show']);
 });
 
 Route::middleware('auth')->group(function () {

@@ -47,10 +47,10 @@
             </div>
         </div>
 
-        {{-- Staff Spending --}}
+        {{-- Spending (Staff + Expenses) --}}
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Staff Spending</p>
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Spending</p>
                 <span class="w-9 h-9 rounded-xl bg-orange-900/25 flex items-center justify-center text-orange-400 shrink-0">
                     <i class="ph-fill ph-wallet" style="font-size:18px;"></i>
                 </span>
@@ -58,7 +58,7 @@
             <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">-${{ number_format($spendingThisMonth, 0) }}</p>
             <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
             <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
-                <span>Salary payouts this month</span>
+                <span>Salaries & Expenses this month</span>
             </div>
         </div>
 
