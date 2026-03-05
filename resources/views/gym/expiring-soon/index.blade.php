@@ -1,16 +1,14 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Expiring Soon</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $members->total() }} Members Expiring within 3 days</p>
-        </div>
+<div class="space-y-4 md:space-y-6">
+    <div>
+        <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Expiring Soon</h1>
+        <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} expiring within 3 days</p>
     </div>
 
     <!-- Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
         @forelse($members as $member)
             @php
                 $daysLeft = now()->startOfDay()->diffInDays($member->fee_due_date, false);

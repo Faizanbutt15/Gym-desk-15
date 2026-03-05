@@ -1,130 +1,131 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Members</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Members</h1>
+            <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
         </div>
-        <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
-            <form action="{{ route('members.index') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
-                <div class="relative w-full md:w-auto">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full md:w-56">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+            <form action="{{ route('members.index') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                <div class="relative w-full sm:w-auto">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-9 pr-4 py-2 bg-zinc-900 border border-zinc-700 text-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-48 placeholder-zinc-500">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <i class="ph-bold ph-magnifying-glass text-zinc-500 text-sm"></i>
                     </div>
                 </div>
-                
-                <select name="filter" class="py-2 pl-3 pr-8 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full md:w-48" onchange="this.form.submit()">
+                <select name="filter" class="py-2 pl-3 pr-8 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto" onchange="this.form.submit()">
                     <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All Members</option>
                     <hr>
-                    <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active Members</option>
-                    <option value="inactive" {{ request('filter') === 'inactive' ? 'selected' : '' }}>Inactive Members</option>
+                    <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ request('filter') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     <option value="with_trainer" {{ request('filter') === 'with_trainer' ? 'selected' : '' }}>With Trainer</option>
                     <option value="no_trainer" {{ request('filter') === 'no_trainer' ? 'selected' : '' }}>No Trainer</option>
                     <option value="with_locker" {{ request('filter') === 'with_locker' ? 'selected' : '' }}>With Locker</option>
                     <option value="no_locker" {{ request('filter') === 'no_locker' ? 'selected' : '' }}>No Locker</option>
                 </select>
             </form>
-            <button @click="addModalOpen = true" class="bg-primary hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm whitespace-nowrap">
-                + Add Member
+            <button @click="addModalOpen = true" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5">
+                <i class="ph-bold ph-plus"></i> Add Member
             </button>
         </div>
     </div>
 
     <!-- Members Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm whitespace-nowrap">
-                <thead class="bg-gray-50 text-gray-500 uppercase tracking-wider border-b border-gray-100">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-zinc-800/50 text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-800">
                     <tr>
-                        <th class="px-6 py-4 font-medium">Member</th>
-                        <th class="px-6 py-4 font-medium">Contact</th>
-                        <th class="px-6 py-4 font-medium">Total Monthly</th>
-                        <th class="px-6 py-4 font-medium">Fee Due Date</th>
-                        <th class="px-6 py-4 font-medium">Status</th>
-                        <th class="px-6 py-4 font-medium text-right">Actions</th>
+                        <th class="px-4 py-3 font-semibold">Member</th>
+                        <th class="px-4 py-3 font-semibold hidden md:table-cell">Contact</th>
+                        <th class="px-4 py-3 font-semibold">Fee/Month</th>
+                        <th class="px-4 py-3 font-semibold hidden lg:table-cell">Due Date</th>
+                        <th class="px-4 py-3 font-semibold">Status</th>
+                        <th class="px-4 py-3 font-semibold text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-zinc-800/60">
                     @forelse($members as $member)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-medium text-gray-900 flex items-center gap-3">
-                                @if($member->photo)
-                                    <img src="{{ asset('storage/' . $member->photo) }}" class="w-10 h-10 rounded-full object-cover border border-gray-200">
-                                @else
-                                    <div class="w-10 h-10 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold border border-blue-200">
-                                        {{ substr($member->name, 0, 1) }}
+                        <tr class="hover:bg-zinc-800/30 transition">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center gap-3">
+                                    @if($member->photo)
+                                        <img src="{{ asset('storage/' . $member->photo) }}" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0">
+                                    @else
+                                        <div class="w-9 h-9 rounded-full bg-red-900/30 text-red-400 flex items-center justify-center font-bold border border-red-900/40 shrink-0 text-sm">
+                                            {{ substr($member->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    <div class="min-w-0">
+                                        <div class="text-zinc-100 font-semibold truncate max-w-[120px] lg:max-w-none">{{ $member->name }}</div>
+                                        <div class="text-zinc-500 text-xs truncate max-w-[120px] lg:max-w-none">{{ $member->email }}</div>
                                     </div>
-                                @endif
-                                <div>
-                                    <div class="text-gray-900 font-semibold">{{ $member->name }}</div>
-                                    <div class="text-gray-500 text-xs font-normal">{{ $member->email }}</div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-gray-600">
+                            <td class="px-4 py-3 text-zinc-400 hidden md:table-cell whitespace-nowrap">
                                 {{ $member->contact ?? '-' }}
                             </td>
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-gray-900">${{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
+                            <td class="px-4 py-3 whitespace-nowrap">
+                                <span class="font-bold text-zinc-100">${{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
                                 @if($member->trainer_fee > 0 || $member->locker_fee > 0)
-                                    <div class="text-[10px] text-gray-500 mt-0.5">Includes extras</div>
+                                    <div class="text-[10px] text-zinc-500 mt-0.5">+ extras</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3 hidden lg:table-cell whitespace-nowrap">
                                 @if($member->fee_due_date)
-                                    @php
-                                        $daysLeft = now()->startOfDay()->diffInDays($member->fee_due_date, false);
-                                    @endphp
-                                    <div class="font-medium {{ $daysLeft < 0 ? 'text-red-600' : ($daysLeft <= 3 ? 'text-orange-600' : 'text-gray-900') }}">
+                                    @php $daysLeft = now()->startOfDay()->diffInDays($member->fee_due_date, false); @endphp
+                                    <div class="font-medium text-sm {{ $daysLeft < 0 ? 'text-red-400' : ($daysLeft <= 3 ? 'text-orange-400' : 'text-zinc-300') }}">
                                         {{ $member->fee_due_date->format('M d, Y') }}
                                         @if($daysLeft < 0)
-                                            <span class="ml-1 text-[10px] text-red-500 font-bold uppercase">(Expired)</span>
+                                            <span class="ml-1 text-[10px] text-red-500 font-bold">(Expired)</span>
                                         @elseif($daysLeft <= 3)
-                                            <span class="ml-1 text-[10px] text-orange-500 font-bold uppercase">(Soon)</span>
+                                            <span class="ml-1 text-[10px] text-orange-500 font-bold">(Soon)</span>
                                         @endif
                                     </div>
                                 @else
-                                    <span class="text-gray-400">Not set</span>
+                                    <span class="text-zinc-600">Not set</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3">
                                 @if($member->status === 'active')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-900/30 text-emerald-400 border border-emerald-900/50">Active</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-400 border border-zinc-700">Inactive</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right flex items-center justify-end gap-2">
-                                <form method="POST" action="{{ route('members.markPaid', $member) }}" class="inline">
-                                    @csrf
-                                    <button type="submit" class="text-white bg-green-500 hover:bg-green-600 p-1.5 rounded-lg transition shadow-sm" onclick="return confirm('Mark as Paid? This will add 30 days to due date and record a payment.')" title="Mark Paid">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <form method="POST" action="{{ route('members.markPaid', $member) }}" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-white bg-emerald-600 hover:bg-emerald-700 p-1.5 rounded-lg transition" onclick="return confirm('Mark as Paid? This will add 30 days to due date and record a payment.')" title="Mark Paid">
+                                            <i class="ph-bold ph-check" style="font-size:14px;"></i>
+                                        </button>
+                                    </form>
+                                    <button @click="viewMember = {{ json_encode($member) }}; viewModalOpen = true" class="text-blue-400 bg-blue-900/20 hover:bg-blue-900/40 p-1.5 rounded-lg transition border border-blue-900/30" title="View">
+                                        <i class="ph-bold ph-eye" style="font-size:14px;"></i>
                                     </button>
-                                </form>
-                                <button @click="viewMember = {{ json_encode($member) }}; viewModalOpen = true" class="text-blue-500 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-lg transition" title="View">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                </button>
-                                <button @click="editMember = {{ json_encode($member) }}; editModalOpen = true" class="text-amber-500 bg-amber-50 hover:bg-amber-100 p-1.5 rounded-lg transition" title="Edit">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                </button>
-                                <form method="POST" action="{{ route('members.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" onclick="confirmDelete('{{ $member->id }}')" class="text-red-500 bg-red-50 hover:bg-red-100 p-1.5 rounded-lg transition" title="Delete">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    <button @click="editMember = {{ json_encode($member) }}; editModalOpen = true" class="text-amber-400 bg-amber-900/20 hover:bg-amber-900/40 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
+                                        <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
                                     </button>
-                                </form>
+                                    <form method="POST" action="{{ route('members.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')" class="text-red-400 bg-red-900/20 hover:bg-red-900/40 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
+                                            <i class="ph-bold ph-trash" style="font-size:14px;"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
                                 <div class="flex flex-col items-center">
-                                    <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                    <span class="text-lg font-medium">No Members Found</span>
-                                    <p class="text-sm mt-1">Add your first member to get started.</p>
+                                    <i class="ph-fill ph-users text-zinc-700 mb-3" style="font-size:48px;"></i>
+                                    <span class="text-base font-medium text-zinc-400">No Members Found</span>
+                                    <p class="text-sm text-zinc-600 mt-1">Add your first member to get started.</p>
                                 </div>
                             </td>
                         </tr>
@@ -133,7 +134,7 @@
             </table>
         </div>
         @if($members->hasPages())
-        <div class="px-6 py-4 border-t border-gray-100">
+        <div class="px-4 py-4 border-t border-zinc-800">
             {{ $members->links() }}
         </div>
         @endif
