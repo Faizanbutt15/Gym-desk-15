@@ -4,18 +4,18 @@
 <div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-            <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Members</h1>
+            <h1 class="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">Members</h1>
             <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
         </div>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <form action="{{ route('members.index') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 <div class="relative w-full sm:w-auto">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-9 pr-4 py-2 bg-zinc-900 border border-zinc-700 text-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-48 placeholder-zinc-500">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-9 pr-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-48 placeholder-zinc-400 dark:placeholder-zinc-500">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="ph-bold ph-magnifying-glass text-zinc-500 text-sm"></i>
                     </div>
                 </div>
-                <select name="filter" class="py-2 pl-3 pr-8 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto" onchange="this.form.submit()">
+                <select name="filter" class="py-2 pl-3 pr-8 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto" onchange="this.form.submit()">
                     <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All Members</option>
                     <hr>
                     <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active</option>
@@ -33,10 +33,10 @@
     </div>
 
     <!-- Members Table -->
-    <div class="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+    <div class="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead class="bg-zinc-800/50 text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-800">
+                <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-200 dark:border-zinc-800">
                     <tr>
                         <th class="px-4 py-3 font-semibold">Member</th>
                         <th class="px-4 py-3 font-semibold hidden md:table-cell">Contact</th>
@@ -46,9 +46,9 @@
                         <th class="px-4 py-3 font-semibold text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-zinc-800/60">
+                <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/60">
                     @forelse($members as $member)
-                        <tr class="hover:bg-zinc-800/30 transition">
+                        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition">
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
                                     @if($member->photo)
@@ -59,16 +59,16 @@
                                         </div>
                                     @endif
                                     <div class="min-w-0">
-                                        <div class="text-zinc-100 font-semibold truncate max-w-[120px] lg:max-w-none">{{ $member->name }}</div>
-                                        <div class="text-zinc-500 text-xs truncate max-w-[120px] lg:max-w-none">{{ $member->email }}</div>
+                                        <div class="text-zinc-900 dark:text-zinc-100 font-semibold truncate max-w-[120px] lg:max-w-none">{{ $member->name }}</div>
+                                        <div class="text-zinc-400 dark:text-zinc-500 text-xs truncate max-w-[120px] lg:max-w-none">{{ $member->email }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-zinc-400 hidden md:table-cell whitespace-nowrap">
+                            <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 hidden md:table-cell whitespace-nowrap">
                                 {{ $member->contact ?? '-' }}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <span class="font-bold text-zinc-100">${{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
+                                <span class="font-bold text-zinc-900 dark:text-zinc-100">${{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
                                 @if($member->trainer_fee > 0 || $member->locker_fee > 0)
                                     <div class="text-[10px] text-zinc-500 mt-0.5">+ extras</div>
                                 @endif
@@ -90,9 +90,9 @@
                             </td>
                             <td class="px-4 py-3">
                                 @if($member->status === 'active')
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-900/30 text-emerald-400 border border-emerald-900/50">Active</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">Active</span>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-zinc-800 text-zinc-400 border border-zinc-700">Inactive</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">Inactive</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3">
