@@ -7,9 +7,9 @@
     <div class="flex items-center justify-between flex-wrap gap-2">
         <div>
             <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Gym Admin</p>
-            <h1 class="text-xl md:text-2xl font-extrabold text-white tracking-tight">Overview</h1>
+            <h1 class="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Overview</h1>
         </div>
-        <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-400 text-xs md:text-sm font-medium">
+        <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-600 dark:text-zinc-400 text-xs md:text-sm font-medium">
             {{ now()->format('F Y') }}
         </div>
     </div>
@@ -18,61 +18,61 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
         {{-- Net Revenue --}}
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Net Revenue</p>
-                <span class="w-9 h-9 rounded-xl bg-red-900/25 flex items-center justify-center text-red-400 shrink-0">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Net Revenue</p>
+                <span class="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/25 flex items-center justify-center text-red-500 dark:text-red-400 shrink-0">
                     <i class="ph-fill ph-chart-line-up" style="font-size:18px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">${{ number_format($netThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">${{ number_format($netThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
                 <span>{{ $netThisMonth >= 0 ? '↑ Positive' : '↓ Negative' }} this month</span>
             </div>
         </div>
 
         {{-- Gross Income --}}
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Gross Income</p>
-                <span class="w-9 h-9 rounded-xl bg-zinc-800 flex items-center justify-center text-emerald-500 shrink-0">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Gross Income</p>
+                <span class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-zinc-800 flex items-center justify-center text-emerald-600 dark:text-emerald-500 shrink-0">
                     <i class="ph-fill ph-money" style="font-size:18px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">+${{ number_format($revenueThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">+${{ number_format($revenueThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
                 <span>Member fee collections</span>
             </div>
         </div>
 
         {{-- Spending (Staff + Expenses) --}}
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Spending</p>
-                <span class="w-9 h-9 rounded-xl bg-orange-900/25 flex items-center justify-center text-orange-400 shrink-0">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Spending</p>
+                <span class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/25 flex items-center justify-center text-orange-500 dark:text-orange-400 shrink-0">
                     <i class="ph-fill ph-wallet" style="font-size:18px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">-${{ number_format($spendingThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-600 relative">All-time: <span class="text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">-${{ number_format($spendingThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
                 <span>Salaries & Expenses this month</span>
             </div>
         </div>
 
         {{-- Paid Members --}}
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400 relative">Paid Members</p>
-                <span class="w-9 h-9 rounded-xl bg-violet-900/25 flex items-center justify-center text-violet-400 shrink-0">
+                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Paid Members</p>
+                <span class="w-9 h-9 rounded-xl bg-violet-100 dark:bg-violet-900/25 flex items-center justify-center text-violet-500 dark:text-violet-400 shrink-0">
                     <i class="ph-fill ph-seal-check" style="font-size:18px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight relative mt-1">{{ $paidMembersThisMonth }}</p>
-            <p class="text-xs text-zinc-600 relative">of {{ $totalMembers }} total members</p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-500 relative font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">{{ $paidMembersThisMonth }}</p>
+            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">of {{ $totalMembers }} total members</p>
+            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
                 <span>Payments collected this month</span>
             </div>
         </div>
