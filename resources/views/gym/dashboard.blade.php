@@ -79,72 +79,18 @@
 
     </div>
 
-    {{-- ── ROW 2: Member Stats Strip ── --}}
-    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3">
-
-        <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-emerald-800/50 transition-all duration-200 flex items-center gap-4">
-            <span class="w-10 h-10 rounded-xl bg-emerald-900/20 flex items-center justify-center text-emerald-400 shrink-0">
-                <i class="ph-fill ph-users-three" style="font-size:20px;"></i>
-            </span>
-            <div>
-                <p class="text-2xl font-bold text-white">{{ $totalMembers }}</p>
-                <p class="text-[11px] text-emerald-500 font-semibold uppercase tracking-wider mt-0.5">Total Members</p>
-            </div>
-        </div>
-
-        <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-red-900/50 transition-all duration-200 flex items-center gap-4">
-            <span class="w-10 h-10 rounded-xl bg-red-900/20 flex items-center justify-center text-red-400 shrink-0">
-                <i class="ph-fill ph-user-minus" style="font-size:20px;"></i>
-            </span>
-            <div>
-                <p class="text-2xl font-bold text-white">{{ $inactiveMembers }}</p>
-                <p class="text-[11px] text-red-500 font-semibold uppercase tracking-wider mt-0.5">Inactive</p>
-            </div>
-        </div>
-
-        <a href="{{ route('expiring-soon') }}" class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-red-900/50 transition-all duration-200 flex items-center gap-4">
-            <span class="w-10 h-10 rounded-xl bg-red-900/20 flex items-center justify-center text-red-400 shrink-0">
-                <i class="ph-fill ph-clock-countdown" style="font-size:20px;"></i>
-            </span>
-            <div>
-                <p class="text-2xl font-bold text-white">{{ $expiringSoon }}</p>
-                <p class="text-[11px] text-red-500 font-semibold uppercase tracking-wider mt-0.5">Expiring Soon</p>
-            </div>
-        </a>
-
-        <a href="{{ route('expired') }}" class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-red-900/50 transition-all duration-200 flex items-center gap-4">
-            <span class="w-10 h-10 rounded-xl bg-red-900/20 flex items-center justify-center text-red-400 shrink-0">
-                <i class="ph-fill ph-warning-circle" style="font-size:20px;"></i>
-            </span>
-            <div>
-                <p class="text-2xl font-bold text-white">{{ $expired }}</p>
-                <p class="text-[11px] text-red-500 font-semibold uppercase tracking-wider mt-0.5">Expired</p>
-            </div>
-        </a>
-
-        <div class="rounded-xl border border-zinc-800 bg-zinc-900/70 px-5 py-4 hover:border-emerald-800/50 transition-all duration-200 flex items-center gap-4">
-            <span class="w-10 h-10 rounded-xl bg-emerald-900/20 flex items-center justify-center text-emerald-400 shrink-0">
-                <i class="ph-fill ph-user-plus" style="font-size:20px;"></i>
-            </span>
-            <div>
-                <p class="text-2xl font-bold text-white">{{ $newMembersThisMonth }}</p>
-                <p class="text-[11px] text-emerald-500 font-semibold uppercase tracking-wider mt-0.5">New / Month</p>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- ── ROW 3: Chart + Recent Payments ── --}}
+    {{-- ── ROW 2: Chart + Member Stats Side Panel ── --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
+        {{-- Total Members --}}
         {{-- Revenue Chart --}}
-        <div class="lg:col-span-2 rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex flex-col gap-4">
+        <div class="lg:col-span-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-4">
             <div class="flex items-center justify-between flex-wrap gap-3">
                 <div>
-                    <h2 class="text-base font-bold text-white tracking-tight">Revenue Trend</h2>
+                    <h2 class="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Revenue Trend</h2>
                     <p class="text-xs text-zinc-500 mt-0.5">Income from member fee collections</p>
                 </div>
-                <div class="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
+                <div class="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg p-1">
                     <button @click="chartType = 'day'; fetchDashChartData('day')"
                         :class="{ 'bg-red-600 text-white shadow': chartType === 'day', 'text-zinc-400': chartType !== 'day' }"
                         class="px-3 py-1.5 rounded-md text-xs font-semibold transition-all">30 Days</button>
@@ -159,40 +105,103 @@
             <div id="dashRevenueChart" class="w-full" style="min-height:260px;"></div>
         </div>
 
-        {{-- Recent Payments --}}
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900 flex flex-col overflow-hidden">
-            <div class="px-6 py-4 border-b border-zinc-800 flex items-center justify-between">
-                <div>
-                    <h2 class="text-sm font-bold text-white tracking-tight">Recent Payments</h2>
-                    <p class="text-[11px] text-zinc-500 mt-0.5">Latest fee collections</p>
-                </div>
-                <a href="{{ route('revenue.index') }}" class="text-xs text-red-500 hover:text-red-400 font-semibold transition">
-                    View all →
-                </a>
+        {{-- Member Stats Side Panel --}}
+        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col overflow-hidden">
+            <div class="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
+                <h2 class="text-sm font-bold text-zinc-900 dark:text-white tracking-tight">Member Stats</h2>
+                <p class="text-[11px] text-zinc-500 mt-0.5">Quick overview</p>
             </div>
-            <div class="flex-1 overflow-y-auto divide-y divide-zinc-800/60">
-                @forelse($recentPayments as $payment)
-                <div class="flex items-center justify-between px-6 py-3.5 hover:bg-zinc-800/40 transition-colors">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-9 h-9 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center shrink-0 font-bold text-sm border border-zinc-700">
-                            {{ strtoupper(substr($payment->member_name, 0, 1)) }}
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-sm font-semibold text-zinc-200 truncate">{{ $payment->member_name }}</p>
-                            <p class="text-[11px] text-zinc-600">{{ $payment->paid_date->format('M d, Y') }}</p>
-                        </div>
-                    </div>
-                    <span class="text-sm font-bold text-emerald-400 shrink-0 ml-2">+${{ number_format($payment->amount, 0) }}</span>
+            <div class="flex-1 flex flex-col gap-3 p-4">
+
+        {{-- Total Members --}}
+        <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
+                    border border-white/10 dark:border-white/5
+                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
+                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-emerald-500/15 dark:bg-emerald-400/10 blur-xl pointer-events-none"></div>
+            <div class="flex items-center justify-between w-full">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Total Members</p>
+                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $totalMembers }}</p>
                 </div>
-                @empty
-                <div class="flex flex-col items-center justify-center py-12 text-zinc-600 gap-2">
-                    <p class="text-sm">No payments yet</p>
-                </div>
-                @endforelse
+                <span class="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 flex items-center justify-center text-emerald-500 dark:text-emerald-400 shrink-0">
+                    <i class="ph-fill ph-users-three" style="font-size:18px;"></i>
+                </span>
             </div>
         </div>
 
-    </div>
+        {{-- Inactive --}}
+        <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
+                    border border-white/10 dark:border-white/5
+                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
+                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-red-500/15 dark:bg-red-400/10 blur-xl pointer-events-none"></div>
+            <div class="flex items-center justify-between w-full">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Inactive</p>
+                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $inactiveMembers }}</p>
+                </div>
+                <span class="w-10 h-10 rounded-xl bg-red-500/10 dark:bg-red-400/10 border border-red-500/20 dark:border-red-400/20 flex items-center justify-center text-red-500 dark:text-red-400 shrink-0">
+                    <i class="ph-fill ph-user-minus" style="font-size:18px;"></i>
+                </span>
+            </div>
+        </div>
+
+        {{-- Expiring Soon --}}
+        <a href="{{ route('expiring-soon') }}" class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
+                    border border-white/10 dark:border-white/5
+                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
+                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 group">
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-amber-500/15 dark:bg-amber-400/10 blur-xl pointer-events-none"></div>
+            <div class="flex items-center justify-between w-full">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expiring Soon</p>
+                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expiringSoon }}</p>
+                </div>
+                <span class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/20 dark:border-amber-400/20 flex items-center justify-center text-amber-500 dark:text-amber-400 shrink-0">
+                    <i class="ph-fill ph-clock-countdown" style="font-size:18px;"></i>
+                </span>
+            </div>
+        </a>
+
+        {{-- Expired --}}
+        <a href="{{ route('expired') }}" class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
+                    border border-white/10 dark:border-white/5
+                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
+                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 group">
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-rose-500/15 dark:bg-rose-400/10 blur-xl pointer-events-none"></div>
+            <div class="flex items-center justify-between w-full">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expired</p>
+                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expired }}</p>
+                </div>
+                <span class="w-10 h-10 rounded-xl bg-rose-500/10 dark:bg-rose-400/10 border border-rose-500/20 dark:border-rose-400/20 flex items-center justify-center text-rose-500 dark:text-rose-400 shrink-0">
+                    <i class="ph-fill ph-warning-circle" style="font-size:18px;"></i>
+                </span>
+            </div>
+        </a>
+
+        {{-- New / Month --}}
+        <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
+                    border border-white/10 dark:border-white/5
+                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
+                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
+            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-teal-500/15 dark:bg-teal-400/10 blur-xl pointer-events-none"></div>
+            <div class="flex items-center justify-between w-full">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">New / Month</p>
+                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $newMembersThisMonth }}</p>
+                </div>
+                <span class="w-10 h-10 rounded-xl bg-teal-500/10 dark:bg-teal-400/10 border border-teal-500/20 dark:border-teal-400/20 flex items-center justify-center text-teal-500 dark:text-teal-400 shrink-0">
+                    <i class="ph-fill ph-user-plus" style="font-size:18px;"></i>
+                </span>
+            </div>
+        </div>
+
+            </div>{{-- end flex-1 gap-3 p-4 --}}
+        </div>{{-- end Member Stats Side Panel --}}
+
+    </div>{{-- end grid --}}
 
 </div>
 
