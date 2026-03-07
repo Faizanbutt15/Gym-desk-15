@@ -74,7 +74,7 @@
         <nav class="flex-1 py-4 overflow-y-auto overflow-x-hidden space-y-0.5 px-2">
             @php
                 $navItems = [
-                    ['route' => 'gym.dashboard',    'match' => 'gym.dashboard',   'icon' => 'ph-squares-four',    'label' => 'Dashboard'],
+                    ['route' => 'gym.dashboard',    'match' => 'gym.dashboard',   'icon' => 'ph-squares-four',    'label' => 'Dashboard', 'iconWeight' => 'ph-fill'],
                     ['route' => 'members.index',     'match' => 'members.*',       'icon' => 'ph-users',           'label' => 'Members'],
                     ['route' => 'expiring-soon',     'match' => 'expiring-soon',   'icon' => 'ph-clock-countdown', 'label' => 'Expiring Soon'],
                     ['route' => 'expired',           'match' => 'expired',         'icon' => 'ph-warning-circle',  'label' => 'Expired'],
@@ -96,7 +96,7 @@
                     @if($active)
                         <span class="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] bg-red-500 rounded-r-full"></span>
                     @endif
-                    <i class="ph-bold {{ $item['icon'] }} text-[18px] shrink-0 {{ $active ? 'text-red-500 dark:text-red-400' : '' }}"></i>
+                    <i class="{{ $item['iconWeight'] ?? 'ph-bold' }} {{ $item['icon'] }} text-[18px] shrink-0 {{ $active ? 'text-red-500 dark:text-red-400' : '' }}"></i>
                     <span class="text-sm overflow-hidden whitespace-nowrap nav-label"
                           x-bind:class="(sidebarOpen || mobileMenuOpen) ? 'opacity-100 w-auto' : 'lg:opacity-0 lg:w-0'">
                         {{ $item['label'] }}
