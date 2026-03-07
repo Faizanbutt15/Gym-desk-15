@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-4 md:space-y-6">
     <div>
-        <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Expired Members</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">Expired Members</h1>
         <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} whose fee is overdue</p>
     </div>
 

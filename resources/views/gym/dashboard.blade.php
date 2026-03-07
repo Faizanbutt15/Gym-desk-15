@@ -115,7 +115,7 @@
 
         {{-- Total Members --}}
         <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
+                    border border-gray-300
                     bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
                     hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-emerald-500/15 dark:bg-emerald-400/10 blur-xl pointer-events-none"></div>
@@ -132,7 +132,7 @@
 
         {{-- Inactive --}}
         <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
+                    border border-gray-300
                     bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
                     hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-red-500/15 dark:bg-red-400/10 blur-xl pointer-events-none"></div>
@@ -149,7 +149,7 @@
 
         {{-- Expiring Soon --}}
         <a href="{{ route('expiring-soon') }}" class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
+                    border border-gray-300
                     bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
                     hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 group">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-amber-500/15 dark:bg-amber-400/10 blur-xl pointer-events-none"></div>
@@ -166,7 +166,7 @@
 
         {{-- Expired --}}
         <a href="{{ route('expired') }}" class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
+                    border border-gray-300
                     bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
                     hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 group">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-rose-500/15 dark:bg-rose-400/10 blur-xl pointer-events-none"></div>
@@ -183,7 +183,7 @@
 
         {{-- New / Month --}}
         <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
+                    border border-gray-300
                     bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
                     hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
             <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-teal-500/15 dark:bg-teal-400/10 blur-xl pointer-events-none"></div>

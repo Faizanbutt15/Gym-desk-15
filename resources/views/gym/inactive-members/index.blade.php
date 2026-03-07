@@ -74,8 +74,9 @@
                                 <form method="POST" action="{{ route('members.reactivate', $member) }}" class="inline">
                                     @csrf
                                     <button type="submit"
-                                            class="text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide transition shadow-sm"
+                                            class="inline-flex items-center gap-1.5 text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"
                                             onclick="return confirm('Reactivate this member?')">
+                                        <i class="ph-bold ph-arrow-counter-clockwise" style="font-size:13px;"></i>
                                         Reactivate
                                     </button>
                                 </form>
@@ -84,8 +85,8 @@
                                     @method('DELETE')
                                     <button type="button"
                                             onclick="confirmDelete('{{ $member->id }}')"
-                                            class="text-red-500 hover:text-red-700 dark:hover:text-red-400 font-medium px-2 border-l border-zinc-200 dark:border-zinc-700">
-                                        Delete
+                                            class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
+                                        <i class="ph-bold ph-trash" style="font-size:14px;"></i>
                                     </button>
                                 </form>
                             </td>

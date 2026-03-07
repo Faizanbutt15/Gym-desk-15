@@ -103,16 +103,16 @@
                                             <i class="ph-bold ph-check" style="font-size:14px;"></i>
                                         </button>
                                     </form>
-                                    <button @click="viewMember = {{ json_encode($member) }}; viewModalOpen = true" class="text-blue-400 bg-blue-900/20 hover:bg-blue-900/40 p-1.5 rounded-lg transition border border-blue-900/30" title="View">
+                                     <button @click="viewMember = {{ json_encode($member) }}; viewModalOpen = true" class="text-blue-400 bg-blue-900/20 hover:bg-blue-900/40 p-1.5 rounded-lg transition border border-blue-900/30" title="View">
                                         <i class="ph-bold ph-eye" style="font-size:14px;"></i>
                                     </button>
-                                    <button @click="editMember = {{ json_encode($member) }}; editModalOpen = true" class="text-amber-400 bg-amber-900/20 hover:bg-amber-900/40 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
+                                     <button @click="editMember = {{ json_encode($member) }}; editModalOpen = true" class="text-white bg-gray-400 hover:bg-gray-500 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
                                         <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
                                     </button>
                                     <form method="POST" action="{{ route('members.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')" class="text-red-400 bg-red-900/20 hover:bg-red-900/40 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
+                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')" class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
                                             <i class="ph-bold ph-trash" style="font-size:14px;"></i>
                                         </button>
                                     </form>

@@ -122,13 +122,13 @@
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1.5">
                                     <button @click="editExpense = {{ json_encode($expense) }}; editExpense.expense_date = '{{ $expense->expense_date->format('Y-m-d') }}'; editModalOpen = true"
-                                            class="text-amber-400 bg-amber-900/20 hover:bg-amber-900/40 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
+                                            class="text-white bg-gray-400 hover:bg-gray-500 p-1.5 rounded-lg transition  border-amber-900/30" title="Edit">
                                         <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
                                     </button>
                                     <form method="POST" action="{{ route('expenses.destroy', $expense) }}" id="del-expense-{{ $expense->id }}" class="inline">
                                         @csrf @method('DELETE')
                                         <button type="button" onclick="confirmExpenseDelete('{{ $expense->id }}')"
-                                                class="text-red-400 bg-red-900/20 hover:bg-red-900/40 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
+                                                class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
                                             <i class="ph-bold ph-trash" style="font-size:14px;"></i>
                                         </button>
                                     </form>

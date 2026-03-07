@@ -52,15 +52,15 @@
                                     Pay Salary
                                 </button>
                                 <button @click="editStaff = {{ json_encode($member) }}; editModalOpen = true"
-                                        class="text-amber-500 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium px-2">
-                                    Edit
+                                        class="text-white bg-gray-400 hover:bg-gray-500 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
+                                    <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
                                 </button>
                                 <form method="POST" action="{{ route('staff.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" onclick="confirmDelete('{{ $member->id }}')"
-                                            class="text-red-500 hover:text-red-700 font-medium px-2 border-l border-zinc-200 dark:border-zinc-700">
-                                        Delete
+                                            class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
+                                        <i class="ph-bold ph-trash" style="font-size:14px;"></i>
                                     </button>
                                 </form>
                             </td>
