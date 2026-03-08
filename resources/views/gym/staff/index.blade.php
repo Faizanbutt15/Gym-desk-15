@@ -47,22 +47,26 @@
                                 ${{ number_format($member->salary, 2) }}
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <button @click="payStaff = {{ json_encode($member) }}; payModalOpen = true"
+                                <div class="flex items-center justify-end gap-1">
+                                    <button @click="payStaff = {{ json_encode($member) }}; payModalOpen = true"
                                         class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
                                     Pay Salary
-                                </button>
-                                <button @click="editStaff = {{ json_encode($member) }}; editModalOpen = true"
-                                        class="text-white bg-gray-400 hover:bg-gray-500 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
-                                    <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
-                                </button>
-                                <form method="POST" action="{{ route('staff.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" onclick="confirmDelete('{{ $member->id }}')"
-                                            class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
-                                        <i class="ph-bold ph-trash" style="font-size:14px;"></i>
                                     </button>
-                                </form>
+                                    <button @click="editStaff = {{ json_encode($member) }}; editModalOpen = true"
+                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-500/15 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-500/30 transition"
+                                            title="Edit">
+                                        <i class="ph-bold ph-pencil" style="font-size:13px;"></i>
+                                    </button>
+                                    <form method="POST" action="{{ route('staff.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')"
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-500/15 text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/30 transition"
+                                                title="Delete">
+                                            <i class="ph-bold ph-trash" style="font-size:13px;"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

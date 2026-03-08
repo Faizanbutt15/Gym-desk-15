@@ -9,77 +9,75 @@
             <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Gym Admin</p>
             <h1 class="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Overview</h1>
         </div>
-        <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-600 dark:text-zinc-400 text-xs md:text-sm font-medium">
-            {{ now()->format('F Y') }}
-        </div>
+        
     </div>
 
     {{-- ── ROW 1: Revenue Metric Cards ── --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
         {{-- Net Revenue --}}
-        <div class="rounded-2xl bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 group">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">Net Revenue</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Net Revenue</p>
                 <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
                       style="background: linear-gradient(135deg,#dc2626 0%,#7f1d1d 100%);">
                     <i class="ph-fill ph-chart-line-up text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight leading-none">${{ number_format($netThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
-            <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">${{ number_format($netThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-arrow-up" style="font-size:13px;"></i>
                 <span>{{ $netThisMonth >= 0 ? 'Positive' : 'Negative' }} this month</span>
             </div>
         </div>
 
         {{-- Gross Income --}}
-        <div class="rounded-2xl bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 group">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">Gross Income</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Gross Income</p>
                 <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
                       style="background: linear-gradient(135deg,#059669 0%,#064e3b 100%);">
                     <i class="ph-fill ph-wallet text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight leading-none">+${{ number_format($revenueThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
-            <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">+${{ number_format($revenueThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-users" style="font-size:13px;"></i>
                 <span>Member fee collections</span>
             </div>
         </div>
 
         {{-- Spending --}}
-        <div class="rounded-2xl bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 group">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">Spending</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Spending</p>
                 <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
                       style="background: linear-gradient(135deg,#ea580c 0%,#7c2d12 100%);">
                     <i class="ph-fill ph-receipt text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight leading-none">-${{ number_format($spendingThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
-            <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">-${{ number_format($spendingThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
+            <div class="flex items-center gap-1.5 text-xs text-orange-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-briefcase" style="font-size:13px;"></i>
                 <span>Salaries &amp; Expenses this month</span>
             </div>
         </div>
 
         {{-- Paid Members --}}
-        <div class="rounded-2xl bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 group">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">Paid Members</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Paid Members</p>
                 <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
                       style="background: linear-gradient(135deg,#7c3aed 0%,#3b0764 100%);">
                     <i class="ph-fill ph-seal-check text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-white tracking-tight leading-none">{{ $paidMembersThisMonth }}</p>
-            <p class="text-xs text-zinc-500">of <span class="text-zinc-400">{{ $totalMembers }}</span> total members</p>
-            <div class="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">{{ $paidMembersThisMonth }}</p>
+            <p class="text-xs text-zinc-500">of <span class="text-zinc-600 dark:text-zinc-400">{{ $totalMembers }}</span> total members</p>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-check-circle" style="font-size:13px;"></i>
                 <span>Payments collected this month</span>
             </div>
@@ -114,18 +112,18 @@
         </div>
 
         {{-- Member Stats Side Panel --}}
-        <div class="rounded-2xl bg-zinc-900 border border-zinc-800 flex flex-col overflow-hidden">
-            <div class="px-5 py-4 border-b border-zinc-800">
-                <h2 class="text-sm font-bold text-white tracking-tight">Member Stats</h2>
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col overflow-hidden shadow-sm">
+            <div class="px-5 py-4 border-b border-zinc-200 dark:border-zinc-800">
+                <h2 class="text-sm font-bold text-zinc-900 dark:text-white tracking-tight">Member Stats</h2>
                 <p class="text-[11px] text-zinc-500 mt-0.5">Quick overview</p>
             </div>
             <div class="flex-1 flex flex-col gap-2.5 p-4">
 
                 {{-- Total Members --}}
-                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600 transition-all duration-200 cursor-default">
+                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200 cursor-default">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Total Members</p>
-                        <p class="text-2xl font-extrabold text-white tracking-tight leading-none mt-0.5">{{ $totalMembers }}</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Total Members</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $totalMembers }}</p>
                     </div>
                     <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
                           style="background: linear-gradient(135deg,#059669 0%,#064e3b 100%);">
@@ -134,10 +132,10 @@
                 </div>
 
                 {{-- Inactive --}}
-                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600 transition-all duration-200 cursor-default">
+                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200 cursor-default">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Inactive</p>
-                        <p class="text-2xl font-extrabold text-white tracking-tight leading-none mt-0.5">{{ $inactiveMembers }}</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Inactive</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $inactiveMembers }}</p>
                     </div>
                     <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
                           style="background: linear-gradient(135deg,#dc2626 0%,#7f1d1d 100%);">
@@ -147,10 +145,10 @@
 
                 {{-- Expiring Soon --}}
                 <a href="{{ route('expiring-soon') }}"
-                   class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600 transition-all duration-200">
+                   class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Expiring Soon</p>
-                        <p class="text-2xl font-extrabold text-white tracking-tight leading-none mt-0.5">{{ $expiringSoon }}</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expiring Soon</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expiringSoon }}</p>
                     </div>
                     <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
                           style="background: linear-gradient(135deg,#d97706 0%,#78350f 100%);">
@@ -160,10 +158,10 @@
 
                 {{-- Expired --}}
                 <a href="{{ route('expired') }}"
-                   class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600 transition-all duration-200">
+                   class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Expired</p>
-                        <p class="text-2xl font-extrabold text-white tracking-tight leading-none mt-0.5">{{ $expired }}</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expired</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expired }}</p>
                     </div>
                     <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
                           style="background: linear-gradient(135deg,#e11d48 0%,#881337 100%);">
@@ -172,10 +170,10 @@
                 </a>
 
                 {{-- New / Month --}}
-                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800/60 border border-zinc-700/50 hover:border-zinc-600 transition-all duration-200 cursor-default">
+                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200 cursor-default">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">New / Month</p>
-                        <p class="text-2xl font-extrabold text-white tracking-tight leading-none mt-0.5">{{ $newMembersThisMonth }}</p>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">New / Month</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $newMembersThisMonth }}</p>
                     </div>
                     <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
                           style="background: linear-gradient(135deg,#0d9488 0%,#134e4a 100%);">

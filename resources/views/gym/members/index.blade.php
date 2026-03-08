@@ -8,25 +8,61 @@
             <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} found</p>
         </div>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-            <form action="{{ route('members.index') }}" method="GET" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+            <form action="{{ route('members.index') }}" method="GET" id="member-filter-form" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                {{-- Search --}}
                 <div class="relative w-full sm:w-auto">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..." class="pl-9 pr-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-48 placeholder-zinc-400 dark:placeholder-zinc-500">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..."
+                           class="pl-9 pr-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-48 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="ph-bold ph-magnifying-glass text-zinc-500 text-sm"></i>
+                        <i class="ph-bold ph-magnifying-glass text-zinc-400 text-sm"></i>
                     </div>
                 </div>
-                <select name="filter" class="py-2 pl-3 pr-8 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto" onchange="this.form.submit()">
-                    <option value="all" {{ request('filter') === 'all' ? 'selected' : '' }}>All Members</option>
-                    <hr>
-                    <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ request('filter') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    <option value="with_trainer" {{ request('filter') === 'with_trainer' ? 'selected' : '' }}>With Trainer</option>
-                    <option value="no_trainer" {{ request('filter') === 'no_trainer' ? 'selected' : '' }}>No Trainer</option>
-                    <option value="with_locker" {{ request('filter') === 'with_locker' ? 'selected' : '' }}>With Locker</option>
-                    <option value="no_locker" {{ request('filter') === 'no_locker' ? 'selected' : '' }}>No Locker</option>
-                </select>
+
+                {{-- Filter Dropdown --}}
+                @php
+                    $selFilter = request('filter', 'all');
+                    $filterOptions = [
+                        'all'          => ['label' => 'All Members',   'icon' => 'ph-users'],
+                        'active'       => ['label' => 'Active',        'icon' => 'ph-check-circle'],
+                        'inactive'     => ['label' => 'Inactive',      'icon' => 'ph-prohibit'],
+                        'with_trainer' => ['label' => 'With Trainer',  'icon' => 'ph-person-arms-spread'],
+                        'no_trainer'   => ['label' => 'No Trainer',    'icon' => 'ph-person-simple'],
+                        'with_locker'  => ['label' => 'With Locker',   'icon' => 'ph-lock-key'],
+                        'no_locker'    => ['label' => 'No Locker',     'icon' => 'ph-lock-open'],
+                    ];
+                    $selLabel = $filterOptions[$selFilter]['label'] ?? 'All Members';
+                @endphp
+                <div class="relative" x-data="{ open: false, selected: '{{ $selFilter }}' }" @click.outside="open = false">
+                    <button type="button" @click="open = !open"
+                            class="flex items-center gap-2 pl-3.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 text-sm font-medium shadow-sm hover:border-zinc-300 dark:hover:border-zinc-600 transition-all w-full sm:w-auto min-w-[150px]">
+                        <i class="ph-bold ph-funnel text-red-500" style="font-size:14px;"></i>
+                        <span class="flex-1 text-left">{{ $selLabel }}</span>
+                        <i class="ph-bold ph-caret-down text-zinc-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''" style="font-size:12px;"></i>
+                    </button>
+                    <input type="hidden" name="filter" :value="selected">
+                    <div x-show="open" x-cloak
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute right-0 z-50 mt-1.5 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden">
+                        <div class="py-1">
+                            @foreach($filterOptions as $val => $opt)
+                                <button type="button"
+                                        @click="selected = '{{ $val }}'; open = false; $nextTick(() => document.getElementById('member-filter-form').submit())"
+                                        class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition"
+                                        :class="selected === '{{ $val }}' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'">
+                                    <i class="ph-fill {{ $opt['icon'] }}" style="font-size:14px;"></i>
+                                    {{ $opt['label'] }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </form>
-            <button @click="addModalOpen = true" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5">
+            <button @click="addModalOpen = true" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5">
                 <i class="ph-bold ph-plus"></i> Add Member
             </button>
         </div>
@@ -54,7 +90,7 @@
                                     @if($member->photo)
                                         <img src="{{ asset('storage/' . $member->photo) }}" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0">
                                     @else
-                                        <div class="w-9 h-9 rounded-full bg-red-900/30 text-red-400 flex items-center justify-center font-bold border border-red-900/40 shrink-0 text-sm">
+                                        <div class="w-9 h-9 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center font-bold border border-red-200 dark:border-red-900/40 shrink-0 text-sm">
                                             {{ substr($member->name, 0, 1) }}
                                         </div>
                                     @endif
@@ -76,7 +112,7 @@
                             <td class="px-4 py-3 hidden lg:table-cell whitespace-nowrap">
                                 @if($member->fee_due_date)
                                     @php $daysLeft = now()->startOfDay()->diffInDays($member->fee_due_date, false); @endphp
-                                    <div class="font-medium text-sm {{ $daysLeft < 0 ? 'text-red-400' : ($daysLeft <= 3 ? 'text-orange-400' : 'text-zinc-300') }}">
+                                    <div class="font-medium text-sm {{ $daysLeft < 0 ? 'text-red-500 dark:text-red-400' : ($daysLeft <= 3 ? 'text-orange-500 dark:text-orange-400' : 'text-zinc-600 dark:text-zinc-300') }}">
                                         {{ $member->fee_due_date->format('M d, Y') }}
                                         @if($daysLeft < 0)
                                             <span class="ml-1 text-[10px] text-red-500 font-bold">(Expired)</span>
@@ -96,36 +132,46 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-1.5">
+                                <div class="flex items-center justify-end gap-1">
                                     <form method="POST" action="{{ route('members.markPaid', $member) }}" class="inline">
                                         @csrf
-                                        <button type="submit" class="text-white bg-emerald-600 hover:bg-emerald-700 p-1.5 rounded-lg transition" onclick="return confirm('Mark as Paid? This will add 30 days to due date and record a payment.')" title="Mark Paid">
-                                            <i class="ph-bold ph-check" style="font-size:14px;"></i>
+                                        <button type="submit"
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/30 transition"
+                                                onclick="return confirm('Mark as Paid? This will add 30 days to due date and record a payment.')"
+                                                title="Mark Paid">
+                                            <i class="ph-bold ph-check" style="font-size:13px;"></i>
                                         </button>
                                     </form>
-                                     <button @click="viewMember = {{ json_encode($member) }}; viewModalOpen = true" class="text-blue-400 bg-blue-900/20 hover:bg-blue-900/40 p-1.5 rounded-lg transition border border-blue-900/30" title="View">
-                                        <i class="ph-bold ph-eye" style="font-size:14px;"></i>
+                                    <button @click="viewMember = {{ json_encode($member) }}; viewModalOpen = true"
+                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-500/15 text-sky-600 dark:text-sky-400 hover:bg-sky-200 dark:hover:bg-sky-500/30 transition"
+                                            title="View">
+                                        <i class="ph-bold ph-eye" style="font-size:13px;"></i>
                                     </button>
-                                     <button @click="editMember = {{ json_encode($member) }}; editModalOpen = true" class="text-white bg-gray-400 hover:bg-gray-500 p-1.5 rounded-lg transition border border-amber-900/30" title="Edit">
-                                        <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
+                                    <button @click="editMember = {{ json_encode($member) }}; editModalOpen = true"
+                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-500/30 transition"
+                                            title="Edit">
+                                        <i class="ph-bold ph-pencil" style="font-size:13px;"></i>
                                     </button>
                                     <form method="POST" action="{{ route('members.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')" class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
-                                            <i class="ph-bold ph-trash" style="font-size:14px;"></i>
+                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')"
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-500/15 text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/30 transition"
+                                                title="Delete">
+                                            <i class="ph-bold ph-trash" style="font-size:13px;"></i>
                                         </button>
                                     </form>
                                 </div>
+
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
                                 <div class="flex flex-col items-center">
-                                    <i class="ph-fill ph-users text-zinc-700 mb-3" style="font-size:48px;"></i>
-                                    <span class="text-base font-medium text-zinc-400">No Members Found</span>
-                                    <p class="text-sm text-zinc-600 mt-1">Add your first member to get started.</p>
+                                    <i class="ph-fill ph-users text-zinc-300 dark:text-zinc-700 mb-3" style="font-size:48px;"></i>
+                                    <span class="text-base font-medium text-zinc-500 dark:text-zinc-400">No Members Found</span>
+                                    <p class="text-sm text-zinc-400 dark:text-zinc-600 mt-1">Add your first member to get started.</p>
                                 </div>
                             </td>
                         </tr>
@@ -134,7 +180,7 @@
             </table>
         </div>
         @if($members->hasPages())
-        <div class="px-4 py-4 border-t border-zinc-800">
+        <div class="px-4 py-4 border-t border-zinc-200 dark:border-zinc-800">
             {{ $members->links() }}
         </div>
         @endif
@@ -143,11 +189,11 @@
     <!-- Add Modal -->
     <div x-show="addModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div x-show="addModalOpen" class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="addModalOpen = false"></div>
-            <div class="relative inline-block w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <div x-show="addModalOpen" class="fixed inset-0 transition-opacity bg-black/60" @click="addModalOpen = false"></div>
+            <div class="relative inline-block w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 shadow-xl rounded-2xl">
                 <div class="flex items-center justify-between mb-5">
-                    <h3 class="text-lg font-bold text-gray-900">Add New Member</h3>
-                    <button @click="addModalOpen = false" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Add New Member</h3>
+                    <button @click="addModalOpen = false" class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-500 dark:text-zinc-400 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
@@ -155,55 +201,55 @@
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
-                            <input type="text" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Email Address</label>
-                            <input type="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Email Address</label>
+                            <input type="email" name="email" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Contact Number</label>
-                            <input type="text" name="contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Contact Number</label>
+                            <input type="text" name="contact" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
-                            <input type="number" step="0.01" name="fee_amount" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.01" name="fee_amount" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Admission Fee ($) <span class="text-xs text-gray-400 font-normal">(One-time)</span></label>
-                            <input type="number" step="0.01" name="admission_fee" value="0.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Admission Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(One-time)</span></label>
+                            <input type="number" step="0.01" name="admission_fee" value="0.00" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Trainer Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly)</span></label>
-                            <input type="number" step="0.01" name="trainer_fee" value="0.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Trainer Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly)</span></label>
+                            <input type="number" step="0.01" name="trainer_fee" value="0.00" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Locker Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly)</span></label>
-                            <input type="number" step="0.01" name="locker_fee" value="0.00" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Locker Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly)</span></label>
+                            <input type="number" step="0.01" name="locker_fee" value="0.00" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Next Fee Due Date</label>
-                            <input type="date" name="fee_due_date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Next Fee Due Date</label>
+                            <input type="date" name="fee_due_date" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Joined Date</label>
-                            <input type="date" name="joined_date" value="{{ date('Y-m-d') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Joined Date</label>
+                            <input type="date" name="joined_date" value="{{ date('Y-m-d') }}" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Photo</label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Photo</label>
                             <div x-data="{ cameraActive: false, capturedImage: null }" class="space-y-3">
                                 <div x-show="!capturedImage" class="flex items-center gap-3">
-                                    <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary hover:file:bg-blue-100 border border-gray-300">
-                                    <span class="text-sm text-gray-400 font-medium">OR</span>
-                                    <button type="button" @click="cameraActive = true; initCamera($refs.videoElement)" x-show="!cameraActive" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-md border border-gray-300 shadow-sm text-sm hover:bg-gray-200 whitespace-nowrap font-medium flex-shrink-0">
+                                    <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-zinc-500 dark:text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 dark:bg-red-900/30 file:text-red-500 hover:file:bg-red-100 dark:hover:file:bg-red-900/50 border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100">
+                                    <span class="text-sm text-zinc-400 dark:text-zinc-500 font-medium">OR</span>
+                                    <button type="button" @click="cameraActive = true; initCamera($refs.videoElement)" x-show="!cameraActive" class="px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-md border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm text-sm hover:bg-gray-200 whitespace-nowrap font-medium flex-shrink-0">
                                         📷 Open Camera
                                     </button>
                                 </div>
                                 
                                 <input type="hidden" name="photo_base64" :value="capturedImage">
 
-                                <div x-show="cameraActive && !capturedImage" class="relative bg-gray-900 rounded-lg overflow-hidden flex flex-col items-center">
+                                <div x-show="cameraActive && !capturedImage" class="relative bg-zinc-900 dark:bg-black rounded-lg overflow-hidden flex flex-col items-center">
                                     <video x-ref="videoElement" autoplay playsinline class="w-full max-h-64 object-cover"></video>
                                     <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
                                         <button type="button" @click="cameraActive = false; stopCamera($refs.videoElement)" class="px-4 py-2 bg-red-600 text-white rounded-full shadow-md text-sm font-bold hover:bg-red-700">Cancel</button>
@@ -213,15 +259,15 @@
                                 </div>
 
                                 <div x-show="capturedImage" class="relative inline-block">
-                                    <img :src="capturedImage" class="h-32 w-32 object-cover rounded-xl border border-gray-300 shadow-sm">
+                                    <img :src="capturedImage" class="h-32 w-32 object-cover rounded-xl border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm">
                                     <button type="button" @click="capturedImage = null" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-600 text-xs font-bold">&times;</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-4 flex justify-end gap-3 border-t border-gray-100">
-                        <button type="button" @click="addModalOpen = false" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none shadow-sm">Cancel</button>
-                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm" onclick="this.innerHTML='Saving...'; this.form.submit();">Save Member</button>
+                    <div class="pt-4 flex justify-end gap-3 border-t border-zinc-100 dark:border-zinc-800/80">
+                        <button type="button" @click="addModalOpen = false" class="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 rounded-lg hover:bg-zinc-50 dark:bg-zinc-800/50 focus:outline-none shadow-sm">Cancel</button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-sm" onclick="this.innerHTML='Saving...'; this.form.submit();">Save Member</button>
                     </div>
                 </form>
             </div>
@@ -231,11 +277,11 @@
     <!-- Edit Modal -->
     <div x-show="editModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div x-show="editModalOpen" class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="editModalOpen = false"></div>
-            <div class="relative inline-block w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <div x-show="editModalOpen" class="fixed inset-0 transition-opacity bg-black/60" @click="editModalOpen = false"></div>
+            <div class="relative inline-block w-full max-w-xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 shadow-xl rounded-2xl">
                 <div class="flex items-center justify-between mb-5">
-                    <h3 class="text-lg font-bold text-gray-900">Edit Member</h3>
-                    <button @click="editModalOpen = false" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Edit Member</h3>
+                    <button @click="editModalOpen = false" class="text-zinc-400 dark:text-zinc-500 hover:text-zinc-500 dark:text-zinc-400 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
@@ -244,58 +290,58 @@
                     @method('PUT')
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
-                            <input type="text" name="name" x-model="editMember.name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" x-model="editMember.name" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Email Address</label>
-                            <input type="email" name="email" x-model="editMember.email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Email Address</label>
+                            <input type="email" name="email" x-model="editMember.email" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Contact Number</label>
-                            <input type="text" name="contact" x-model="editMember.contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Contact Number</label>
+                            <input type="text" name="contact" x-model="editMember.contact" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
-                            <input type="number" step="0.01" name="fee_amount" x-model="editMember.fee_amount" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.01" name="fee_amount" x-model="editMember.fee_amount" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Admission Fee ($) <span class="text-xs text-gray-400 font-normal">(One-time)</span></label>
-                            <input type="number" step="0.01" name="admission_fee" x-model="editMember.admission_fee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Admission Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(One-time)</span></label>
+                            <input type="number" step="0.01" name="admission_fee" x-model="editMember.admission_fee" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Trainer Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly, set to 0 to remove)</span></label>
-                            <input type="number" step="0.01" name="trainer_fee" x-model="editMember.trainer_fee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Trainer Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly, set to 0 to remove)</span></label>
+                            <input type="number" step="0.01" name="trainer_fee" x-model="editMember.trainer_fee" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Locker Fee ($) <span class="text-xs text-gray-400 font-normal">(Monthly, set to 0 to remove)</span></label>
-                            <input type="number" step="0.01" name="locker_fee" x-model="editMember.locker_fee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Locker Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly, set to 0 to remove)</span></label>
+                            <input type="number" step="0.01" name="locker_fee" x-model="editMember.locker_fee" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Fee Due Date</label>
-                            <input type="date" name="fee_due_date" x-model="editMember.fee_due_date ? editMember.fee_due_date.substring(0,10) : ''" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Fee Due Date</label>
+                            <input type="date" name="fee_due_date" x-model="editMember.fee_due_date ? editMember.fee_due_date.substring(0,10) : ''" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Status <span class="text-red-500">*</span></label>
-                            <select name="status" x-model="editMember.status" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Status <span class="text-red-500">*</span></label>
+                            <select name="status" x-model="editMember.status" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
                             </select>
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Update Photo <span class="text-xs text-gray-400 font-normal">(leave empty to keep current)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Update Photo <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(leave empty to keep current)</span></label>
                             <div x-data="{ cameraActive: false, capturedImage: null }" class="space-y-3">
                                 <div x-show="!capturedImage" class="flex items-center gap-3">
-                                    <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-primary hover:file:bg-blue-100 border border-gray-300">
-                                    <span class="text-sm text-gray-400 font-medium">OR</span>
-                                    <button type="button" @click="cameraActive = true; initCamera($refs.videoElement)" x-show="!cameraActive" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-md border border-gray-300 shadow-sm text-sm hover:bg-gray-200 whitespace-nowrap font-medium flex-shrink-0">
+                                    <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-zinc-500 dark:text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 dark:bg-red-900/30 file:text-red-500 hover:file:bg-red-100 dark:hover:file:bg-red-900/50 border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100">
+                                    <span class="text-sm text-zinc-400 dark:text-zinc-500 font-medium">OR</span>
+                                    <button type="button" @click="cameraActive = true; initCamera($refs.videoElement)" x-show="!cameraActive" class="px-3 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-md border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm text-sm hover:bg-gray-200 whitespace-nowrap font-medium flex-shrink-0">
                                         📷 Open Camera
                                     </button>
                                 </div>
                                 
                                 <input type="hidden" name="photo_base64" :value="capturedImage">
 
-                                <div x-show="cameraActive && !capturedImage" class="relative bg-gray-900 rounded-lg overflow-hidden flex flex-col items-center">
+                                <div x-show="cameraActive && !capturedImage" class="relative bg-zinc-900 dark:bg-black rounded-lg overflow-hidden flex flex-col items-center">
                                     <video x-ref="videoElement" autoplay playsinline class="w-full max-h-64 object-cover"></video>
                                     <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-3">
                                         <button type="button" @click="cameraActive = false; stopCamera($refs.videoElement)" class="px-4 py-2 bg-red-600 text-white rounded-full shadow-md text-sm font-bold hover:bg-red-700">Cancel</button>
@@ -305,15 +351,15 @@
                                 </div>
 
                                 <div x-show="capturedImage" class="relative inline-block">
-                                    <img :src="capturedImage" class="h-32 w-32 object-cover rounded-xl border border-gray-300 shadow-sm">
+                                    <img :src="capturedImage" class="h-32 w-32 object-cover rounded-xl border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm">
                                     <button type="button" @click="capturedImage = null" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-600 text-xs font-bold">&times;</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-4 flex justify-end gap-3 border-t border-gray-100">
-                        <button type="button" @click="editModalOpen = false" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none shadow-sm">Cancel</button>
-                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm" onclick="this.innerHTML='Saving...'; this.form.submit();">Update Member</button>
+                    <div class="pt-4 flex justify-end gap-3 border-t border-zinc-100 dark:border-zinc-800/80">
+                        <button type="button" @click="editModalOpen = false" class="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 rounded-lg hover:bg-zinc-50 dark:bg-zinc-800/50 focus:outline-none shadow-sm">Cancel</button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-sm" onclick="this.innerHTML='Saving...'; this.form.submit();">Update Member</button>
                     </div>
                 </form>
             </div>
@@ -323,15 +369,15 @@
     <!-- View Modal (Card Style) -->
     <div x-show="viewModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-            <div x-show="viewModalOpen" class="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-75" @click="viewModalOpen = false"></div>
+            <div x-show="viewModalOpen" class="fixed inset-0 transition-opacity bg-black/80" @click="viewModalOpen = false"></div>
             
-            <div class="relative inline-block w-full max-w-[360px] overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl flex flex-col h-[85vh] sm:h-auto sm:max-h-[90vh]">
+            <div class="relative inline-block w-full max-w-[360px] overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl flex flex-col h-[85vh] sm:h-auto sm:max-h-[90vh]">
                 
                 <!-- Scrollable Content Area -->
-                <div class="flex-1 overflow-y-auto w-full bg-white relative pb-16">
+                <div class="flex-1 overflow-y-auto w-full bg-white dark:bg-zinc-900 relative pb-16">
                     
                     <!-- Top Dark Header Section -->
-                    <div class="bg-black pt-4 pb-8 px-4 relative flex flex-col items-center">
+                    <div class="bg-black dark:bg-zinc-950 pt-4 pb-8 px-4 relative flex flex-col items-center">
                         <!-- Top Actions (Back & Check) -->
                         <div class="w-full flex justify-between items-center text-white mb-2 relative left-0 px-1">
                             <button @click="viewModalOpen = false" class="text-white hover:text-gray-300 transition focus:outline-none">
@@ -345,10 +391,10 @@
                         <!-- Profile Image Avatar -->
                         <div class="flex justify-center mt-1 relative z-10 w-full">
                             <template x-if="viewMember.photo">
-                                <img :src="'/storage/' + viewMember.photo" class="w-32 h-32 rounded-full object-cover border-2 border-white shadow-sm bg-white">
+                                <img :src="'/storage/' + viewMember.photo" class="w-32 h-32 rounded-full object-cover border-2 border-white dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900">
                             </template>
                             <template x-if="!viewMember.photo">
-                                <div class="w-32 h-32 rounded-full bg-blue-100 text-primary flex items-center justify-center font-bold text-5xl shadow-sm border-2 border-white" x-text="viewMember.name ? viewMember.name.substring(0, 1) : ''"></div>
+                                <div class="w-32 h-32 rounded-full bg-red-100 dark:bg-red-900/50 text-red-500 flex items-center justify-center font-bold text-5xl shadow-sm border-2 border-white dark:border-zinc-800" x-text="viewMember.name ? viewMember.name.substring(0, 1) : ''"></div>
                             </template>
                         </div>
                         
@@ -358,111 +404,94 @@
                     </div>
 
                     <!-- Action Bar -->
-                    <div class="flex justify-center border-b border-gray-200 bg-white">
-                        <form method="POST" :action="'{{ url('gym/members') }}/' + viewMember.id + '/mark-paid'" class="w-1/2 border-r border-gray-200" x-ref="markPaidForm">
+                    <div class="flex justify-center border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+                        <form method="POST" :action="'{{ url('gym/members') }}/' + viewMember.id + '/mark-paid'" class="w-1/2 border-r border-zinc-200 dark:border-zinc-700" x-ref="markPaidForm">
                             @csrf
-                            <button type="button" @click="$refs.markPaidForm.submit()" class="w-full flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-gray-50 transition text-gray-700">
-                                <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                <span class="text-[11px] font-semibold text-gray-800">Mark Paid</span>
+                            <button type="button" @click="$refs.markPaidForm.submit()" class="w-full flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-zinc-50 dark:bg-zinc-800/50 transition text-zinc-700 dark:text-zinc-300">
+                                <svg class="w-5 h-5 text-zinc-800 dark:text-zinc-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                <span class="text-[11px] font-semibold text-zinc-800 dark:text-zinc-200">Mark Paid</span>
                             </button>
                         </form>
-                        <button type="button" @click="viewModalOpen = false; editMember = viewMember; editModalOpen = true" class="w-1/2 flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-gray-50 transition text-gray-700">
-                            <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span class="text-[11px] font-semibold text-gray-800">Edit Member</span>
+                        <button type="button" @click="viewModalOpen = false; editMember = viewMember; editModalOpen = true" class="w-1/2 flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-zinc-50 dark:bg-zinc-800/50 transition text-zinc-700 dark:text-zinc-300">
+                            <svg class="w-5 h-5 text-zinc-800 dark:text-zinc-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="text-[11px] font-semibold text-zinc-800 dark:text-zinc-200">Edit Member</span>
                         </button>
                     </div>
 
                     <!-- Details Section Head -->
-                    <div class="bg-gray-100 px-4 py-2 flex items-center gap-2 border-b border-gray-200">
-                        <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-                        <span class="text-xs uppercase tracking-wider font-bold text-black">Details</span>
+                    <div class="bg-zinc-100 dark:bg-zinc-800 px-4 py-2 flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-700">
+                        <svg class="w-4 h-4 text-zinc-500 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                        <span class="text-xs uppercase tracking-wider font-bold text-black dark:text-white">Details</span>
                     </div>
 
                     <!-- Details List -->
-                    <div class="px-4 bg-white divide-y divide-gray-100 text-sm">
+                    <div class="px-4 bg-white dark:bg-zinc-900 divide-y divide-gray-100 text-sm">
                         <div class="py-3.5 flex items-center justify-between">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Status</span>
-                            <span class="text-gray-800 w-2/3 font-medium text-[13px]" x-text="viewMember.status === 'active' ? 'Active' : 'Inactive'"></span>
+                            <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Status</span>
+                            <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-medium text-[13px]" x-text="viewMember.status === 'active' ? 'Active' : 'Inactive'"></span>
                         </div>
                         <div class="py-3.5 flex items-center justify-between">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Gym Fee</span>
-                            <span class="text-gray-800 w-2/3 font-bold text-[13px]" x-text="'$' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></span>
+                            <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Gym Fee</span>
+                            <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px]" x-text="'$' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></span>
                         </div>
                         <template x-if="viewMember.trainer_fee > 0">
                             <div class="py-3.5 flex items-center justify-between">
-                                <span class="text-gray-400 w-1/3 text-[13px] font-medium">Trainer Fee</span>
-                                <span class="text-gray-800 w-2/3 font-bold text-[13px] text-blue-600" x-text="'$' + parseFloat(viewMember.trainer_fee).toFixed(2) + ' /mo'"></span>
+                                <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Trainer Fee</span>
+                                <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px] text-red-600 dark:text-red-400" x-text="'$' + parseFloat(viewMember.trainer_fee).toFixed(2) + ' /mo'"></span>
                             </div>
                         </template>
                         <template x-if="viewMember.locker_fee > 0">
                             <div class="py-3.5 flex items-center justify-between">
-                                <span class="text-gray-400 w-1/3 text-[13px] font-medium">Locker Fee</span>
-                                <span class="text-gray-800 w-2/3 font-bold text-[13px] text-purple-600" x-text="'$' + parseFloat(viewMember.locker_fee).toFixed(2) + ' /mo'"></span>
+                                <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Locker Fee</span>
+                                <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px] text-purple-600 dark:text-purple-400" x-text="'$' + parseFloat(viewMember.locker_fee).toFixed(2) + ' /mo'"></span>
                             </div>
                         </template>
-                        <div class="py-3.5 flex items-center justify-between bg-gray-50 -mx-4 px-4 border-y border-gray-100">
-                            <span class="text-gray-500 w-1/3 text-[13px] font-bold">Total Monthly</span>
+                        <div class="py-3.5 flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50 -mx-4 px-4 border-y border-zinc-100 dark:border-zinc-800/80">
+                            <span class="text-zinc-500 dark:text-zinc-400 w-1/3 text-[13px] font-bold">Total Monthly</span>
                             <span class="text-green-600 w-2/3 font-bold text-[14px]" x-text="'$' + (parseFloat(viewMember.fee_amount || 0) + parseFloat(viewMember.trainer_fee || 0) + parseFloat(viewMember.locker_fee || 0)).toFixed(2)"></span>
                         </div>
                         <template x-if="viewMember.admission_fee > 0">
                             <div class="py-3.5 flex items-center justify-between">
-                                <span class="text-gray-400 w-1/3 text-[13px] font-medium">Admission</span>
-                                <span class="text-gray-500 w-2/3 font-medium text-[13px]" x-text="'$' + parseFloat(viewMember.admission_fee).toFixed(2) + ' (Paid once)'"></span>
+                                <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Admission</span>
+                                <span class="text-zinc-500 dark:text-zinc-400 w-2/3 font-medium text-[13px]" x-text="'$' + parseFloat(viewMember.admission_fee).toFixed(2) + ' (Paid once)'"></span>
                             </div>
                         </template>
                         <div class="py-3.5 flex items-center justify-between">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Joined Date</span>
+                            <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Joined Date</span>
                             <div class="w-2/3 flex items-center justify-between">
-                                <span class="text-gray-800 font-medium text-[13px]" x-text="viewMember.joined_date ? new Date(viewMember.joined_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''"></span>
+                                <span class="text-zinc-800 dark:text-zinc-200 font-medium text-[13px]" x-text="viewMember.joined_date ? new Date(viewMember.joined_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''"></span>
                             </div>
                         </div>
                         <div class="py-3.5 flex items-center justify-between">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium">Due Date</span>
+                            <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Due Date</span>
                             <div class="w-2/3 flex items-center justify-between">
-                                <span class="text-gray-800 font-medium text-[13px]" x-text="viewMember.fee_due_date ? new Date(viewMember.fee_due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''"></span>
-                                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span class="text-zinc-800 dark:text-zinc-200 font-medium text-[13px]" x-text="viewMember.fee_due_date ? new Date(viewMember.fee_due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''"></span>
+                                <svg class="w-4 h-4 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                         </div>
                     </div>
 
                     <!-- Contact Info Section Head -->
-                    <div class="bg-gray-100 px-4 py-2 border-y border-gray-200 flex items-center gap-2 mt-2 border-t-0">
-                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        <span class="text-xs uppercase tracking-wider font-bold text-black">Contact</span>
+                    <div class="bg-zinc-100 dark:bg-zinc-800 px-4 py-2 border-y border-zinc-200 dark:border-zinc-700 flex items-center gap-2 mt-2 border-t-0">
+                        <svg class="w-4 h-4 text-zinc-500 dark:text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span class="text-xs uppercase tracking-wider font-bold text-black dark:text-white">Contact</span>
                     </div>
 
                     <!-- Contact List -->
-                    <div class="px-4 bg-white divide-y divide-gray-100 text-sm pb-2">
+                    <div class="px-4 bg-white dark:bg-zinc-900 divide-y divide-gray-100 text-sm pb-2">
                         <div class="py-3.5 flex items-center justify-between overflow-hidden">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium mr-4">Phone</span>
-                            <span class="text-gray-900 w-2/3 font-medium text-[13px] truncate" x-text="viewMember.contact || ''"></span>
+                            <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium mr-4">Phone</span>
+                            <span class="text-zinc-900 dark:text-zinc-100 w-2/3 font-medium text-[13px] truncate" x-text="viewMember.contact || ''"></span>
                         </div>
                         <div class="py-3.5 flex items-center justify-between overflow-hidden">
-                            <span class="text-gray-400 w-1/3 text-[13px] font-medium mr-4">Email</span>
-                            <span class="text-gray-900 w-2/3 font-medium text-[13px] truncate" x-text="viewMember.email || ''"></span>
+                            <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium mr-4">Email</span>
+                            <span class="text-zinc-900 dark:text-zinc-100 w-2/3 font-medium text-[13px] truncate" x-text="viewMember.email || ''"></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Bottom Navigation Bar Dummy -->
-                <div class="absolute bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-between items-center px-4 py-2 pb-3 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] pt-2.5">
-                    <button class="flex flex-col items-center gap-1 text-indigo-600 focus:outline-none">
-                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
-                        <span class="text-[9px] font-bold">Details</span>
-                    </button>
-                    <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition focus:outline-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
-                        <span class="text-[9px] font-bold">Membership</span>
-                    </button>
-                    <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition focus:outline-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <span class="text-[9px] font-bold">Communication</span>
-                    </button>
-                    <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition focus:outline-none">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span class="text-[9px] font-bold">Bookings</span>
-                    </button>
-                </div>
+               
             </div>
         </div>
     </div>

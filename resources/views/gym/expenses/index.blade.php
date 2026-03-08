@@ -19,23 +19,24 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
         @php
             $categoryIcons = [
-                'Rent'        => ['icon' => 'ph-buildings',        'color' => 'text-blue-400',   'bg' => 'bg-blue-900/20',   'border' => 'border-blue-900/30'],
-                'Utilities'   => ['icon' => 'ph-lightning',        'color' => 'text-yellow-400', 'bg' => 'bg-yellow-900/20', 'border' => 'border-yellow-900/30'],
-                'Equipment'   => ['icon' => 'ph-barbell',          'color' => 'text-purple-400', 'bg' => 'bg-purple-900/20', 'border' => 'border-purple-900/30'],
-                'Maintenance' => ['icon' => 'ph-wrench',           'color' => 'text-orange-400', 'bg' => 'bg-orange-900/20', 'border' => 'border-orange-900/30'],
-                'Supplies'    => ['icon' => 'ph-package',          'color' => 'text-teal-400',   'bg' => 'bg-teal-900/20',   'border' => 'border-teal-900/30'],
-                'Marketing'   => ['icon' => 'ph-megaphone',        'color' => 'text-pink-400',   'bg' => 'bg-pink-900/20',   'border' => 'border-pink-900/30'],
-                'Cleaning'    => ['icon' => 'ph-broom',            'color' => 'text-cyan-400',   'bg' => 'bg-cyan-900/20',   'border' => 'border-cyan-900/30'],
-                'Other'       => ['icon' => 'ph-dots-three-circle','color' => 'text-zinc-400',   'bg' => 'bg-zinc-800',      'border' => 'border-zinc-700'],
+                'Rent'        => ['icon' => 'ph-buildings',         'gradient' => 'linear-gradient(135deg,#3b82f6 0%,#1e3a8a 100%)'],
+                'Utilities'   => ['icon' => 'ph-lightning',         'gradient' => 'linear-gradient(135deg,#eab308 0%,#713f12 100%)'],
+                'Equipment'   => ['icon' => 'ph-barbell',           'gradient' => 'linear-gradient(135deg,#a855f7 0%,#3b0764 100%)'],
+                'Maintenance' => ['icon' => 'ph-wrench',            'gradient' => 'linear-gradient(135deg,#f97316 0%,#7c2d12 100%)'],
+                'Supplies'    => ['icon' => 'ph-package',           'gradient' => 'linear-gradient(135deg,#14b8a6 0%,#134e4a 100%)'],
+                'Marketing'   => ['icon' => 'ph-megaphone',         'gradient' => 'linear-gradient(135deg,#ec4899 0%,#831843 100%)'],
+                'Cleaning'    => ['icon' => 'ph-broom',             'gradient' => 'linear-gradient(135deg,#06b6d4 0%,#164e63 100%)'],
+                'Other'       => ['icon' => 'ph-dots-three-circle', 'gradient' => 'linear-gradient(135deg,#71717a 0%,#27272a 100%)'],
             ];
         @endphp
 
         @foreach($categoryTotals as $cat)
             @php $style = $categoryIcons[$cat->category] ?? $categoryIcons['Other']; @endphp
-            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl {{ $style['bg'] }} {{ $style['border'] }} border flex items-center justify-center shrink-0">
-                    <i class="ph-fill {{ $style['icon'] }} {{ $style['color'] }}" style="font-size:20px;"></i>
-                </div>
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 flex items-center gap-3 shadow-sm">
+                <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
+                      style="background: {{ $style['gradient'] }};">
+                    <i class="ph-fill {{ $style['icon'] }} text-white" style="font-size:20px;"></i>
+                </span>
                 <div class="min-w-0">
                     <p class="text-[11px] text-zinc-500 uppercase tracking-wide truncate">{{ $cat->category }}</p>
                     <p class="text-lg font-bold text-zinc-900 dark:text-zinc-100">${{ number_format($cat->total, 2) }}</p>
@@ -56,26 +57,119 @@
     </div>
 
     {{-- Filters --}}
-    <form method="GET" action="{{ route('expenses.index') }}" class="flex flex-wrap gap-2">
-        <select name="category" class="bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm px-3 py-2 focus:ring-red-500 focus:border-red-500" onchange="this.form.submit()">
-            <option value="all">All Categories</option>
-            @foreach($categories as $cat)
-                <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-            @endforeach
-        </select>
-        <select name="month" class="bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm px-3 py-2 focus:ring-red-500 focus:border-red-500" onchange="this.form.submit()">
-            <option value="">All Months</option>
-            @foreach(range(1, 12) as $m)
-                <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>{{ date('F', mktime(0,0,0,$m,1)) }}</option>
-            @endforeach
-        </select>
-        <select name="year" class="bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg text-sm px-3 py-2 focus:ring-red-500 focus:border-red-500" onchange="this.form.submit()">
-            @foreach($years as $yr)
-                <option value="{{ $yr }}" {{ (request('year', now()->year)) == $yr ? 'selected' : '' }}>{{ $yr }}</option>
-            @endforeach
-        </select>
+    <form method="GET" action="{{ route('expenses.index') }}" id="filter-form" class="flex flex-wrap items-center gap-2">
+
+        {{-- Category Dropdown --}}
+        @php
+            $selCat = request('category', 'all');
+        @endphp
+        <div class="relative" x-data="{ open: false, selected: '{{ $selCat }}' }" @click.outside="open = false">
+            <button type="button" @click="open = !open"
+                    class="flex items-center gap-2 pl-3.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 text-sm font-medium shadow-sm hover:border-zinc-300 dark:hover:border-zinc-600 transition-all min-w-[155px]">
+                <i class="ph-bold ph-tag text-red-500" style="font-size:14px;"></i>
+                <span x-text="selected === 'all' ? 'All Categories' : selected" class="flex-1 text-left truncate"></span>
+                <i class="ph-bold ph-caret-down text-zinc-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''" style="font-size:12px;"></i>
+            </button>
+            <input type="hidden" name="category" :value="selected">
+            <div x-show="open" x-cloak
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute z-50 mt-1.5 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden">
+                <div class="py-1">
+                    <button type="button" @click="selected = 'all'; open = false; $nextTick(() => document.getElementById('filter-form').submit())"
+                            class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition"
+                            :class="selected === 'all' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'">
+                        <i class="ph-fill ph-squares-four" style="font-size:14px;"></i>
+                        All Categories
+                    </button>
+                    @foreach($categories as $cat)
+                        @php $catIcon = ['Rent'=>'ph-buildings','Utilities'=>'ph-lightning','Equipment'=>'ph-barbell','Maintenance'=>'ph-wrench','Supplies'=>'ph-package','Marketing'=>'ph-megaphone','Cleaning'=>'ph-broom','Other'=>'ph-dots-three-circle'][$cat] ?? 'ph-tag'; @endphp
+                        <button type="button" @click="selected = '{{ $cat }}'; open = false; $nextTick(() => document.getElementById('filter-form').submit())"
+                                class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition"
+                                :class="selected === '{{ $cat }}' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'">
+                            <i class="ph-fill {{ $catIcon }}" style="font-size:14px;"></i>
+                            {{ $cat }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        {{-- Month Dropdown --}}
+        @php $selMonth = request('month', ''); @endphp
+        <div class="relative" x-data="{ open: false, selected: '{{ $selMonth }}' }" @click.outside="open = false">
+            <button type="button" @click="open = !open"
+                    class="flex items-center gap-2 pl-3.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 text-sm font-medium shadow-sm hover:border-zinc-300 dark:hover:border-zinc-600 transition-all min-w-[140px]">
+                <i class="ph-bold ph-calendar text-red-500" style="font-size:14px;"></i>
+                <span x-text="selected === '' ? 'All Months' : new Date(2000, selected - 1, 1).toLocaleString('en', {month: 'long'})" class="flex-1 text-left"></span>
+                <i class="ph-bold ph-caret-down text-zinc-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''" style="font-size:12px;"></i>
+            </button>
+            <input type="hidden" name="month" :value="selected">
+            <div x-show="open" x-cloak
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute z-50 mt-1.5 w-40 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden">
+                <div class="py-1 max-h-60 overflow-y-auto">
+                    <button type="button" @click="selected = ''; open = false; $nextTick(() => document.getElementById('filter-form').submit())"
+                            class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition"
+                            :class="selected === '' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'">
+                        All Months
+                    </button>
+                    @foreach(range(1, 12) as $m)
+                        <button type="button" @click="selected = '{{ $m }}'; open = false; $nextTick(() => document.getElementById('filter-form').submit())"
+                                class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition"
+                                :class="selected == '{{ $m }}' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'">
+                            {{ date('F', mktime(0,0,0,$m,1)) }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        {{-- Year Dropdown --}}
+        @php $selYear = request('year', now()->year); @endphp
+        <div class="relative" x-data="{ open: false, selected: '{{ $selYear }}' }" @click.outside="open = false">
+            <button type="button" @click="open = !open"
+                    class="flex items-center gap-2 pl-3.5 pr-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-200 text-sm font-medium shadow-sm hover:border-zinc-300 dark:hover:border-zinc-600 transition-all min-w-[110px]">
+                <i class="ph-bold ph-clock-clockwise text-red-500" style="font-size:14px;"></i>
+                <span x-text="selected" class="flex-1 text-left"></span>
+                <i class="ph-bold ph-caret-down text-zinc-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''" style="font-size:12px;"></i>
+            </button>
+            <input type="hidden" name="year" :value="selected">
+            <div x-show="open" x-cloak
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute z-50 mt-1.5 w-28 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden">
+                <div class="py-1">
+                    @foreach($years as $yr)
+                        <button type="button" @click="selected = '{{ $yr }}'; open = false; $nextTick(() => document.getElementById('filter-form').submit())"
+                                class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm transition"
+                                :class="selected == '{{ $yr }}' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'">
+                            {{ $yr }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
         @if(request()->hasAny(['category','month','year']))
-            <a href="{{ route('expenses.index') }}" class="px-3 py-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-300 dark:border-zinc-700 rounded-lg transition">Clear</a>
+            <a href="{{ route('expenses.index') }}"
+               class="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-400 border border-zinc-200 dark:border-zinc-700 rounded-xl hover:border-red-300 dark:hover:border-red-900/50 bg-white dark:bg-zinc-900 shadow-sm transition-all">
+                <i class="ph-bold ph-x-circle" style="font-size:14px;"></i>
+                Clear
+            </a>
         @endif
     </form>
 
@@ -99,18 +193,20 @@
                         <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition">
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg {{ $style['bg'] }} {{ $style['border'] }} border flex items-center justify-center shrink-0">
-                                        <i class="ph-fill {{ $style['icon'] }} {{ $style['color'] }}" style="font-size:15px;"></i>
-                                    </div>
+                                    <span class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-sm"
+                                          style="background: {{ $style['gradient'] }};">
+                                        <i class="ph-fill {{ $style['icon'] }} text-white" style="font-size:15px;"></i>
+                                    </span>
                                     <span class="text-zinc-900 dark:text-zinc-100 font-medium">{{ $expense->title }}</span>
                                 </div>
                             </td>
                             <td class="px-4 py-3">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $style['bg'] }} {{ $style['color'] }} border {{ $style['border'] }}">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold"
+                                      style="background: {{ $style['gradient'] }}; color: white;">
                                     {{ $expense->category }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 font-bold text-red-400 whitespace-nowrap">
+                            <td class="px-4 py-3 font-bold text-red-600 dark:text-red-400 whitespace-nowrap">
                                 ${{ number_format($expense->amount, 2) }}
                             </td>
                             <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 whitespace-nowrap hidden md:table-cell">
@@ -120,16 +216,16 @@
                                 {{ $expense->notes ?? '—' }}
                             </td>
                             <td class="px-4 py-3">
-                                <div class="flex items-center justify-end gap-1.5">
+                                <div class="flex items-center justify-end gap-1">
                                     <button @click="editExpense = {{ json_encode($expense) }}; editExpense.expense_date = '{{ $expense->expense_date->format('Y-m-d') }}'; editModalOpen = true"
-                                            class="text-white bg-gray-400 hover:bg-gray-500 p-1.5 rounded-lg transition  border-amber-900/30" title="Edit">
-                                        <i class="ph-bold ph-pencil" style="font-size:14px;"></i>
+                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-500/30 transition" title="Edit">
+                                        <i class="ph-bold ph-pencil" style="font-size:13px;"></i>
                                     </button>
                                     <form method="POST" action="{{ route('expenses.destroy', $expense) }}" id="del-expense-{{ $expense->id }}" class="inline">
                                         @csrf @method('DELETE')
                                         <button type="button" onclick="confirmExpenseDelete('{{ $expense->id }}')"
-                                                class="text-white bg-red-500 hover:bg-red-700 p-1.5 rounded-lg transition border border-red-900/30" title="Delete">
-                                            <i class="ph-bold ph-trash" style="font-size:14px;"></i>
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-500/15 text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/30 transition" title="Delete">
+                                            <i class="ph-bold ph-trash" style="font-size:13px;"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -139,9 +235,9 @@
                         <tr>
                             <td colspan="6" class="px-6 py-14 text-center text-zinc-500">
                                 <div class="flex flex-col items-center">
-                                    <i class="ph-fill ph-receipt text-zinc-700 mb-3" style="font-size:48px;"></i>
-                                    <span class="text-base font-medium text-zinc-400">No Expenses Found</span>
-                                    <p class="text-sm text-zinc-600 mt-1">Add your first expense to start tracking costs.</p>
+                                    <i class="ph-fill ph-receipt text-zinc-300 dark:text-zinc-700 mb-3" style="font-size:48px;"></i>
+                                    <span class="text-base font-medium text-zinc-500 dark:text-zinc-400">No Expenses Found</span>
+                                    <p class="text-sm text-zinc-400 dark:text-zinc-600 mt-1">Add your first expense to start tracking costs.</p>
                                 </div>
                             </td>
                         </tr>

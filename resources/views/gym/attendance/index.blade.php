@@ -110,7 +110,7 @@
                                         @if($date > date('Y-m-d'))
                                             <button type="submit" disabled class="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-400 rounded-lg text-xs font-bold opacity-50 cursor-not-allowed">Mark Present</button>
                                         @else
-                                            <button type="submit" class="px-3 py-1.5 bg-zinc-800 dark:bg-zinc-700 hover:bg-black dark:hover:bg-zinc-600 text-white rounded-lg text-xs font-bold transition shadow-sm">Mark Present</button>
+                                            <button type="submit" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition shadow-sm">Mark Present</button>
                                         @endif
                                     </form>
                                 @endif
