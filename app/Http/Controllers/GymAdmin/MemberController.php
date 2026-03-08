@@ -13,6 +13,14 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         $gymId = $request->user()->gym_id;
+
+        // Auto-move members expired > 60 days to inactive
+        Member::where('gym_id', $gymId)
+            ->where('status', 'active')
+            ->whereNotNull('fee_due_date')
+            ->where('fee_due_date', '<', now()->subDays(60))
+            ->update(['status' => 'inactive']);
+
         $query = Member::where('gym_id', $gymId);
 
         if ($request->filled('search')) {
@@ -85,22 +93,9 @@ class MemberController extends Controller
             $validated['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        $member = Member::create($validated);
+        Member::create($validated);
 
-        // Record initial payment upon creation (admission + all first month fees)
-        $totalInitialPayment = $member->fee_amount + $member->admission_fee + $member->trainer_fee + $member->locker_fee;
-        
-        if ($totalInitialPayment > 0) {
-            Payment::create([
-                'gym_id' => $gymId,
-                'member_id' => $member->id,
-                'member_name' => $member->name,
-                'amount' => $totalInitialPayment,
-                'paid_date' => now()
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Member added successfully. Initial payment recorded.');
+        return redirect()->back()->with('success', 'Member added successfully.');
     }
 
     public function update(Request $request, Member $member)
@@ -160,7 +155,12 @@ class MemberController extends Controller
         $totalRecurringMonthly = $member->fee_amount + $member->trainer_fee + $member->locker_fee;
         $amountPaid = $totalRecurringMonthly * $months;
 
-        $newDueDate = $member->fee_due_date ? $member->fee_due_date->addDays($daysToAdd) : now()->addDays($daysToAdd);
+        // If inactive or fee is wildly overdue (e.g. over 30 days), start billing cycle from today
+        if ($member->status === 'inactive' || ($member->fee_due_date && $member->fee_due_date->diffInDays(now(), false) > 30)) {
+            $newDueDate = now()->addDays($daysToAdd);
+        } else {
+            $newDueDate = $member->fee_due_date ? $member->fee_due_date->addDays($daysToAdd) : now()->addDays($daysToAdd);
+        }
 
         $member->update([
             'fee_due_date' => $newDueDate,
@@ -186,7 +186,11 @@ class MemberController extends Controller
     {
         if ($member->gym_id !== $request->user()->gym_id) abort(403);
         
-        $member->update(['status' => 'active']);
-        return redirect()->back()->with('success', 'Member reactivated successfully.');
+        $member->update([
+            'status' => 'active',
+            'fee_due_date' => now() // Reset due date to today so they aren't months overdue
+        ]);
+        
+        return redirect()->back()->with('success', 'Member reactivated successfully. Please collect and record their fee to update their due date.');
     }
 }

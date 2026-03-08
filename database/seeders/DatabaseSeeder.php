@@ -39,5 +39,10 @@ class DatabaseSeeder extends Seeder
             'role' => 'gym_admin',
             'gym_id' => $gym->id,
         ]);
+
+        // Seed dummy members only in non-production app environments.
+        if (app()->environment(['local', 'staging'])) {
+            $this->call(MemberSeeder::class);
+        }
     }
 }

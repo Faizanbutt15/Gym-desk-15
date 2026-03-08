@@ -186,6 +186,60 @@
 
     </div>{{-- end grid --}}
 
+    {{-- ── ROW 3: Recent Payments ── --}}
+    <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden shadow-sm mt-4">
+        <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+            <div>
+                <h2 class="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Recent Payments</h2>
+                <p class="text-[11px] text-zinc-500 mt-0.5">Latest fee collections from members</p>
+            </div>
+            <a href="{{ route('members.index') }}" class="text-xs font-semibold text-red-600 hover:text-red-700">View Members &rarr;</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-200 dark:border-zinc-800">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">Member</th>
+                        <th class="px-6 py-4 font-semibold">Amount</th>
+                        <th class="px-6 py-4 font-semibold hidden sm:table-cell">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/60">
+                    @forelse($recentPayments as $payment)
+                        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition">
+                            <td class="px-6 py-4">
+                                <span class="font-medium inline-block text-zinc-900 dark:text-zinc-100">{{ $payment->member_name }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
+                                    +${{ number_format($payment->amount, 2) }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-zinc-500 dark:text-zinc-400 text-xs hidden sm:table-cell">
+                                @if($payment->paid_date)
+                                    {{ $payment->paid_date->format('M d, Y') }}
+                                @else
+                                    {{ $payment->created_at->format('M d, Y') }}
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <span class="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-3">
+                                        <i class="ph-fill ph-receipt text-zinc-400 dark:text-zinc-500 text-2xl"></i>
+                                    </span>
+                                    <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400">No recent payments</span>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 @push('scripts')

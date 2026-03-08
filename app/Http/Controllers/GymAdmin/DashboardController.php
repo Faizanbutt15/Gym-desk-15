@@ -15,6 +15,13 @@ class DashboardController extends Controller
     {
         $gymId = $request->user()->gym_id;
 
+        // Auto-move members expired > 60 days to inactive
+        Member::where('gym_id', $gymId)
+            ->where('status', 'active')
+            ->whereNotNull('fee_due_date')
+            ->where('fee_due_date', '<', now()->subDays(60))
+            ->update(['status' => 'inactive']);
+
         // Member stats
         $totalMembers = Member::where('gym_id', $gymId)->count();
         $activeMembers = Member::where('gym_id', $gymId)->where('status', 'active')->count();
@@ -61,9 +68,13 @@ class DashboardController extends Controller
         $netThisMonth = $revenueThisMonth - $spendingThisMonth;
         $netTotal     = $totalRevenue - $totalSpending;
 
+        // Count unique members who made a payment this month
         $paidMembersThisMonth = Payment::where('gym_id', $gymId)
             ->whereMonth('paid_date', now()->month)
             ->whereYear('paid_date', now()->year)
+            ->whereHas('member', function ($query) {
+                $query->whereNull('deleted_at');
+            })
             ->distinct('member_id')
             ->count('member_id');
 
@@ -79,4 +90,3 @@ class DashboardController extends Controller
         ));
     }
 }
-
