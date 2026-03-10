@@ -2,8 +2,9 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }} - Super Admin</title>
+    <title>Gymdesk15 - Super Admin</title>
     {{-- Theme init: runs before body renders to prevent flash --}}
     <script>
         (function() {
@@ -28,7 +29,7 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-white dark:bg-black text-zinc-800 dark:text-white flex flex-col hidden md:flex absolute md:relative z-20 h-full border-r border-zinc-200 dark:border-zinc-800 transition-transform duration-300 transform md:translate-x-0" :class="mobileMenuOpen ? 'translate-x-0 !flex' : '-translate-x-full'">
         <div class="h-16 flex items-center justify-between px-6 font-bold text-2xl border-b border-zinc-200 dark:border-zinc-800 tracking-tight text-zinc-900 dark:text-white">
-            <span><span class="text-red-500">Gym</span>OS</span>
+            <span><span class="text-red-500">Gym</span>desk-15</span>
             <button class="md:hidden text-zinc-500 dark:text-white" @click="mobileMenuOpen = false">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
@@ -70,7 +71,7 @@
     <div class="flex-1 flex flex-col h-screen overflow-hidden w-full relative">
         <!-- Top Header -->
         <header class="h-16 bg-white dark:bg-zinc-900 flex items-center justify-between px-6 border-b border-zinc-200 dark:border-zinc-800 z-10 relative">
-            <div class="font-bold text-xl text-red-500 md:hidden">GymOS</div>
+            <div class="font-bold text-xl text-red-500 md:hidden">Gymdesk15</div>
             <div class="flex items-center space-x-3 md:ml-auto">
                 <div class="hidden md:flex items-center gap-3">
                     <div class="w-8 h-8 rounded-full bg-red-50 dark:bg-red-900/40 text-red-500 dark:text-red-400 flex items-center justify-center font-bold text-sm">

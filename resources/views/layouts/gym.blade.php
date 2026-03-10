@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }} - Gym Admin</title>
+    <title>Gymdesk15 </title>
     {{-- Theme init: runs before body renders to prevent flash --}}
     <script>
         (function() {
@@ -59,7 +59,7 @@
 
         {{-- Logo --}}
         <div class="h-16 flex items-center border-b border-zinc-200 dark:border-zinc-800/60 px-4 overflow-hidden whitespace-nowrap shrink-0">
-            <span class="text-red-500 text-xl font-black tracking-tight shrink-0">G</span>
+            <img src="{{ asset('logo.png') }}" alt="Logo" class="w-12 h-12 rounded-md border border-zinc-200 dark:border-zinc-700/60 object-cover shrink-0">
             <span class="ml-1 font-bold text-zinc-800 dark:text-white text-sm tracking-tight overflow-hidden transition-all duration-200"
                   x-bind:class="{ 'opacity-100 max-w-full': sidebarOpen || mobileMenuOpen, 'opacity-0 max-w-0 lg:hidden': !sidebarOpen && !mobileMenuOpen }">
                 {{ \Illuminate\Support\Str::limit(auth()->user()->gym->name ?? 'Gym Panel', 16) }}
