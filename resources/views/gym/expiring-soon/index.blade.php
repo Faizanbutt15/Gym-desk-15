@@ -82,7 +82,7 @@
 
                     <!-- Action bottom -->
                     <div class="mt-auto px-5 py-4 bg-gray-50 border-t border-gray-200 rounded-b-2xl relative z-20">
-                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-4">
+                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-4" onsubmit="window.confirmFormSubmit(event, this, 'Record Payment?', 'This will record a payment and extend the due date.', 'Yes, Mark as Paid')">
                             @csrf
                             
                             @php
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="relative z-10 w-full text-white bg-green-500 hover:bg-green-600 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-0.5 text-center flex justify-center items-center gap-2" onclick="return confirm('Record this payment and extend the due date?')">
+                            <button type="submit" class="relative z-10 w-full text-white bg-green-500 hover:bg-green-600 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-0.5 text-center flex justify-center items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Mark as Paid
                             </button>

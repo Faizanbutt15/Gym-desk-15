@@ -106,11 +106,10 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <form method="POST" action="{{ route('members.reactivate', $member) }}" class="inline">
+                                <form method="POST" action="{{ route('members.reactivate', $member) }}" class="inline" onsubmit="window.confirmFormSubmit(event, this, 'Reactivate Member?', 'This will reactivate the member profile.', 'Yes, Reactivate')">
                                     @csrf
                                     <button type="submit"
-                                            class="inline-flex items-center gap-1.5 text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"
-                                            onclick="return confirm('Reactivate this member?')">
+                                            class="inline-flex items-center gap-1.5 text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">
                                         <i class="ph-bold ph-arrow-counter-clockwise" style="font-size:13px;"></i>
                                         Reactivate
                                     </button>
@@ -156,9 +155,8 @@
             text: "This action cannot be undone.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            ...window.gymSwalConfig
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();

@@ -133,11 +133,10 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1">
-                                    <form method="POST" action="{{ route('members.markPaid', $member) }}" class="inline">
+                                    <form method="POST" action="{{ route('members.markPaid', $member) }}" class="inline" onsubmit="window.confirmFormSubmit(event, this, 'Mark as Paid?', 'This will record a payment and extend the due date.', 'Yes, Mark Paid')">
                                         @csrf
                                         <button type="submit"
                                                 class="w-7 h-7 flex items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/30 transition"
-                                                onclick="return confirm('Mark as Paid? This will add 30 days to due date and record a payment.')"
                                                 title="Mark Paid">
                                             <i class="ph-bold ph-check" style="font-size:13px;"></i>
                                         </button>
@@ -405,9 +404,9 @@
 
                     <!-- Action Bar -->
                     <div class="flex justify-center border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
-                        <form method="POST" :action="'{{ url('gym/members') }}/' + viewMember.id + '/mark-paid'" class="w-1/2 border-r border-zinc-200 dark:border-zinc-700" x-ref="markPaidForm">
+                        <form method="POST" :action="'{{ url('gym/members') }}/' + viewMember.id + '/mark-paid'" class="w-1/2 border-r border-zinc-200 dark:border-zinc-700" x-ref="markPaidForm" onsubmit="window.confirmFormSubmit(event, this, 'Mark as Paid?', 'This will record a payment and extend the due date.', 'Yes, Mark Paid')">
                             @csrf
-                            <button type="button" @click="$refs.markPaidForm.submit()" class="w-full flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-zinc-50 dark:bg-zinc-800/50 transition text-zinc-700 dark:text-zinc-300">
+                            <button type="submit" class="w-full flex flex-col items-center justify-center gap-1.5 py-3 hover:bg-zinc-50 dark:bg-zinc-800/50 transition text-zinc-700 dark:text-zinc-300">
                                 <svg class="w-5 h-5 text-zinc-800 dark:text-zinc-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                 <span class="text-[11px] font-semibold text-zinc-800 dark:text-zinc-200">Mark Paid</span>
                             </button>
@@ -505,9 +504,8 @@
             text: "This action cannot be undone.",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            ...window.gymSwalConfig
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + id).submit();

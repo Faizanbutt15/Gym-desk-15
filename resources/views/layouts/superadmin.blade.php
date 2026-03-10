@@ -108,6 +108,7 @@
                             showConfirmButton: false,
                             timer: 3000,
                             timerProgressBar: true,
+                            customClass: { popup: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl', title: 'text-zinc-900 dark:text-white' }
                         });
                     });
                 </script>
@@ -124,6 +125,7 @@
                             showConfirmButton: false,
                             timer: 4000,
                             timerProgressBar: true,
+                            customClass: { popup: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl', title: 'text-zinc-900 dark:text-white' }
                         });
                     });
                 </script>
@@ -134,6 +136,35 @@
     </div>
 
     <script>
+        // Global SweetAlert Config for the Black/Red/White theme supporting Light/Dark modes
+        window.gymSwalConfig = {
+            customClass: {
+                popup: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl',
+                title: 'text-xl font-bold text-zinc-900 dark:text-white',
+                htmlContainer: 'text-zinc-500 dark:text-zinc-400',
+                confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg px-4 py-2 border-0',
+                cancelButton: 'bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-white font-semibold rounded-lg px-4 py-2 border-0 mx-2',
+                actions: 'gap-3 mt-4'
+            },
+            buttonsStyling: false
+        };
+
+        window.confirmFormSubmit = function(event, formElement, title, text, confirmText) {
+            event.preventDefault();
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: confirmText || 'Yes, confirm!',
+                ...window.gymSwalConfig
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    formElement.submit();
+                }
+            });
+        }
+
         function toggleTheme() {
             var html = document.documentElement;
             var sun  = document.getElementById('theme-icon-sun');
