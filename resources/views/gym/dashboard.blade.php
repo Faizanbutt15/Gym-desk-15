@@ -24,8 +24,8 @@
                     <i class="ph-fill ph-chart-line-up text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">${{ number_format($netThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-500 dark:text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">Rs {{ number_format($netThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">Rs {{ number_format($netTotal, 0) }}</span></p>
             <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-arrow-up" style="font-size:13px;"></i>
                 <span>{{ $netThisMonth >= 0 ? 'Positive' : 'Negative' }} this month</span>
@@ -41,8 +41,8 @@
                     <i class="ph-fill ph-wallet text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">+${{ number_format($revenueThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">+Rs {{ number_format($revenueThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">Rs {{ number_format($totalRevenue, 0) }}</span></p>
             <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-users" style="font-size:13px;"></i>
                 <span>Member fee collections</span>
@@ -58,8 +58,8 @@
                     <i class="ph-fill ph-receipt text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">-${{ number_format($spendingThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">-Rs {{ number_format($spendingThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">Rs {{ number_format($totalSpending, 0) }}</span></p>
             <div class="flex items-center gap-1.5 text-xs text-orange-600 dark:text-emerald-400 font-semibold">
                 <i class="ph-fill ph-briefcase" style="font-size:13px;"></i>
                 <span>Salaries &amp; Expenses this month</span>
@@ -212,7 +212,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
-                                    +${{ number_format($payment->amount, 2) }}
+                                    +Rs {{ number_format($payment->amount, 2) }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-zinc-500 dark:text-zinc-400 text-xs hidden sm:table-cell">
@@ -294,13 +294,13 @@
             },
             yaxis: {
                 labels: {
-                    formatter: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v),
+                    formatter: v => 'Rs ' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v),
                     style: { colors: '#52525b' }
                 }
             },
             tooltip: {
                 theme: 'dark',
-                y: { formatter: v => '$' + Number(v).toLocaleString() }
+                y: { formatter: v => 'Rs ' + Number(v).toLocaleString() }
             },
             grid: {
                 borderColor: '#27272a',

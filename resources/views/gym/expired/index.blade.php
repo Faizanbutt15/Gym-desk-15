@@ -43,18 +43,18 @@
                         </div>
                         <div class="py-3 flex justify-between items-center bg-gray-50 -mx-4 px-4 border-b border-gray-100">
                             <span class="text-gray-500 font-bold text-[13px]">Gym Fee</span>
-                            <span class="text-gray-900 font-bold">${{ number_format($member->fee_amount, 2) }}</span>
+                            <span class="text-gray-900 font-bold">Rs {{ number_format($member->fee_amount, 2) }}</span>
                         </div>
                         @if($member->trainer_fee > 0)
                         <div class="py-2.5 flex justify-between items-center text-[13px]">
                             <span class="text-gray-400 font-medium">Trainer Fee</span>
-                            <span class="text-blue-600 font-bold">${{ number_format($member->trainer_fee, 2) }}</span>
+                            <span class="text-blue-600 font-bold">Rs {{ number_format($member->trainer_fee, 2) }}</span>
                         </div>
                         @endif
                         @if($member->locker_fee > 0)
                         <div class="py-2.5 flex justify-between items-center text-[13px]">
                             <span class="text-gray-400 font-medium">Locker Fee</span>
-                            <span class="text-purple-600 font-bold">${{ number_format($member->locker_fee, 2) }}</span>
+                            <span class="text-purple-600 font-bold">Rs {{ number_format($member->locker_fee, 2) }}</span>
                         </div>
                         @endif
                     </div>
@@ -89,7 +89,7 @@
                                 ];
                             @endphp
                             
-                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; ${{ number_format($monthlyTotal, 2) }}' }" class="relative z-40">
+                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; Rs {{ number_format($monthlyTotal, 2) }}' }" class="relative z-40">
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 pl-1">Months Paying For</label>
                                 <input type="hidden" name="months" x-model="selected">
                                 
@@ -110,11 +110,11 @@
                                      style="display: none;">
                                     <ul class="max-h-60 overflow-y-auto text-sm divide-y divide-gray-50 p-1">
                                         @foreach($feeOptions as $val => $opt)
-                                        <li @click="selected = {{ $val }}; selectedLabel = '{{ $opt['label'] }} &mdash; ${{ number_format($opt['amount'], 2) }}'; open = false"
+                                        <li @click="selected = {{ $val }}; selectedLabel = '{{ $opt['label'] }} &mdash; Rs {{ number_format($opt['amount'], 2) }}'; open = false"
                                             class="px-3 py-2.5 rounded-lg hover:bg-green-50 cursor-pointer transition-colors flex justify-between items-center group font-medium"
                                             :class="{'bg-green-50 text-green-700': selected == {{ $val }}, 'text-gray-600': selected != {{ $val }}}">
                                             <span :class="{'font-bold text-green-700': selected == {{ $val }}}">{{ $opt['label'] }}</span>
-                                            <span class="text-gray-400 group-hover:text-green-600 transition-colors" :class="{'text-green-600 font-bold': selected == {{ $val }}}">${{ number_format($opt['amount'], 2) }}</span>
+                                            <span class="text-gray-400 group-hover:text-green-600 transition-colors" :class="{'text-green-600 font-bold': selected == {{ $val }}}">Rs {{ number_format($opt['amount'], 2) }}</span>
                                         </li>
                                         @endforeach
                                     </ul>

@@ -38,7 +38,7 @@
                 <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4h3a3 3 0 116 0h3V6a2 2 0 00-2-2H4zm16 6H4v4a2 2 0 002 2h12a2 2 0 002-2v-4z"></path></svg>
             </div>
             <h3 class="text-gray-500 text-sm font-bold uppercase tracking-wider relative z-10">Total Revenue</h3>
-             <span class="text-3xl font-extrabold text-gray-900 mt-2 relative z-10">${{ number_format($totalRevenue, 2) }}</span>
+             <span class="text-3xl font-extrabold text-gray-900 mt-2 relative z-10">Rs {{ number_format($totalRevenue, 2) }}</span>
         </div>
     </div>
 

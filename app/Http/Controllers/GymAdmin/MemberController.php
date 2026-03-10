@@ -143,6 +143,23 @@ class MemberController extends Controller
         return redirect()->back()->with('success', 'Member deleted successfully.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'member_ids' => 'required|array',
+            'member_ids.*' => 'integer|exists:members,id'
+        ]);
+
+        $gymId = $request->user()->gym_id;
+
+        // Delete all provided member IDs that actually belong to this gym
+        $deletedCount = Member::where('gym_id', $gymId)
+            ->whereIn('id', $validated['member_ids'])
+            ->delete();
+
+        return redirect()->back()->with('success', "{$deletedCount} members deleted successfully.");
+    }
+
     public function markAsPaid(Request $request, Member $member)
     {
         if ($member->gym_id !== $request->user()->gym_id) abort(403);

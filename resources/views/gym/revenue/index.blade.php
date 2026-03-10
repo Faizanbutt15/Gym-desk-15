@@ -23,23 +23,23 @@
             </div>
             <h3 class="text-blue-100 text-sm font-medium uppercase tracking-wider">Net Revenue This Month</h3>
             <span class="text-3xl font-bold mt-2 flex items-baseline gap-2">
-                ${{ number_format($netThisMonth, 2) }}
+                Rs {{ number_format($netThisMonth, 2) }}
             </span>
-            <div class="text-xs text-blue-200 mt-2">All-time Net: ${{ number_format($netTotal, 2) }}</div>
+            <div class="text-xs text-blue-200 mt-2">All-time Net: Rs {{ number_format($netTotal, 2) }}</div>
         </div>
         
         <!-- Income Card -->
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex flex-col justify-center">
             <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Gross Income (Month)</h3>
-            <span class="text-3xl font-bold text-green-600 mt-2">+${{ number_format($revenueThisMonth, 2) }}</span>
-            <div class="text-xs text-gray-400 mt-1">All-time: ${{ number_format($totalRevenue, 2) }}</div>
+            <span class="text-3xl font-bold text-green-600 mt-2">+Rs {{ number_format($revenueThisMonth, 2) }}</span>
+            <div class="text-xs text-gray-400 mt-1">All-time: Rs {{ number_format($totalRevenue, 2) }}</div>
         </div>
         
         <!-- Spending Card -->
         <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex flex-col justify-center">
             <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Staff Spending (Month)</h3>
-            <span class="text-3xl font-bold text-red-500 mt-2">-${{ number_format($spendingThisMonth, 2) }}</span>
-             <div class="text-xs text-gray-400 mt-1">All-time: -${{ number_format($totalSpending, 2) }}</div>
+            <span class="text-3xl font-bold text-red-500 mt-2">-Rs {{ number_format($spendingThisMonth, 2) }}</span>
+             <div class="text-xs text-gray-400 mt-1">All-time: -Rs {{ number_format($totalSpending, 2) }}</div>
         </div>
         
         <!-- Paid Members -->
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                             <div class="text-sm font-bold text-gray-900">
-                                +${{ number_format($payment->amount, 2) }}
+                                +Rs {{ number_format($payment->amount, 2) }}
                             </div>
                         </li>
                     @empty
@@ -144,7 +144,7 @@
             yaxis: {
                 labels: {
                     formatter: function (val) {
-                        return "$" + val;
+                        return "Rs " + val;
                     },
                     style: { colors: '#6B7280' }
                 }
@@ -152,7 +152,7 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return "$" + val
+                        return "Rs " + val
                     }
                 }
             },

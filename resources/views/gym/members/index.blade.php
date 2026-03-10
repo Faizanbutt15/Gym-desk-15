@@ -1,7 +1,7 @@
 @extends('layouts.gym')
 
 @section('content')
-<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {} }">
+<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, viewModalOpen: false, editMember: {}, viewMember: {}, selectedMembers: [], selectAll: false }" x-init="$watch('selectAll', val => selectedMembers = val ? {{ $members->pluck('id')->toJson() }}.map(String) : [])">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
             <h1 class="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">Members</h1>
@@ -62,9 +62,29 @@
                     </div>
                 </div>
             </form>
-            <button @click="addModalOpen = true" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5">
-                <i class="ph-bold ph-plus"></i> Add Member
-            </button>
+            <div class="flex items-center gap-2">
+                <!-- Bulk Actions -->
+                <div x-show="selectedMembers.length > 0" x-cloak x-transition.opacity class="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-1">
+                    <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300 px-3"><span x-text="selectedMembers.length"></span> selected</span>
+                    <div class="relative" x-data="{ bulkOpen: false }" @click.outside="bulkOpen = false">
+                        <button type="button" @click="bulkOpen = !bulkOpen" class="flex items-center gap-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 py-1.5 rounded-lg text-sm font-medium transition shadow-sm">
+                            Actions <i class="ph-bold ph-caret-down mt-0.5" style="font-size:10px" :class="bulkOpen ? 'rotate-180 transition-transform' : 'transition-transform'"></i>
+                        </button>
+                        <div x-show="bulkOpen" x-cloak x-transition class="absolute right-0 z-50 mt-1.5 w-48 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden py-1">
+                            <button type="button" @click="bulkOpen = false; Swal.fire('Coming Soon', 'Bulk Print functionality will be implemented here', 'info')" class="w-full text-left px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center gap-2 transition">
+                                <i class="ph-bold ph-printer text-zinc-500"></i> Print Selected
+                            </button>
+                            <button type="button" @click="bulkOpen = false; confirmBulkDelete()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 flex items-center gap-2 transition">
+                                <i class="ph-bold ph-trash"></i> Delete Selected
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button @click="addModalOpen = true" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5">
+                    <i class="ph-bold ph-plus"></i> Add Member
+                </button>
+            </div>
         </div>
     </div>
 
@@ -74,6 +94,9 @@
             <table class="w-full text-left text-sm">
                 <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-200 dark:border-zinc-800">
                     <tr>
+                        <th class="px-4 py-3 font-semibold w-10 text-center">
+                            <input type="checkbox" x-model="selectAll" class="rounded border-zinc-300 dark:border-zinc-700 text-red-600 focus:ring-red-500 bg-white dark:bg-zinc-900 shadow-sm cursor-pointer w-4 h-4 mt-1">
+                        </th>
                         <th class="px-4 py-3 font-semibold">Member</th>
                         <th class="px-4 py-3 font-semibold hidden md:table-cell">Contact</th>
                         <th class="px-4 py-3 font-semibold">Fee/Month</th>
@@ -84,7 +107,10 @@
                 </thead>
                 <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/60">
                     @forelse($members as $member)
-                        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition">
+                        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition" :class="selectedMembers.includes('{{ $member->id }}') ? 'bg-zinc-50 dark:bg-zinc-800/40' : ''">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox" x-model="selectedMembers" value="{{ $member->id }}" @change="selectAll = selectedMembers.length === {{ $members->count() }}" class="rounded border-zinc-300 dark:border-zinc-700 text-red-600 focus:ring-red-500 bg-white dark:bg-zinc-900 shadow-sm cursor-pointer w-4 h-4 mt-0.5">
+                            </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
                                     @if($member->photo)
@@ -104,7 +130,7 @@
                                 {{ $member->contact ?? '-' }}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <span class="font-bold text-zinc-900 dark:text-zinc-100">${{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
+                                <span class="font-bold text-zinc-900 dark:text-zinc-100">Rs {{ number_format($member->fee_amount + $member->trainer_fee + $member->locker_fee, 2) }}</span>
                                 @if($member->trainer_fee > 0 || $member->locker_fee > 0)
                                     <div class="text-[10px] text-zinc-500 mt-0.5">+ extras</div>
                                 @endif
@@ -166,7 +192,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-zinc-500">
+                            <td colspan="7" class="px-6 py-12 text-center text-zinc-500">
                                 <div class="flex flex-col items-center">
                                     <i class="ph-fill ph-users text-zinc-300 dark:text-zinc-700 mb-3" style="font-size:48px;"></i>
                                     <span class="text-base font-medium text-zinc-500 dark:text-zinc-400">No Members Found</span>
@@ -212,19 +238,19 @@
                             <input type="text" name="contact" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Gym Fee (Rs) <span class="text-red-500">*</span></label>
                             <input type="number" step="0.01" name="fee_amount" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Admission Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(One-time)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Admission Fee (Rs) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(One-time)</span></label>
                             <input type="number" step="0.01" name="admission_fee" value="0.00" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Trainer Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Trainer Fee (Rs) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly)</span></label>
                             <input type="number" step="0.01" name="trainer_fee" value="0.00" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Locker Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Locker Fee (Rs) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly)</span></label>
                             <input type="number" step="0.01" name="locker_fee" value="0.00" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
@@ -301,19 +327,19 @@
                             <input type="text" name="contact" x-model="editMember.contact" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Gym Fee ($) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Gym Fee (Rs) <span class="text-red-500">*</span></label>
                             <input type="number" step="0.01" name="fee_amount" x-model="editMember.fee_amount" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Admission Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(One-time)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Admission Fee (Rs) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(One-time)</span></label>
                             <input type="number" step="0.01" name="admission_fee" x-model="editMember.admission_fee" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Trainer Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly, set to 0 to remove)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Trainer Fee (Rs) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly, set to 0 to remove)</span></label>
                             <input type="number" step="0.01" name="trainer_fee" x-model="editMember.trainer_fee" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Locker Fee ($) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly, set to 0 to remove)</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Locker Fee (Rs) <span class="text-xs text-zinc-400 dark:text-zinc-500 font-normal">(Monthly, set to 0 to remove)</span></label>
                             <input type="number" step="0.01" name="locker_fee" x-model="editMember.locker_fee" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
@@ -431,28 +457,28 @@
                         </div>
                         <div class="py-3.5 flex items-center justify-between">
                             <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Gym Fee</span>
-                            <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px]" x-text="'$' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></span>
+                            <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px]" x-text="'Rs ' + (viewMember.fee_amount ? parseFloat(viewMember.fee_amount).toFixed(2) : '0.00')"></span>
                         </div>
                         <template x-if="viewMember.trainer_fee > 0">
                             <div class="py-3.5 flex items-center justify-between">
                                 <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Trainer Fee</span>
-                                <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px] text-red-600 dark:text-red-400" x-text="'$' + parseFloat(viewMember.trainer_fee).toFixed(2) + ' /mo'"></span>
+                                <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px] text-red-600 dark:text-red-400" x-text="'Rs ' + parseFloat(viewMember.trainer_fee).toFixed(2) + ' /mo'"></span>
                             </div>
                         </template>
                         <template x-if="viewMember.locker_fee > 0">
                             <div class="py-3.5 flex items-center justify-between">
                                 <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Locker Fee</span>
-                                <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px] text-purple-600 dark:text-purple-400" x-text="'$' + parseFloat(viewMember.locker_fee).toFixed(2) + ' /mo'"></span>
+                                <span class="text-zinc-800 dark:text-zinc-200 w-2/3 font-bold text-[13px] text-purple-600 dark:text-purple-400" x-text="'Rs ' + parseFloat(viewMember.locker_fee).toFixed(2) + ' /mo'"></span>
                             </div>
                         </template>
                         <div class="py-3.5 flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/50 -mx-4 px-4 border-y border-zinc-100 dark:border-zinc-800/80">
                             <span class="text-zinc-500 dark:text-zinc-400 w-1/3 text-[13px] font-bold">Total Monthly</span>
-                            <span class="text-green-600 w-2/3 font-bold text-[14px]" x-text="'$' + (parseFloat(viewMember.fee_amount || 0) + parseFloat(viewMember.trainer_fee || 0) + parseFloat(viewMember.locker_fee || 0)).toFixed(2)"></span>
+                            <span class="text-green-600 w-2/3 font-bold text-[14px]" x-text="'Rs ' + (parseFloat(viewMember.fee_amount || 0) + parseFloat(viewMember.trainer_fee || 0) + parseFloat(viewMember.locker_fee || 0)).toFixed(2)"></span>
                         </div>
                         <template x-if="viewMember.admission_fee > 0">
                             <div class="py-3.5 flex items-center justify-between">
                                 <span class="text-zinc-400 dark:text-zinc-500 w-1/3 text-[13px] font-medium">Admission</span>
-                                <span class="text-zinc-500 dark:text-zinc-400 w-2/3 font-medium text-[13px]" x-text="'$' + parseFloat(viewMember.admission_fee).toFixed(2) + ' (Paid once)'"></span>
+                                <span class="text-zinc-500 dark:text-zinc-400 w-2/3 font-medium text-[13px]" x-text="'Rs ' + parseFloat(viewMember.admission_fee).toFixed(2) + ' (Paid once)'"></span>
                             </div>
                         </template>
                         <div class="py-3.5 flex items-center justify-between">
@@ -511,6 +537,43 @@
                 document.getElementById('delete-form-' + id).submit();
             }
         })
+    }
+
+    function confirmBulkDelete() {
+        const selectedElements = document.querySelectorAll('input[x-model="selectedMembers"]:checked');
+        if (selectedElements.length === 0) return;
+
+        Swal.fire({
+            title: `Delete ${selectedElements.length} Members?`,
+            text: "This action cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete them!',
+            ...window.gymSwalConfig
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route('members.bulkDestroy') }}';
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+
+                selectedElements.forEach(el => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'member_ids[]';
+                    input.value = el.value;
+                    form.appendChild(input);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
     }
 
     let currentStream = null;

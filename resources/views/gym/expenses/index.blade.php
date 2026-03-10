@@ -39,7 +39,7 @@
                 </span>
                 <div class="min-w-0">
                     <p class="text-[11px] text-zinc-500 uppercase tracking-wide truncate">{{ $cat->category }}</p>
-                    <p class="text-lg font-bold text-zinc-900 dark:text-zinc-100">${{ number_format($cat->total, 2) }}</p>
+                    <p class="text-lg font-bold text-zinc-900 dark:text-zinc-100">Rs {{ number_format($cat->total, 2) }}</p>
                 </div>
             </div>
         @endforeach
@@ -51,7 +51,7 @@
             </div>
             <div class="min-w-0">
                 <p class="text-[11px] text-zinc-500 uppercase tracking-wide">Total</p>
-                <p class="text-lg font-bold text-red-600 dark:text-red-400">${{ number_format($grandTotal, 2) }}</p>
+                <p class="text-lg font-bold text-red-600 dark:text-red-400">Rs {{ number_format($grandTotal, 2) }}</p>
             </div>
         </div>
     </div>
@@ -207,7 +207,7 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3 font-bold text-red-600 dark:text-red-400 whitespace-nowrap">
-                                ${{ number_format($expense->amount, 2) }}
+                                Rs {{ number_format($expense->amount, 2) }}
                             </td>
                             <td class="px-4 py-3 text-zinc-500 dark:text-zinc-400 whitespace-nowrap hidden md:table-cell">
                                 {{ $expense->expense_date->format('M d, Y') }}
@@ -279,7 +279,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5 uppercase tracking-wide">Amount *</label>
                         <div class="relative">
-                            <span class="absolute inset-y-0 left-3 flex items-center text-zinc-400 text-sm">$</span>
+                            <span class="absolute inset-y-0 left-3 flex items-center text-zinc-400 text-sm">Rs</span>
                             <input type="number" name="amount" step="0.01" min="0.01" required placeholder="0.00"
                                    class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-lg pl-7 pr-3 py-2.5 text-sm focus:ring-red-500 focus:border-red-500">
                         </div>
@@ -333,7 +333,7 @@
                         <div>
                             <label class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1.5 uppercase tracking-wide">Amount *</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-3 flex items-center text-zinc-400 text-sm">$</span>
+                                <span class="absolute inset-y-0 left-3 flex items-center text-zinc-400 text-sm">Rs</span>
                                 <input type="number" name="amount" step="0.01" min="0.01" :value="editExpense.amount" required
                                        class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-lg pl-7 pr-3 py-2.5 text-sm focus:ring-red-500 focus:border-red-500">
                             </div>
