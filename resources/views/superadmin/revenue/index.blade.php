@@ -41,7 +41,7 @@
                                 {{ $gym->name }}
                             </td>
                             <td class="px-6 py-4 text-right font-semibold text-green-600">
-                                ${{ number_format($gym->payments_sum_amount ?? 0, 2) }}
+                                Rs {{ number_format($gym->payments_sum_amount ?? 0, 2) }}
                             </td>
                         </tr>
                     @empty
@@ -99,7 +99,7 @@
             yaxis: {
                 labels: {
                     formatter: function (val) {
-                        return "$" + val;
+                        return "Rs " + val;
                     },
                     style: { colors: '#6B7280' }
                 }
@@ -107,7 +107,7 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return "$" + val
+                        return "Rs " + val
                     }
                 }
             },

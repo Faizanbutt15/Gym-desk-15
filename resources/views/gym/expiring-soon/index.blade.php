@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-4 md:space-y-6">
     <div>
-        <h1 class="text-xl md:text-2xl font-bold text-zinc-100">Expiring Soon</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">Expiring Soon</h1>
         <p class="text-xs text-zinc-500 mt-0.5">{{ $members->total() }} {{ Str::plural('Member', $members->total()) }} expiring within 3 days</p>
     </div>
 
@@ -53,18 +53,18 @@
                         </div>
                         <div class="py-3 flex justify-between items-center bg-gray-50 -mx-4 px-4 border-b border-gray-100">
                             <span class="text-gray-500 font-bold text-[13px]">Gym Fee</span>
-                            <span class="text-gray-900 font-bold">${{ number_format($member->fee_amount, 2) }}</span>
+                            <span class="text-gray-900 font-bold">Rs {{ number_format($member->fee_amount, 2) }}</span>
                         </div>
                         @if($member->trainer_fee > 0)
                         <div class="py-2.5 flex justify-between items-center text-[13px]">
                             <span class="text-gray-400 font-medium">Trainer Fee</span>
-                            <span class="text-blue-600 font-bold">${{ number_format($member->trainer_fee, 2) }}</span>
+                            <span class="text-blue-600 font-bold">Rs {{ number_format($member->trainer_fee, 2) }}</span>
                         </div>
                         @endif
                         @if($member->locker_fee > 0)
                         <div class="py-2.5 flex justify-between items-center text-[13px]">
                             <span class="text-gray-400 font-medium">Locker Fee</span>
-                            <span class="text-purple-600 font-bold">${{ number_format($member->locker_fee, 2) }}</span>
+                            <span class="text-purple-600 font-bold">Rs {{ number_format($member->locker_fee, 2) }}</span>
                         </div>
                         @endif
                     </div>
@@ -82,7 +82,7 @@
 
                     <!-- Action bottom -->
                     <div class="mt-auto px-5 py-4 bg-gray-50 border-t border-gray-200 rounded-b-2xl relative z-20">
-                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-4">
+                        <form method="POST" action="{{ route('members.markPaid', $member) }}" class="block w-full space-y-4" onsubmit="window.confirmFormSubmit(event, this, 'Record Payment?', 'This will record a payment and extend the due date.', 'Yes, Mark as Paid')">
                             @csrf
                             
                             @php
@@ -96,7 +96,7 @@
                                 ];
                             @endphp
                             
-                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; ${{ number_format($monthlyTotal, 2) }}' }" class="relative z-40">
+                            <div x-data="{ open: false, selected: 1, selectedLabel: '1 Month &mdash; Rs {{ number_format($monthlyTotal, 2) }}' }" class="relative z-40">
                                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 pl-1">Months Paying For</label>
                                 <input type="hidden" name="months" x-model="selected">
                                 
@@ -117,18 +117,18 @@
                                      style="display: none;">
                                     <ul class="max-h-60 overflow-y-auto text-sm divide-y divide-gray-50 p-1">
                                         @foreach($feeOptions as $val => $opt)
-                                        <li @click="selected = {{ $val }}; selectedLabel = '{{ $opt['label'] }} &mdash; ${{ number_format($opt['amount'], 2) }}'; open = false"
+                                        <li @click="selected = {{ $val }}; selectedLabel = '{{ $opt['label'] }} &mdash; Rs {{ number_format($opt['amount'], 2) }}'; open = false"
                                             class="px-3 py-2.5 rounded-lg hover:bg-green-50 cursor-pointer transition-colors flex justify-between items-center group font-medium"
                                             :class="{'bg-green-50 text-green-700': selected == {{ $val }}, 'text-gray-600': selected != {{ $val }}}">
                                             <span :class="{'font-bold text-green-700': selected == {{ $val }}}">{{ $opt['label'] }}</span>
-                                            <span class="text-gray-400 group-hover:text-green-600 transition-colors" :class="{'text-green-600 font-bold': selected == {{ $val }}}">${{ number_format($opt['amount'], 2) }}</span>
+                                            <span class="text-gray-400 group-hover:text-green-600 transition-colors" :class="{'text-green-600 font-bold': selected == {{ $val }}}">Rs {{ number_format($opt['amount'], 2) }}</span>
                                         </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
 
-                            <button type="submit" class="relative z-10 w-full text-white bg-green-500 hover:bg-green-600 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-0.5 text-center flex justify-center items-center gap-2" onclick="return confirm('Record this payment and extend the due date?')">
+                            <button type="submit" class="relative z-10 w-full text-white bg-green-500 hover:bg-green-600 py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-0.5 text-center flex justify-center items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Mark as Paid
                             </button>

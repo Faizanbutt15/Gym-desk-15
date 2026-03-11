@@ -44,6 +44,7 @@ Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->name('superadmi
 // Gym Admin Routes
 Route::middleware(['auth', 'gym_admin', 'active_gym'])->group(function () {
     Route::get('/gym/dashboard', [GADashboardController::class, 'index'])->name('gym.dashboard');
+    Route::post('/members/bulk-delete', [GAMemberController::class, 'bulkDestroy'])->name('members.bulkDestroy');
     Route::resource('members', GAMemberController::class);
     Route::post('/members/{member}/mark-paid', [GAMemberController::class, 'markAsPaid'])->name('members.markPaid');
     Route::post('/members/{member}/reactivate', [GAMemberController::class, 'reactivate'])->name('members.reactivate');

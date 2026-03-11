@@ -9,70 +9,76 @@
             <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Gym Admin</p>
             <h1 class="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">Overview</h1>
         </div>
-        <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 text-zinc-600 dark:text-zinc-400 text-xs md:text-sm font-medium">
-            {{ now()->format('F Y') }}
-        </div>
+        
     </div>
 
     {{-- ── ROW 1: Revenue Metric Cards ── --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
         {{-- Net Revenue --}}
-        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Net Revenue</p>
-                <span class="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/25 flex items-center justify-center text-red-500 dark:text-red-400 shrink-0">
-                    <i class="ph-fill ph-chart-line-up" style="font-size:18px;"></i>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Net Revenue</p>
+                <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
+                      style="background: linear-gradient(135deg,#dc2626 0%,#7f1d1d 100%);">
+                    <i class="ph-fill ph-chart-line-up text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">${{ number_format($netThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($netTotal, 0) }}</span></p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
-                <span>{{ $netThisMonth >= 0 ? '↑ Positive' : '↓ Negative' }} this month</span>
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">Rs {{ number_format($netThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">Rs {{ number_format($netTotal, 0) }}</span></p>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                <i class="ph-fill ph-arrow-up" style="font-size:13px;"></i>
+                <span>{{ $netThisMonth >= 0 ? 'Positive' : 'Negative' }} this month</span>
             </div>
         </div>
 
         {{-- Gross Income --}}
-        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Gross Income</p>
-                <span class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-zinc-800 flex items-center justify-center text-emerald-600 dark:text-emerald-500 shrink-0">
-                    <i class="ph-fill ph-money" style="font-size:18px;"></i>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Gross Income</p>
+                <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
+                      style="background: linear-gradient(135deg,#059669 0%,#064e3b 100%);">
+                    <i class="ph-fill ph-wallet text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">+${{ number_format($revenueThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalRevenue, 0) }}</span></p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">+Rs {{ number_format($revenueThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">Rs {{ number_format($totalRevenue, 0) }}</span></p>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                <i class="ph-fill ph-users" style="font-size:13px;"></i>
                 <span>Member fee collections</span>
             </div>
         </div>
 
-        {{-- Spending (Staff + Expenses) --}}
-        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
+        {{-- Spending --}}
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Spending</p>
-                <span class="w-9 h-9 rounded-xl bg-orange-100 dark:bg-orange-900/25 flex items-center justify-center text-orange-500 dark:text-orange-400 shrink-0">
-                    <i class="ph-fill ph-wallet" style="font-size:18px;"></i>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Spending</p>
+                <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
+                      style="background: linear-gradient(135deg,#ea580c 0%,#7c2d12 100%);">
+                    <i class="ph-fill ph-receipt text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">-${{ number_format($spendingThisMonth, 0) }}</p>
-            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">All-time: <span class="text-zinc-600 dark:text-zinc-400">${{ number_format($totalSpending, 0) }}</span></p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
-                <span>Salaries & Expenses this month</span>
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">-Rs {{ number_format($spendingThisMonth, 0) }}</p>
+            <p class="text-xs text-zinc-500">All-time: <span class="text-zinc-600 dark:text-zinc-400">Rs {{ number_format($totalSpending, 0) }}</span></p>
+            <div class="flex items-center gap-1.5 text-xs text-orange-600 dark:text-emerald-400 font-semibold">
+                <i class="ph-fill ph-briefcase" style="font-size:13px;"></i>
+                <span>Salaries &amp; Expenses this month</span>
             </div>
         </div>
 
         {{-- Paid Members --}}
-        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2 relative overflow-hidden group hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-300">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 p-5 flex flex-col gap-3 relative overflow-hidden border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 group shadow-sm">
             <div class="flex items-start justify-between">
-                <p class="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400 relative">Paid Members</p>
-                <span class="w-9 h-9 rounded-xl bg-violet-100 dark:bg-violet-900/25 flex items-center justify-center text-violet-500 dark:text-violet-400 shrink-0">
-                    <i class="ph-fill ph-seal-check" style="font-size:18px;"></i>
+                <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">Paid Members</p>
+                <span class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
+                      style="background: linear-gradient(135deg,#7c3aed 0%,#3b0764 100%);">
+                    <i class="ph-fill ph-seal-check text-white" style="font-size:20px;"></i>
                 </span>
             </div>
-            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight relative mt-1">{{ $paidMembersThisMonth }}</p>
-            <p class="text-xs text-zinc-400 dark:text-zinc-600 relative">of {{ $totalMembers }} total members</p>
-            <div class="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-500 relative font-semibold">
+            <p class="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none">{{ $paidMembersThisMonth }}</p>
+            <p class="text-xs text-zinc-500">of <span class="text-zinc-600 dark:text-zinc-400">{{ $totalMembers }}</span> total members</p>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                <i class="ph-fill ph-check-circle" style="font-size:13px;"></i>
                 <span>Payments collected this month</span>
             </div>
         </div>
@@ -106,102 +112,133 @@
         </div>
 
         {{-- Member Stats Side Panel --}}
-        <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col overflow-hidden">
-            <div class="px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div class="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col overflow-hidden shadow-sm">
+            <div class="px-5 py-4 border-b border-zinc-200 dark:border-zinc-800">
                 <h2 class="text-sm font-bold text-zinc-900 dark:text-white tracking-tight">Member Stats</h2>
                 <p class="text-[11px] text-zinc-500 mt-0.5">Quick overview</p>
             </div>
-            <div class="flex-1 flex flex-col gap-3 p-4">
+            <div class="flex-1 flex flex-col gap-2.5 p-4">
 
-        {{-- Total Members --}}
-        <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
-                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
-                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
-            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-emerald-500/15 dark:bg-emerald-400/10 blur-xl pointer-events-none"></div>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Total Members</p>
-                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $totalMembers }}</p>
+                {{-- Total Members --}}
+                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200 cursor-default">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Total Members</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $totalMembers }}</p>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
+                          style="background: linear-gradient(135deg,#059669 0%,#064e3b 100%);">
+                        <i class="ph-fill ph-users-three text-white" style="font-size:18px;"></i>
+                    </span>
                 </div>
-                <span class="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 flex items-center justify-center text-emerald-500 dark:text-emerald-400 shrink-0">
-                    <i class="ph-fill ph-users-three" style="font-size:18px;"></i>
-                </span>
-            </div>
-        </div>
 
-        {{-- Inactive --}}
-        <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
-                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
-                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
-            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-red-500/15 dark:bg-red-400/10 blur-xl pointer-events-none"></div>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Inactive</p>
-                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $inactiveMembers }}</p>
+                {{-- Inactive --}}
+                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200 cursor-default">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Inactive</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $inactiveMembers }}</p>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
+                          style="background: linear-gradient(135deg,#dc2626 0%,#7f1d1d 100%);">
+                        <i class="ph-fill ph-user-minus text-white" style="font-size:18px;"></i>
+                    </span>
                 </div>
-                <span class="w-10 h-10 rounded-xl bg-red-500/10 dark:bg-red-400/10 border border-red-500/20 dark:border-red-400/20 flex items-center justify-center text-red-500 dark:text-red-400 shrink-0">
-                    <i class="ph-fill ph-user-minus" style="font-size:18px;"></i>
-                </span>
-            </div>
-        </div>
 
-        {{-- Expiring Soon --}}
-        <a href="{{ route('expiring-soon') }}" class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
-                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
-                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 group">
-            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-amber-500/15 dark:bg-amber-400/10 blur-xl pointer-events-none"></div>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expiring Soon</p>
-                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expiringSoon }}</p>
-                </div>
-                <span class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-400/10 border border-amber-500/20 dark:border-amber-400/20 flex items-center justify-center text-amber-500 dark:text-amber-400 shrink-0">
-                    <i class="ph-fill ph-clock-countdown" style="font-size:18px;"></i>
-                </span>
-            </div>
-        </a>
+                {{-- Expiring Soon --}}
+                <a href="{{ route('expiring-soon') }}"
+                   class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expiring Soon</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expiringSoon }}</p>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
+                          style="background: linear-gradient(135deg,#d97706 0%,#78350f 100%);">
+                        <i class="ph-fill ph-clock-countdown text-white" style="font-size:18px;"></i>
+                    </span>
+                </a>
 
-        {{-- Expired --}}
-        <a href="{{ route('expired') }}" class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
-                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
-                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 group">
-            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-rose-500/15 dark:bg-rose-400/10 blur-xl pointer-events-none"></div>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expired</p>
-                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expired }}</p>
-                </div>
-                <span class="w-10 h-10 rounded-xl bg-rose-500/10 dark:bg-rose-400/10 border border-rose-500/20 dark:border-rose-400/20 flex items-center justify-center text-rose-500 dark:text-rose-400 shrink-0">
-                    <i class="ph-fill ph-warning-circle" style="font-size:18px;"></i>
-                </span>
-            </div>
-        </a>
+                {{-- Expired --}}
+                <a href="{{ route('expired') }}"
+                   class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Expired</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $expired }}</p>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
+                          style="background: linear-gradient(135deg,#e11d48 0%,#881337 100%);">
+                        <i class="ph-fill ph-warning-circle text-white" style="font-size:18px;"></i>
+                    </span>
+                </a>
 
-        {{-- New / Month --}}
-        <div class="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl
-                    border border-white/10 dark:border-white/5
-                    bg-white/60 dark:bg-white/[0.04] backdrop-blur-md
-                    hover:bg-white/80 dark:hover:bg-white/[0.07] transition-all duration-200 cursor-default group">
-            <div class="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-teal-500/15 dark:bg-teal-400/10 blur-xl pointer-events-none"></div>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">New / Month</p>
-                    <p class="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $newMembersThisMonth }}</p>
+                {{-- New / Month --}}
+                <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-200 cursor-default">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">New / Month</p>
+                        <p class="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-none mt-0.5">{{ $newMembersThisMonth }}</p>
+                    </div>
+                    <span class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md"
+                          style="background: linear-gradient(135deg,#0d9488 0%,#134e4a 100%);">
+                        <i class="ph-fill ph-user-plus text-white" style="font-size:18px;"></i>
+                    </span>
                 </div>
-                <span class="w-10 h-10 rounded-xl bg-teal-500/10 dark:bg-teal-400/10 border border-teal-500/20 dark:border-teal-400/20 flex items-center justify-center text-teal-500 dark:text-teal-400 shrink-0">
-                    <i class="ph-fill ph-user-plus" style="font-size:18px;"></i>
-                </span>
-            </div>
-        </div>
 
             </div>{{-- end flex-1 gap-3 p-4 --}}
         </div>{{-- end Member Stats Side Panel --}}
 
     </div>{{-- end grid --}}
+
+    {{-- ── ROW 3: Recent Payments ── --}}
+    <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden shadow-sm mt-4">
+        <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+            <div>
+                <h2 class="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Recent Payments</h2>
+                <p class="text-[11px] text-zinc-500 mt-0.5">Latest fee collections from members</p>
+            </div>
+            <a href="{{ route('members.index') }}" class="text-xs font-semibold text-red-600 hover:text-red-700">View Members &rarr;</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-200 dark:border-zinc-800">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">Member</th>
+                        <th class="px-6 py-4 font-semibold">Amount</th>
+                        <th class="px-6 py-4 font-semibold hidden sm:table-cell">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/60">
+                    @forelse($recentPayments as $payment)
+                        <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition">
+                            <td class="px-6 py-4">
+                                <span class="font-medium inline-block text-zinc-900 dark:text-zinc-100">{{ $payment->member_name }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
+                                    +Rs {{ number_format($payment->amount, 2) }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-zinc-500 dark:text-zinc-400 text-xs hidden sm:table-cell">
+                                @if($payment->paid_date)
+                                    {{ $payment->paid_date->format('M d, Y') }}
+                                @else
+                                    {{ $payment->created_at->format('M d, Y') }}
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <span class="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-3">
+                                        <i class="ph-fill ph-receipt text-zinc-400 dark:text-zinc-500 text-2xl"></i>
+                                    </span>
+                                    <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400">No recent payments</span>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 
@@ -257,13 +294,13 @@
             },
             yaxis: {
                 labels: {
-                    formatter: v => '$' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v),
+                    formatter: v => 'Rs ' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v),
                     style: { colors: '#52525b' }
                 }
             },
             tooltip: {
                 theme: 'dark',
-                y: { formatter: v => '$' + Number(v).toLocaleString() }
+                y: { formatter: v => 'Rs ' + Number(v).toLocaleString() }
             },
             grid: {
                 borderColor: '#27272a',

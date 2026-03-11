@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // Create Demo Gym
         $gym = Gym::create([
-            'name' => 'Demo Gym',
+            'name' => 'Gym-15',
             'address' => '123 Fitness St',
             'status' => 'active',
             'subscription_start' => now(),
@@ -39,5 +39,10 @@ class DatabaseSeeder extends Seeder
             'role' => 'gym_admin',
             'gym_id' => $gym->id,
         ]);
+
+        // Seed dummy members only in non-production app environments.
+        if (app()->environment(['local', 'staging'])) {
+            $this->call(MemberSeeder::class);
+        }
     }
 }

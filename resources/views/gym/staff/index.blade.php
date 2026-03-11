@@ -44,25 +44,29 @@
                                 <span class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 rounded-full text-xs font-medium">{{ $member->role }}</span>
                             </td>
                             <td class="px-6 py-4 font-bold text-zinc-900 dark:text-zinc-100">
-                                ${{ number_format($member->salary, 2) }}
+                                Rs {{ number_format($member->salary, 2) }}
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <button @click="payStaff = {{ json_encode($member) }}; payModalOpen = true"
+                                <div class="flex items-center justify-end gap-1">
+                                    <button @click="payStaff = {{ json_encode($member) }}; payModalOpen = true"
                                         class="text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
                                     Pay Salary
-                                </button>
-                                <button @click="editStaff = {{ json_encode($member) }}; editModalOpen = true"
-                                        class="text-amber-500 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium px-2">
-                                    Edit
-                                </button>
-                                <form method="POST" action="{{ route('staff.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" onclick="confirmDelete('{{ $member->id }}')"
-                                            class="text-red-500 hover:text-red-700 font-medium px-2 border-l border-zinc-200 dark:border-zinc-700">
-                                        Delete
                                     </button>
-                                </form>
+                                    <button @click="editStaff = {{ json_encode($member) }}; editModalOpen = true"
+                                            class="w-7 h-7 flex items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-500/15 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-500/30 transition"
+                                            title="Edit">
+                                        <i class="ph-bold ph-pencil" style="font-size:13px;"></i>
+                                    </button>
+                                    <form method="POST" action="{{ route('staff.destroy', $member) }}" class="inline" id="delete-form-{{ $member->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="confirmDelete('{{ $member->id }}')"
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg bg-red-100 dark:bg-red-500/15 text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/30 transition"
+                                                title="Delete">
+                                            <i class="ph-bold ph-trash" style="font-size:13px;"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -109,7 +113,7 @@
                             <input type="text" name="role" required placeholder="e.g. Trainer, Receptionist" class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Salary ($) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Monthly Salary (Rs) <span class="text-red-500">*</span></label>
                             <input type="number" step="0.01" name="salary" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
@@ -179,7 +183,7 @@
                             <input type="text" name="role" x-model="editStaff.role" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Salary ($)</label>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Salary (Rs)</label>
                             <input type="number" step="0.01" name="salary" x-model="editStaff.salary" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                         </div>
                         <div>
@@ -220,7 +224,7 @@
                     @csrf
                     <div>
                         <p class="text-zinc-600 dark:text-zinc-400 mb-4">Record a salary payment for <span class="font-bold text-zinc-900 dark:text-zinc-100" x-text="payStaff.name"></span>.</p>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Amount ($) <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Amount (Rs) <span class="text-red-500">*</span></label>
                         <input type="number" step="0.01" name="amount" x-model="payStaff.salary" required class="mt-1 block w-full rounded-md border-zinc-300 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
                     </div>
                     <div class="pt-4 flex justify-end gap-3 border-t border-zinc-200 dark:border-zinc-700">
