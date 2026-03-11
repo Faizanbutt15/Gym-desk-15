@@ -11,12 +11,37 @@ use Illuminate\Support\Facades\Hash;
 
 class GymController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Eager load the admins so we can display the primary admin
-        $gyms = Gym::with(['admins' => function($query) {
-            $query->where('role', 'gym_admin');
-        }])->latest()->paginate(10);
+        $query = Gym::with(['admins' => function($q) {
+            $q->where('role', 'gym_admin');
+        }]);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%")
+                  ->orWhereHas('admins', function($adminQuery) use ($search) {
+                      $adminQuery->where('name', 'like', "%{$search}%")
+                                 ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('filter') && $request->filter !== 'all') {
+            if ($request->filter === 'active') {
+                $query->where('status', 'active');
+            } elseif ($request->filter === 'inactive') {
+                $query->where('status', 'inactive');
+            } elseif ($request->filter === 'expired') {
+                $query->where('subscription_end', '<', now());
+            } elseif ($request->filter === 'expiring_soon') {
+                $query->whereBetween('subscription_end', [now(), now()->addDays(7)]);
+            }
+        }
+
+        $gyms = $query->latest()->paginate(10)->withQueryString();
         
         return view('superadmin.gyms.index', compact('gyms'));
     }
