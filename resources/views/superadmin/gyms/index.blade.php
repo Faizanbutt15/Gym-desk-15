@@ -1,7 +1,7 @@
 @extends('layouts.superadmin')
 
 @section('content')
-<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, editGym: {} }">
+<div class="space-y-4 md:space-y-6" x-data="{ addModalOpen: false, editModalOpen: false, paymentModalOpen: false, editGym: {}, paymentGym: {} }">
     {{-- Page Header --}}
     <div class="flex items-center justify-between flex-wrap gap-2">
         <div>
@@ -18,14 +18,15 @@
         <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
             <div>
                 <h2 class="text-base font-bold text-zinc-900 dark:text-white tracking-tight">Registered Gyms</h2>
-                <p class="text-[11px] text-zinc-500 mt-0.5">List of all gyms across the platform</p>
+                <p class="text-[11px] text-zinc-500 mt-0.5">List of all gyms and their primary administrators</p>
             </div>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm whitespace-nowrap">
                 <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 uppercase tracking-wider text-[11px] border-b border-zinc-200 dark:border-zinc-800">
                     <tr>
-                        <th class="px-6 py-4 font-semibold">Gym</th>
+                        <th class="px-6 py-4 font-semibold">Gym Details</th>
+                        <th class="px-6 py-4 font-semibold">Primary Admin</th>
                         <th class="px-6 py-4 font-semibold">Status</th>
                         <th class="px-6 py-4 font-semibold">Subscription</th>
                         <th class="px-6 py-4 font-semibold text-right">Actions</th>
@@ -46,6 +47,15 @@
                                     <div class="text-zinc-900 dark:text-white">{{ $gym->name }}</div>
                                     <div class="text-zinc-500 dark:text-zinc-400 text-xs font-normal">{{ $gym->address ?? 'No address' }}</div>
                                 </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @php $admin = $gym->admins->first(); @endphp
+                                @if($admin)
+                                    <div class="text-zinc-900 dark:text-white font-medium">{{ $admin->name }}</div>
+                                    <div class="text-zinc-500 dark:text-zinc-400 text-xs">{{ $admin->email }}</div>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20">Missing Admin</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <form method="POST" action="{{ route('superadmin.gyms.status', $gym) }}" class="inline">
@@ -75,6 +85,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right">
+                                <button @click="paymentGym = {{ json_encode($gym) }}; paymentModalOpen = true" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-xs hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition shadow-sm mr-3">
+                                    <i class="ph-bold ph-money text-sm"></i> Payment
+                                </button>
                                 <button @click="editGym = {{ json_encode($gym) }}; editModalOpen = true" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium mr-3 transition-colors">Edit</button>
                                 <form method="POST" action="{{ route('superadmin.gyms.destroy', $gym) }}" class="inline" id="delete-form-{{ $gym->id }}">
                                     @csrf
@@ -85,7 +98,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-zinc-500 dark:text-zinc-400">
+                            <td colspan="5" class="px-6 py-12 text-center text-zinc-500 dark:text-zinc-400">
                                 <div class="flex flex-col items-center">
                                     <span class="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-3">
                                         <i class="ph-fill ph-buildings text-zinc-400 dark:text-zinc-500 text-2xl"></i>
@@ -110,49 +123,92 @@
     <div x-show="addModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
             <div x-show="addModalOpen" x-transition.opacity class="fixed inset-0 bg-zinc-900/70" @click="addModalOpen = false"></div>
-            <div x-show="addModalOpen" x-transition.scale class="relative inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-2xl">
+            <div x-show="addModalOpen" x-transition.scale class="relative inline-block w-full max-w-2xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-2xl">
                 <div class="flex items-center justify-between mb-5">
-                    <h3 class="text-lg font-bold text-zinc-900 dark:text-white">Add New Gym</h3>
+                    <h3 class="text-lg font-bold text-zinc-900 dark:text-white">Add New Gym & Admin</h3>
                     <button @click="addModalOpen = false" class="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300 focus:outline-none">
                         <i class="ph-bold ph-x text-lg"></i>
                     </button>
                 </div>
-                <form action="{{ route('superadmin.gyms.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <form action="{{ route('superadmin.gyms.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
+                    
+                    {{-- Gym Details Section --}}
                     <div>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Gym Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Address</label>
-                        <input type="text" name="address" class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Logo</label>
-                        <input type="file" name="logo" accept="image/*" class="w-full bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 rounded-xl file:mr-4 file:py-2.5 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-zinc-100 dark:file:bg-zinc-800 file:text-zinc-700 dark:file:text-zinc-300 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 transition-all cursor-pointer">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Status <span class="text-red-500">*</span></label>
-                            <select name="status" required class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
+                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2">
+                            <i class="ph-fill ph-buildings text-red-500"></i> Gym Details
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Gym Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 placeholder-zinc-400 outline-none">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Address</label>
+                                    <input type="text" name="address" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Logo</label>
+                                    <input type="file" name="logo" accept="image/*" class="w-full bg-zinc-50 dark:bg-zinc-950 text-sm text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 rounded-xl file:mr-4 file:py-2.5 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-zinc-100 dark:file:bg-zinc-800 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 transition-all cursor-pointer">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Status <span class="text-red-500">*</span></label>
+                                    <select name="status" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription Start</label>
+                                    <input type="date" name="subscription_start" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription End</label>
+                                    <input type="date" name="subscription_end" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Monthly Subscription Payment <span class="text-zinc-400 dark:text-zinc-500 text-xs">(optional)</span></label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="text-zinc-500 dark:text-zinc-400 sm:text-sm font-medium">Rs</span>
+                                        </div>
+                                        <input type="number" step="0.01" min="0" name="payment_amount" placeholder="0.00" class="w-full pl-9 bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                    </div>
+                                    <p class="mt-1 text-xs text-zinc-500">Record an initial subscription payment collected at signup.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription Start</label>
-                            <input type="date" name="subscription_start" class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription End</label>
-                            <input type="date" name="subscription_end" class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+
+                    {{-- Admin Details Section --}}
+                    <div>
+                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2">
+                            <i class="ph-fill ph-user-gear text-red-500"></i> Primary Admin Details
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Admin Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="admin_name" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Admin Email <span class="text-red-500">*</span></label>
+                                <input type="email" name="admin_email" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Admin Password <span class="text-red-500">*</span></label>
+                                <input type="password" name="admin_password" required minlength="8" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
                         </div>
                     </div>
-                    <div class="pt-4 flex justify-end gap-3 border-t border-zinc-200 dark:border-zinc-800">
+
+                    <div class="pt-2 flex justify-end gap-3 border-t border-zinc-200 dark:border-zinc-800 mt-6">
                         <button type="button" @click="addModalOpen = false" class="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:outline-none shadow-sm transition-all">Cancel</button>
-                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/20 shadow-sm transition-all" onclick="this.innerHTML='Saving...'; this.form.submit();">Save Gym</button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/20 shadow-sm transition-all" onclick="this.innerHTML='Saving...'; this.form.submit();">Create Gym & Admin</button>
                     </div>
                 </form>
             </div>
@@ -163,50 +219,127 @@
     <div x-show="editModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
             <div x-show="editModalOpen" x-transition.opacity class="fixed inset-0 bg-zinc-900/70" @click="editModalOpen = false"></div>
-            <div x-show="editModalOpen" x-transition.scale class="relative inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-2xl">
+            <div x-show="editModalOpen" x-transition.scale class="relative inline-block w-full max-w-2xl p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-2xl">
                 <div class="flex items-center justify-between mb-5">
-                    <h3 class="text-lg font-bold text-zinc-900 dark:text-white">Edit Gym</h3>
+                    <h3 class="text-lg font-bold text-zinc-900 dark:text-white">Edit Gym & Admin</h3>
                     <button @click="editModalOpen = false" class="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300 focus:outline-none">
                         <i class="ph-bold ph-x text-lg"></i>
                     </button>
                 </div>
-                <form :action="'{{ url('superadmin/gyms') }}/' + editGym.id" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <form :action="'{{ url('superadmin/gyms') }}/' + editGym.id" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
                     @method('PUT')
+                    
+                    {{-- Gym Details Section --}}
                     <div>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Gym Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" x-model="editGym.name" required class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Address</label>
-                        <input type="text" name="address" x-model="editGym.address" class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Update Logo <span class="text-zinc-400 dark:text-zinc-500 text-xs">(leave empty to keep current)</span></label>
-                        <input type="file" name="logo" accept="image/*" class="w-full bg-zinc-50 dark:bg-zinc-900 text-sm text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 rounded-xl file:mr-4 file:py-2.5 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-zinc-100 dark:file:bg-zinc-800 file:text-zinc-700 dark:file:text-zinc-300 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 transition-all cursor-pointer">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Status <span class="text-red-500">*</span></label>
-                            <select name="status" x-model="editGym.status" required class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
+                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2">
+                            <i class="ph-fill ph-buildings text-red-500"></i> Gym Details
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Gym Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" :value="editGym.name" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Address</label>
+                                    <input type="text" name="address" :value="editGym.address" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Update Logo <span class="text-zinc-400 dark:text-zinc-500 text-xs">(leave empty to keep current)</span></label>
+                                    <input type="file" name="logo" accept="image/*" class="w-full bg-zinc-50 dark:bg-zinc-950 text-sm text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700 rounded-xl file:mr-4 file:py-2.5 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-zinc-100 dark:file:bg-zinc-800 hover:file:bg-zinc-200 dark:hover:file:bg-zinc-700 transition-all cursor-pointer">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Status <span class="text-red-500">*</span></label>
+                                    <select name="status" :value="editGym.status" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription Start</label>
+                                    <input type="date" name="subscription_start" :value="editGym.subscription_start ? editGym.subscription_start.substring(0,10) : ''" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription End</label>
+                                    <input type="date" name="subscription_end" :value="editGym.subscription_end ? editGym.subscription_end.substring(0,10) : ''" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription Start</label>
-                            <input type="date" name="subscription_start" x-model="editGym.subscription_start ? editGym.subscription_start.substring(0,10) : ''" class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Subscription End</label>
-                            <input type="date" name="subscription_end" x-model="editGym.subscription_end ? editGym.subscription_end.substring(0,10) : ''" class="w-full bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+
+                    {{-- Admin Details Section --}}
+                    <div>
+                        <h4 class="text-sm font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2">
+                            <i class="ph-fill ph-user-gear text-red-500"></i> Primary Admin Details
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Admin Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="admin_name" :value="editGym.admins && editGym.admins.length > 0 ? editGym.admins[0].name : ''" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Admin Email <span class="text-red-500">*</span></label>
+                                <input type="email" name="admin_email" :value="editGym.admins && editGym.admins.length > 0 ? editGym.admins[0].email : ''" required class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">New Password <span class="text-zinc-400 dark:text-zinc-500 text-xs">(Leave blank to keep current)</span></label>
+                                <input type="password" name="admin_password" minlength="8" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                            </div>
                         </div>
                     </div>
-                    <div class="pt-4 flex justify-end gap-3 border-t border-zinc-200 dark:border-zinc-800">
+
+                    <div class="pt-2 flex justify-end gap-3 border-t border-zinc-200 dark:border-zinc-800 mt-6">
                         <button type="button" @click="editModalOpen = false" class="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:outline-none shadow-sm transition-all">Cancel</button>
                         <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/20 shadow-sm transition-all" onclick="this.innerHTML='Saving...'; this.form.submit();">Update Gym</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Payment Modal -->
+    <div x-show="paymentModalOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div x-show="paymentModalOpen" x-transition.opacity class="fixed inset-0 bg-zinc-900/70" @click="paymentModalOpen = false"></div>
+            <div x-show="paymentModalOpen" x-transition.scale class="relative inline-block w-full max-w-lg p-6 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-2xl">
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <h3 class="text-lg font-bold text-zinc-900 dark:text-white">Record Gym Payment</h3>
+                        <p class="text-xs text-zinc-500 mt-0.5" x-text="'Collect subscription payment from ' + paymentGym.name"></p>
+                    </div>
+                    <button @click="paymentModalOpen = false" class="text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300 focus:outline-none">
+                        <i class="ph-bold ph-x text-lg"></i>
+                    </button>
+                </div>
+                
+                <form :action="'{{ url('superadmin/gyms') }}/' + paymentGym.id + '/payments'" method="POST" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Payment Amount <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-zinc-500 dark:text-zinc-400 sm:text-sm font-medium">Rs</span>
+                            </div>
+                            <input type="number" step="0.01" min="0.01" name="amount" required placeholder="0.00" class="w-full pl-9 bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl px-4 py-2.5 transition-all duration-200 outline-none text-lg font-bold">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Date Paid <span class="text-red-500">*</span></label>
+                        <input type="date" name="payment_date" required value="{{ date('Y-m-d') }}" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Notes <span class="text-zinc-400 dark:text-zinc-500 text-xs">(optional)</span></label>
+                        <textarea name="notes" rows="2" placeholder="e.g. Subscription for March 2026" class="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl px-4 py-2 transition-all duration-200 outline-none resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-4 flex justify-end gap-3 border-t border-zinc-200 dark:border-zinc-800 mt-6">
+                        <button type="button" @click="paymentModalOpen = false" class="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-700 focus:outline-none shadow-sm transition-all">Cancel</button>
+                        <button type="submit" class="px-5 py-2 text-sm font-medium text-white bg-emerald-600 rounded-xl hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 shadow-sm transition-all flex items-center gap-2" onclick="this.innerHTML='<i class=\'ph-bold ph-spinner animate-spin\'></i> Saving...'; this.form.submit();">
+                            <i class="ph-bold ph-check-circle"></i> Record Payment
+                        </button>
                     </div>
                 </form>
             </div>
@@ -219,7 +352,7 @@
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
-            text: "This action cannot be undone. All data related to this gym will be deleted.",
+            text: "This action cannot be undone. All data related to this gym (including its admin) will be deleted.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',

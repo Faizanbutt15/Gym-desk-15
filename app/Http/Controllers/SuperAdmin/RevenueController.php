@@ -11,12 +11,13 @@ class RevenueController extends Controller
 {
     public function index()
     {
-        $gymRevenues = Gym::withSum('payments', 'amount')->orderByDesc('payments_sum_amount')->get();
+        // Calculate revenue from gymPayments (what the gym pays the Super Admin)
+        $gymRevenues = Gym::withSum('gymPayments', 'amount')->orderByDesc('gym_payments_sum_amount')->get();
 
         $chartData = $gymRevenues->map(function ($gym) {
             return [
                 'name' => $gym->name,
-                'data' => [ (float) $gym->payments_sum_amount ]
+                'data' => [ (float) $gym->gym_payments_sum_amount ]
             ];
         });
 

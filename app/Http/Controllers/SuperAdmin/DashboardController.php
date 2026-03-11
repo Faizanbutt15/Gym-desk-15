@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $activeGyms = Gym::where('status', 'active')->count();
         $inactiveGyms = Gym::where('status', 'inactive')->count();
         
-        $totalRevenue = Payment::sum('amount');
+        $totalRevenue = \App\Models\GymPayment::sum('amount');
         
         $recentGyms = Gym::latest()->take(5)->get();
 

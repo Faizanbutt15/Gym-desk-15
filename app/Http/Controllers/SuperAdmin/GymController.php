@@ -4,14 +4,20 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gym;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class GymController extends Controller
 {
     public function index()
     {
-        $gyms = Gym::latest()->paginate(10);
+        // Eager load the admins so we can display the primary admin
+        $gyms = Gym::with(['admins' => function($query) {
+            $query->where('role', 'gym_admin');
+        }])->latest()->paginate(10);
+        
         return view('superadmin.gyms.index', compact('gyms'));
     }
 
@@ -24,18 +30,49 @@ class GymController extends Controller
             'status' => 'required|in:active,inactive',
             'subscription_start' => 'nullable|date',
             'subscription_end' => 'nullable|date',
+            // Admin fields
+            'admin_name' => 'required|string|max:255',
+            'admin_email' => 'required|string|email|max:255|unique:users,email',
+            'admin_password' => 'required|string|min:8',
+            // Payment fields
+            'payment_amount' => 'nullable|numeric|min:0',
         ]);
 
+        $gymData = collect($validated)->except(['admin_name', 'admin_email', 'admin_password', 'payment_amount'])->toArray();
+
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+            $gymData['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        Gym::create($validated);
-        return redirect()->route('superadmin.gyms.index')->with('success', 'Gym created successfully.');
+        $gym = Gym::create($gymData);
+
+        // Create the primary admin
+        User::create([
+            'name' => $validated['admin_name'],
+            'email' => $validated['admin_email'],
+            'password' => Hash::make($validated['admin_password']),
+            'role' => 'gym_admin',
+            'gym_id' => $gym->id,
+        ]);
+
+        // Create initial payment if provided
+        if (!empty($validated['payment_amount']) && $validated['payment_amount'] > 0) {
+            $gym->gymPayments()->create([
+                'amount' => $validated['payment_amount'],
+                'payment_date' => now()->toDateString(),
+                'notes' => 'Initial signup payment',
+            ]);
+        }
+
+        return redirect()->route('superadmin.gyms.index')->with('success', 'Gym and Admin created successfully.');
     }
 
     public function update(Request $request, Gym $gym)
     {
+        // Find the primary admin
+        $admin = $gym->admins()->where('role', 'gym_admin')->first();
+        $adminId = $admin ? $admin->id : 'NULL';
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
@@ -43,21 +80,57 @@ class GymController extends Controller
             'status' => 'required|in:active,inactive',
             'subscription_start' => 'nullable|date',
             'subscription_end' => 'nullable|date',
+            // Admin fields
+            'admin_name' => 'required|string|max:255',
+            'admin_email' => 'required|string|email|max:255|unique:users,email,' . $adminId,
+            'admin_password' => 'nullable|string|min:8',
         ]);
+
+        $gymData = collect($validated)->except(['admin_name', 'admin_email', 'admin_password'])->toArray();
 
         if ($request->hasFile('logo')) {
             if ($gym->logo) Storage::disk('public')->delete($gym->logo);
-            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+            $gymData['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        $gym->update($validated);
+        $gym->update($gymData);
+
+        // Update the primary admin, or create one if it doesn't exist logically
+        if ($admin) {
+            $adminData = [
+                'name' => $validated['admin_name'],
+                'email' => $validated['admin_email'],
+            ];
+            
+            if (!empty($validated['admin_password'])) {
+                $adminData['password'] = Hash::make($validated['admin_password']);
+            }
+            
+            $admin->update($adminData);
+        } else {
+             User::create([
+                'name' => $validated['admin_name'],
+                'email' => $validated['admin_email'],
+                'password' => Hash::make($validated['admin_password'] ?? 'password123'),
+                'role' => 'gym_admin',
+                'gym_id' => $gym->id,
+            ]);
+        }
+
         return redirect()->route('superadmin.gyms.index')->with('success', 'Gym updated successfully.');
     }
 
     public function destroy(Gym $gym)
     {
+        // Delete associated logo if exists
+        if ($gym->logo) Storage::disk('public')->delete($gym->logo);
+        
+        // Delete the admins (might be handled by foreign key cascade, but let's be explicit)
+        $gym->admins()->delete();
+        
         $gym->delete();
-        return redirect()->route('superadmin.gyms.index')->with('success', 'Gym deleted successfully.');
+        
+        return redirect()->route('superadmin.gyms.index')->with('success', 'Gym and associated admins deleted successfully.');
     }
 
     public function toggleStatus(Request $request, Gym $gym)
@@ -65,5 +138,18 @@ class GymController extends Controller
         $validated = $request->validate(['status' => 'required|in:active,inactive']);
         $gym->update(['status' => $validated['status']]);
         return redirect()->back()->with('success', "Gym status updated.");
+    }
+
+    public function addPayment(Request $request, Gym $gym)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'payment_date' => 'required|date',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $gym->gymPayments()->create($validated);
+
+        return redirect()->back()->with('success', "Payment of Rs " . number_format($validated['amount'], 2) . " recorded successfully for " . $gym->name . ".");
     }
 }

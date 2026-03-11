@@ -49,7 +49,7 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
-                                    +Rs {{ number_format($gym->payments_sum_amount ?? 0, 2) }}
+                                    +Rs {{ number_format($gym->gym_payments_sum_amount ?? 0, 2) }}
                                 </div>
                             </td>
                         </tr>
