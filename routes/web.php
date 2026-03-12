@@ -27,6 +27,17 @@ Route::get('/seed-db', function () {
     return 'Database seeded! You can now login with superadmin@gymos.test / password';
 });
 
+Route::get('/debug-db', function () {
+    $user = \App\Models\User::where('email', 'admin@gymos.test')->first();
+    $gym = $user ? $user->gym : null;
+    return response()->json([
+        'user' => $user,
+        'gym' => $gym,
+        'now' => now()->toDateTimeString(),
+        'is_expired' => $gym && $gym->subscription_end ? ($gym->subscription_end < now()) : null
+    ]);
+});
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
     if ($user->role === 'superadmin') {
