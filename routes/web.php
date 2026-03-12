@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 // Super Admin Controllers
 use App\Http\Controllers\SuperAdmin\DashboardController as SADashboardController;
 use App\Http\Controllers\SuperAdmin\GymController as SAGymController;
-use App\Http\Controllers\SuperAdmin\GymAdminController as SAGymAdminController;
-use App\Http\Controllers\SuperAdmin\RevenueController as SARevenueController;
 
 // Gym Admin Controllers
 use App\Http\Controllers\GymAdmin\DashboardController as GADashboardController;
@@ -35,10 +33,10 @@ Route::get('/dashboard', function () {
 // Super Admin Routes
 Route::middleware(['auth', 'superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SADashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/chart', [SADashboardController::class, 'chartData'])->name('dashboard.chart');
     Route::resource('gyms', SAGymController::class);
     Route::post('/gyms/{gym}/status', [SAGymController::class, 'toggleStatus'])->name('gyms.status');
-    Route::resource('gym-admins', SAGymAdminController::class);
-    Route::get('/revenue', [SARevenueController::class, 'index'])->name('revenue');
+    Route::post('/gyms/{gym}/payments', [SAGymController::class, 'addPayment'])->name('gyms.payment');
 });
 
 // Gym Admin Routes
