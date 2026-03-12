@@ -38,6 +38,13 @@ Route::get('/debug-db', function () {
     ]);
 });
 
+Route::get('/force-logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+});
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
     if ($user->role === 'superadmin') {
