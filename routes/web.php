@@ -22,6 +22,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/seed-db', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+    return 'Database seeded! You can now login with superadmin@gymos.test / password';
+});
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
     if ($user->role === 'superadmin') {
