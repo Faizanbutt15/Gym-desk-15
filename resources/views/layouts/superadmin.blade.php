@@ -75,7 +75,6 @@
                 $navItems = [
                     ['route' => 'superadmin.dashboard',    'match' => 'superadmin.dashboard',   'icon' => 'ph-squares-four',    'label' => 'Dashboard', 'iconWeight' => 'ph-fill'],
                     ['route' => 'superadmin.gyms.index',     'match' => 'superadmin.gyms.*',       'icon' => 'ph-buildings',           'label' => 'Gyms'],
-                    ['route' => 'superadmin.revenue',           'match' => 'superadmin.revenue',         'icon' => 'ph-coins',  'label' => 'Revenue'],
                 ];
             @endphp
             @foreach($navItems as $item)
