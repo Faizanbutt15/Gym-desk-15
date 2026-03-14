@@ -1,7 +1,6 @@
 <div>
     <!-- 2. HERO SECTION -->
     <section class="hero" id="home">
-        <canvas id="particles-js" wire:ignore></canvas>
         <div class="container hero-content">
             <div class="hero-text fade-up">
                 <div class="badge">
@@ -110,7 +109,6 @@
 
     <!-- 5. HOW IT WORKS SECTION -->
     <section class="how-it-works" id="how-it-works">
-        <canvas class="section-stars" id="how-it-works-stars" wire:ignore></canvas>
         <div class="container" style="position:relative; z-index:1;">
             <h2 class="section-title fade-up">Up and Running in 3 Simple Steps</h2>
             <div class="steps-container">
@@ -264,7 +262,6 @@
 
     <!-- 8.5 VIDEO SECTION -->
     <section class="video-section" id="video-section">
-        <canvas class="section-stars" id="video-section-stars" wire:ignore></canvas>
         <div class="container" style="position:relative; z-index:1;">
             <h2 class="section-title fade-up">See Gymdesk15 in Action</h2>
             <div class="video-wrapper fade-up" id="video-wrapper">
