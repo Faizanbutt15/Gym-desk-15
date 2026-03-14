@@ -19,7 +19,7 @@ use App\Http\Controllers\GymAdmin\AttendanceController as GAAttendanceController
 use App\Http\Controllers\GymAdmin\ExpenseController as GAExpenseController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 Route::get('/seed-db', function () {
