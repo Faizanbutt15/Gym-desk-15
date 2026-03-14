@@ -6,13 +6,10 @@
                 <img src="{{ asset('logo.png') }}" alt="Gymdesk15 Logo" style="height: 48px; width: auto;">
             </a>
             <nav class="nav-links">
-                @if($page == 'home')
-                    <a href="#features">Features</a>
-                    <a href="#how-it-works">How It Works</a>
-                    <a href="#pricing">Pricing</a>
-                @else
-                    <a href="#" wire:click.prevent="setPage('home')">Home</a>
-                @endif
+                <a href="#" wire:click.prevent="scrollToSection('home')">Home</a>
+                <a href="#" wire:click.prevent="scrollToSection('features')">Features</a>
+                <a href="#" wire:click.prevent="scrollToSection('how-it-works')">How It Works</a>
+                <a href="#" wire:click.prevent="scrollToSection('pricing')">Pricing</a>
                 <a href="#" wire:click.prevent="setPage('about')">About Us</a>
                 <a href="#" wire:click.prevent="setPage('contact')">Contact</a>
             </nav>
@@ -21,11 +18,11 @@
                     <a href="{{ url('/dashboard') }}" class="login-link">Dashboard</a>
                     <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                         @csrf
-                        <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</button>
+                        <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px;">Logout</button>
                     </form>
                 @else
                     <a href="{{ route('login') }}" class="login-link">Login</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">Get Started Free</a>
+                    <a href="#" wire:click.prevent="setPage('contact')" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.85rem; border-radius: 8px;">Get Started</a>
                 @endauth
             </div>
         </div>

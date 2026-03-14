@@ -1,16 +1,17 @@
 <div>
     <!-- 2. HERO SECTION -->
     <section class="hero" id="home">
+        <div id="particles-js"></div>
         <div class="container hero-content">
             <div class="hero-text fade-up">
                 <div class="badge">
                     <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:14px; margin-right:6px;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                     Trusted by Gym Owners
                 </div>
-                <h1>Stop Managing Your Gym on Excel or paper. <br><span style="color:var(--primary)" id="typing-text"></span><span class="cursor">|</span></h1>
+                <h1><span class="scramble-static">Stop Managing Your Gym on Excel or paper.</span> <br><span style="color:var(--primary)" id="typing-text"></span><span class="cursor">|</span></h1>
                 <p>Gymdesk15 gives you complete control over members, staff, payments and revenue — from one powerful dashboard.</p>
                 <div class="hero-btns">
-                    <a href="#pricing" class="btn btn-primary">See Live Demo</a>
+                    <a href="#" wire:click.prevent="setPage('contact')" class="btn btn-primary">Request Demo</a>
                     <a href="#video-section" class="btn btn-outline" style="display:inline-flex; align-items:center; gap:8px;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         Watch Video
@@ -232,7 +233,7 @@
                         <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px; color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Staff & Salary management</li>
                         <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px; color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> 1 Admin user</li>
                     </ul>
-                    <a href="#" class="btn btn-outline" style="border-radius: 12px;">Start For Free</a>
+                    <a href="#" wire:click.prevent="setPage('contact')" class="btn btn-outline" style="border-radius: 12px;">Contact Us</a>
                 </div>
                 <div class="pricing-card popular fade-up" style="transition-delay: 0.1s">
                     <div class="popular-badge">Most Popular</div>
@@ -244,7 +245,7 @@
                         <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px; color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Staff & Salary management</li>
                         <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px; color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Priority support</li>
                     </ul>
-                    <a href="#" class="btn btn-primary" style="border-radius: 12px; box-shadow: 0 10px 20px var(--primary-glow);">Get Pro Now</a>
+                    <a href="#" wire:click.prevent="setPage('contact')" class="btn btn-primary" style="border-radius: 12px; box-shadow: 0 10px 20px var(--primary-glow);">Get Pro Now</a>
                 </div>
                 <div class="pricing-card fade-up" style="transition-delay: 0.2s">
                     <h3 class="plan-name">Enterprise</h3>
@@ -254,7 +255,7 @@
                         <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px; color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Full API access</li>
                         <li><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px; color:var(--primary);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg> Dedicated support</li>
                     </ul>
-                    <a href="#" class="btn btn-outline" style="border-radius: 12px;">Contact Sales</a>
+                    <a href="#" wire:click.prevent="setPage('contact')" class="btn btn-outline" style="border-radius: 12px;">Contact Sales</a>
                 </div>
             </div>
         </div>

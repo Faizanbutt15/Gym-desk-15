@@ -209,7 +209,27 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            opacity: 0.4;
+            opacity: 0.8;
+            background-image: 
+                radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 20% 50%, #fff, transparent),
+                radial-gradient(2px 2px at 30% 90%, #fff, transparent),
+                radial-gradient(1px 1px at 40% 40%, #fff, transparent),
+                radial-gradient(2px 2px at 50% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 60% 70%, #fff, transparent),
+                radial-gradient(1px 1px at 70% 30%, #fff, transparent),
+                radial-gradient(2px 2px at 80% 80%, #fff, transparent),
+                radial-gradient(1px 1px at 90% 20%, #fff, transparent),
+                radial-gradient(1px 1px at 15% 75%, #fff, transparent),
+                radial-gradient(2px 2px at 45% 65%, #fff, transparent),
+                radial-gradient(1px 1px at 85% 45%, #fff, transparent);
+            background-size: 300px 300px;
+            animation: stars-move 150s linear infinite;
+        }
+
+        @keyframes stars-move {
+            from { background-position: 0 0; }
+            to { background-position: 300px 600px; }
         }
 
         .hero-content {
@@ -224,6 +244,7 @@
 
         .hero-text {
             max-width: 600px;
+            min-width: 0;
         }
 
         .badge {
@@ -239,10 +260,10 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3rem);
-            line-height: 1.15;
+            font-size: clamp(2rem, 4.5vw, 2.8rem);
+            line-height: 1.2;
             margin-bottom: 20px;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
         }
 
         /* Typing effect class target */
@@ -276,12 +297,27 @@
             position: relative;
             animation: float 6s ease-in-out infinite;
             box-shadow: 0 40px 80px -20px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        /* Glitch Animation for Image */
+        .glitch-active {
+            animation: glitch-anim 0.25s infinite !important;
+            filter: hue-rotate(90deg) contrast(1.3) brightness(1.1);
+            opacity: 0.9;
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-4px, 2px); }
+            40% { transform: translate(-4px, -2px); }
+            60% { transform: translate(4px, 2px); }
+            80% { transform: translate(4px, -2px); }
+            100% { transform: translate(0); }
         }
 
         .dashboard-image {
             width: 100%;
-            height: auto;
-            max-height: 400px;
             display: block;
             border-radius: 14px;
             object-fit: contain;
@@ -830,10 +866,51 @@
         // Store instances for re-init
         let starfields = [];
         let observer;
+        let typingTimeout;
+        let scrambleInterval;
+
+        function scrambleText(element, targetText, syncElement = null) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            let iteration = 0;
+            if (scrambleInterval) clearInterval(scrambleInterval);
+            
+            // Start glitch on sync element
+            if (syncElement) syncElement.classList.add('glitch-active');
+            
+            scrambleInterval = setInterval(() => {
+                element.innerText = targetText
+                    .split("")
+                    .map((char, index) => {
+                        if (index < iteration) {
+                            return targetText[index];
+                        }
+                        if (targetText[index] === ' ') return ' ';
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    })
+                    .join("");
+                
+                if (iteration >= targetText.length) {
+                    clearInterval(scrambleInterval);
+                    // Stop glitch on sync element
+                    if (syncElement) syncElement.classList.remove('glitch-active');
+                }
+                
+                iteration += targetText.length / 40; // Smoother gradual transition
+            }, 25);
+        }
 
         function initAll() {
+            console.log('initAll triggered');
+            // 0. Scramble Hero Title + Glitch Image
+            const heroTitle = document.querySelector('.hero h1 .scramble-static');
+            const dashContainer = document.querySelector('.dashboard-image-container');
+            if (heroTitle) {
+                scrambleText(heroTitle, "Stop Managing Your Gym on Excel or paper.", dashContainer);
+            }
+
             // 1. Navbar Scroll Effect
             const header = document.getElementById('navbar');
+            console.log('Navbar found:', !!header);
             if (header) {
                 window.addEventListener('scroll', () => {
                     if (window.scrollY > 50) {
@@ -847,6 +924,7 @@
             // 2. Typing Effect for Hero (only on home)
             const typingText = document.getElementById('typing-text');
             if (typingText) {
+                if (typingTimeout) clearTimeout(typingTimeout);
                 typingText.innerHTML = ''; // Reset
                 const textToType = "Start Running It Like a Business.";
                 let charIndex = 0;
@@ -855,17 +933,18 @@
                     if(charIndex < textToType.length) {
                         typingText.innerHTML += textToType.charAt(charIndex);
                         charIndex++;
-                        setTimeout(type, 100);
+                        typingTimeout = setTimeout(type, 100);
                     } else {
                         const cursor = document.querySelector('.cursor');
                         if (cursor) cursor.style.animation = "blink 1s infinite step-end";
                     }
                 }
-                setTimeout(type, 500);
+                typingTimeout = setTimeout(type, 500);
             }
             
             // 3. Intersection Observer for Fade-Up animations
             const fadeElements = document.querySelectorAll('.fade-up');
+            console.log('Fade-up elements found:', fadeElements.length);
             
             const observerOptions = {
                 root: null,
@@ -929,17 +1008,60 @@
             }
 
             // 7. Video Playback Logic
+            // (Reserved for future video logic if needed)
+        }
 
         // Initialize on load
+        document.addEventListener('livewire:initialized', () => {
+             console.log('livewire:initialized fired');
+            setTimeout(initAll, 100);
+        });
+
+        // Fallback for initial load if livewire:initialized is missed
         document.addEventListener('DOMContentLoaded', () => {
-            initAll();
+            console.log('DOMContentLoaded fired');
+            setTimeout(initAll, 500); 
         });
 
         // Re-initialize on Livewire page change
         document.addEventListener('page-changed', () => {
+            console.log('page-changed event received');
             setTimeout(initAll, 100);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'instant' });
         });
+
+        // Handle cross-page scrolling
+        document.addEventListener('scroll-to-section', (event) => {
+            const section = event.detail.section;
+            console.log('Scrolling to section:', section);
+            
+            // Small delay to allow home component to render if we just switched pages
+            setTimeout(() => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    console.warn('Section element not found:', section);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 150);
+        });
+
+        // Final safety fallback: Show all after 3 seconds if still hidden
+        setTimeout(() => {
+            const hiddenElements = document.querySelectorAll('.fade-up:not(.visible)');
+            if (hiddenElements.length > 0) {
+                console.warn('Safety fallback: Showing ' + hiddenElements.length + ' hidden elements');
+                hiddenElements.forEach(el => el.classList.add('visible'));
+            }
+        }, 3000);
 
     </script>
 </body>

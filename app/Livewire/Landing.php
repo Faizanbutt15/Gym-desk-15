@@ -16,6 +16,16 @@ class Landing extends Component
         $this->dispatch('page-changed');
     }
 
+    public function scrollToSection($section)
+    {
+        if ($this->page !== 'home') {
+            $this->page = 'home';
+            $this->dispatch('page-changed');
+        }
+        
+        $this->dispatch('scroll-to-section', section: $section);
+    }
+
     public function render()
     {
         return view('livewire.landing');
