@@ -7,12 +7,19 @@ use Livewire\Component;
 class Landing extends Component
 {
     public $page = 'home';
+    public $mobileMenuOpen = false;
 
     protected $queryString = ['page'];
+
+    public function toggleMobileMenu()
+    {
+        $this->mobileMenuOpen = !$this->mobileMenuOpen;
+    }
 
     public function setPage($page)
     {
         $this->page = $page;
+        $this->mobileMenuOpen = false; // Close menu on page change
         $this->dispatch('page-changed');
     }
 
@@ -23,6 +30,7 @@ class Landing extends Component
             $this->dispatch('page-changed');
         }
         
+        $this->mobileMenuOpen = false; // Close menu on scroll
         $this->dispatch('scroll-to-section', section: $section);
     }
 
