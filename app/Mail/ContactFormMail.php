@@ -34,7 +34,10 @@ class ContactFormMail extends Mailable
     {
         return new Envelope(
             subject: 'New Gymdesk15 Contact Form Submission',
-            from: new \Illuminate\Mail\Mailables\Address($this->email, $this->name),
+            from: new \Illuminate\Mail\Mailables\Address(config('mail.from.address'), config('mail.from.name')),
+            replyTo: [
+                new \Illuminate\Mail\Mailables\Address($this->email, $this->name),
+            ],
         );
     }
 

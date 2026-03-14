@@ -1,11 +1,16 @@
 <div class="contact-container" style="padding: 120px 0 80px; min-height: 80vh; background: radial-gradient(circle at 80% 30%, #1a0a0f 0%, #0b0c10 100%);">
+    <style>
+        @media (max-width: 991px) {
+            .contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+        }
+    </style>
     <div class="container">
         <h1 class="section-title fade-up visible">Get In Touch</h1>
         <p style="text-align: center; max-width: 600px; margin: 0 auto 60px; font-size: 1.1rem;" class="fade-up visible">
             Have questions about how Gymdesk15 can transform your business? Our team is here to help you scale.
         </p>
 
-        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; margin-top: 40px;">
+        <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; margin-top: 40px;">
             <div class="fade-up visible">
                 <h2 style="margin-bottom: 30px; color: var(--primary);">Contact Information</h2>
                 
@@ -26,7 +31,7 @@
                         </div>
                         <div>
                             <h4 style="margin-bottom: 5px;">Call Us</h4>
-                            <p style="color: var(--text-secondary);">+92 302 795970</p>
+                            <p style="color: var(--text-secondary);">+92 302 7959570</p>
                         </div>
                     </div>
 

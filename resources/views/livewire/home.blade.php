@@ -177,7 +177,7 @@
                         <div class="avatar" style="background: linear-gradient(135deg, #D90429 0%, #7d0218 100%); color:white;">AR</div>
                         <div class="author-info">
                             <h4>Ahmed R.</h4>
-                            <p>Gym Owner, Lahore</p>
+                            <p>Gym Owner, Sialkot</p>
                         </div>
                     </div>
                 </div>
