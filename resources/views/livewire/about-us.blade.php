@@ -5,23 +5,23 @@
 
     <div class="container">
         <!-- Hero Section -->
-        <div style="text-align: center; margin-bottom: 80px; position: relative; z-index: 2;" class="fade-up visible">
+        <div class="about-hero-section" style="text-align: center; margin-bottom: 80px; position: relative; z-index: 2;" class="fade-up visible">
             <div style="display: inline-block; padding: 4px 12px; background: var(--primary-transparent); border: 1px solid var(--glass-border); border-radius: 100px; color: var(--primary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">
                 Our Mission
             </div>
-            <h1 class="section-title" style="font-size: clamp(2rem, 5vw, 3rem); line-height: 1.1; margin-bottom: 20px; font-weight: 800; letter-spacing: -0.04em;">
+            <h1 class="section-title" style="font-size: clamp(2rem, 8vw, 3.5rem); line-height: 1.1; margin-bottom: 20px; font-weight: 800; letter-spacing: -0.04em;">
                 The Future of <br><span style="color: var(--primary); background: none; -webkit-text-fill-color: var(--primary);">Gym Management</span>
             </h1>
-            <p style="font-size: 1.1rem; max-width: 650px; margin: 0 auto; line-height: 1.6; color: var(--text-secondary); font-weight: 400;">
+            <p class="section-subtitle" style="font-size: 1.1rem; max-width: 650px; margin: 0 auto; line-height: 1.6; color: var(--text-secondary); font-weight: 400;">
                 Gymdesk15 was founded to eliminate the friction in fitness business operations. We build tools that are as powerful as they are beautiful.
             </p>
         </div>
         
         <!-- Story & Founder Section -->
         <div class="about-grid" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center; margin-bottom: 140px; position: relative; z-index: 2;">
-            <div class="fade-up visible" style="transition-delay: 0.1s;">
-                <h2 style="margin-bottom: 32px; font-size: 2.5rem; letter-spacing: -0.03em;">Our <span style="color: var(--primary);">Story</span></h2>
-                <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="fade-up visible story-text-col" style="transition-delay: 0.1s;">
+                <h2 class="story-title" style="margin-bottom: 32px; font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: -0.03em;">Our <span style="color: var(--primary);">Story</span></h2>
+                <div class="story-p-container" style="display: flex; flex-direction: column; gap: 24px;">
                     <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary);">
                         Founded in 2026, <strong style="color: var(--text-primary);">Gymdesk15</strong> emerged from a local gym in Sialkot where manual tracking and clunky software were slowing down growth. We saw an opportunity to bring high-end technology to gym owners everywhere.
                     </p>
@@ -83,10 +83,10 @@
                             <a href="https://wa.me/923027959570" target="_blank" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; border: 1px solid var(--glass-border); transition: 0.3s; color: var(--text-secondary);" onmouseover="this.style.color='#25D366'; this.style.borderColor='#25D366'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--glass-border)'">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path></svg>
                             </a>
-                            <a href="https://www.linkedin.com/in/faizanmasood15" target="_blank" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; border: 1px solid var(--glass-border); transition: 0.3s; color: var(--text-secondary);" onmouseover="this.style.color='#0A66C2'; this.style.borderColor='#0A66C2'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--glass-border)'">
+                             <a href="https://www.linkedin.com/in/faizanbutt15" target="_blank" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; border: 1px solid var(--glass-border); transition: 0.3s; color: var(--text-secondary);" onmouseover="this.style.color='#0A66C2'; this.style.borderColor='#0A66C2'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--glass-border)'">
                                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                             </a>
-                            <a href="https://github.com/FaizanMasood15" target="_blank" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; border: 1px solid var(--glass-border); transition: 0.3s; color: var(--text-secondary);" onmouseover="this.style.color='#fff'; this.style.borderColor='#fff'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--glass-border)'">
+                            <a href="https://github.com/Faizanbutt15" target="_blank" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; border: 1px solid var(--glass-border); transition: 0.3s; color: var(--text-secondary);" onmouseover="this.style.color='#fff'; this.style.borderColor='#fff'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--glass-border)'">
                                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                             </a>
                             <a href="https://www.instagram.com/faizanbutt_15/" target="_blank" style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; border: 1px solid var(--glass-border); transition: 0.3s; color: var(--text-secondary);" onmouseover="this.style.color='#E4405F'; this.style.borderColor='#E4405F'" onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--glass-border)'">
@@ -100,22 +100,22 @@
 
         <!-- Global Stats Section -->
         <div style="position: relative; margin-bottom: 140px;" class="fade-up visible">
-            <div class="stats-grid-about" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 70px 40px; border-radius: 48px; backdrop-filter: blur(10px);">
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;">
+            <div class="stats-grid-about" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: clamp(30px, 5vw, 70px) clamp(20px, 4vw, 40px); border-radius: 48px; backdrop-filter: blur(10px);">
+                <div class="stats-inner-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px;">
                     <div style="text-align: center;">
-                        <div style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">150<span style="color: var(--primary);">+</span></div>
+                        <div style="font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">150<span style="color: var(--primary);">+</span></div>
                         <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Active Partner Gyms</div>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">25<span style="color: var(--primary);">k</span></div>
+                        <div style="font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">25<span style="color: var(--primary);">k</span></div>
                         <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Fitness Members</div>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">100<span style="color: var(--primary);">%</span></div>
+                        <div style="font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">100<span style="color: var(--primary);">%</span></div>
                         <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Data Reliability</div>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">24<span style="color: var(--primary);">/7</span></div>
+                        <div style="font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -2px;">24<span style="color: var(--primary);">/7</span></div>
                         <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Customer Priority</div>
                     </div>
                 </div>
@@ -124,8 +124,8 @@
 
         <!-- Professional Core Values -->
         <div style="text-align: center; margin-bottom: 60px;" class="fade-up visible">
-            <h2 style="font-size: 2.8rem; margin-bottom: 80px; letter-spacing: -0.03em;">Built on <span style="color: var(--primary);">Solid Values</span></h2>
-            <div class="values-grid-about" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;">
+            <h2 style="font-size: clamp(2rem, 5vw, 2.8rem); margin-bottom: clamp(40px, 8vw, 80px); letter-spacing: -0.03em;">Built on <span style="color: var(--primary);">Solid Values</span></h2>
+            <div class="values-grid-about" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px;">
                 <div style="background: rgba(255,255,255,0.01); padding: 50px 40px; border-radius: 32px; border: 1px solid var(--glass-border); transition: 0.4s; position: relative; overflow: hidden;" onmouseover="this.style.background='rgba(255,255,255,0.03)'; this.style.transform='translateY(-10px)'" onmouseout="this.style.background='rgba(255,255,255,0.01)'; this.style.transform='translateY(0)'">
                     <div style="width: 64px; height: 64px; background: var(--primary-transparent); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: var(--primary); margin: 0 auto 32px;">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
@@ -162,21 +162,30 @@
 
     /* RESPONSIVE STYLES */
     @media (max-width: 991px) {
-        .about-us-container { padding: 100px 0 60px; }
-        .about-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+        .about-us-container { padding: 120px 0 60px; }
+        .about-grid { grid-template-columns: 1fr !important; gap: 60px !important; }
         .about-grid > div:first-child { text-align: center; }
         .about-grid div[style*="flex-direction: column"] { align-items: center; }
         .about-grid div[style*="display: flex; gap: 20px"] { justify-content: center; }
+        
+        .story-text-col {
+            text-align: center;
+        }
     }
 
     @media (max-width: 768px) {
-        .stats-grid-about { grid-template-columns: repeat(2, 1fr) !important; gap: 30px !important; padding: 40px 20px !important; }
-        .values-grid-about { grid-template-columns: 1fr !important; gap: 24px !important; }
-        .section-title { font-size: 2.2rem !important; }
+        .stats-grid-about { padding: 40px 20px !important; border-radius: 32px !important; }
+        .values-grid-about { gap: 24px !important; }
+        .section-title { margin-bottom: 40px !important; text-align: center; }
+        .section-subtitle { text-align: center; }
+        .story-title { text-align: center; }
+        .story-p-container p { text-align: center; }
     }
 
     @media (max-width: 480px) {
-        .stats-grid-about { grid-template-columns: 1fr !important; }
-        .stat-number-about { font-size: 2.8rem !important; }
+        .about-us-container { padding: 100px 0 40px; }
+        .stats-inner-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+        .values-grid-about { grid-template-columns: 1fr !important; }
+        .values-grid-about > div { padding: 40px 25px !important; }
     }
 </style>
