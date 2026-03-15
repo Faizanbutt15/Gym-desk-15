@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
 
         // Create Demo Gym
         $gym = Gym::create([
-            'name' => 'Gym-15',
+            'name' => 'Gymdesk-15',
             'address' => '123 Fitness St',
             'status' => 'active',
             'subscription_start' => now(),
