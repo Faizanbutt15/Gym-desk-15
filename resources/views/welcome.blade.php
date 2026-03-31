@@ -1008,7 +1008,16 @@
             }
 
             // 7. Video Playback Logic
-            // (Reserved for future video logic if needed)
+            const videoOverlay = document.getElementById('video-overlay');
+            const mainVideo = document.getElementById('main-video');
+            
+            if (videoOverlay && mainVideo) {
+                videoOverlay.addEventListener('click', () => {
+                    videoOverlay.style.display = 'none';
+                    mainVideo.play();
+                    mainVideo.setAttribute('controls', 'true');
+                });
+            }
         }
 
         // Initialize on load
