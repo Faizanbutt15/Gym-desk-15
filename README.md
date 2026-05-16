@@ -2,13 +2,14 @@
 
 <!-- LOGO / HEADER -->
 <img src="https://img.shields.io/badge/GymDesk-Multi--Tenant%20SaaS-7C3AED?style=for-the-badge&logo=laravel&logoColor=white" alt="GymDesk" height="50"/>
-
+<h1> Anyone who clone this project not sale this to anyone without my permission <h1>
 <h1>🏋️ GymDesk — Gym Management SaaS Platform</h1>
 
 <p><strong>A production-ready, multi-tenant SaaS application for gym owners.</strong><br/>
 Manage members, staff, subscriptions, revenue & more — all from one powerful dashboard.</p>
 
 <br/>
+
 
 [![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
